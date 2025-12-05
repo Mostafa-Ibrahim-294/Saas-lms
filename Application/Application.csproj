@@ -10,7 +10,6 @@
     <Folder Include="Constants\" />
     <Folder Include="Contracts\Repositories\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Features\" />
   </ItemGroup>
 
   <ItemGroup>
