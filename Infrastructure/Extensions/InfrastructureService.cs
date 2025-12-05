@@ -4,7 +4,9 @@ using Hangfire.PostgreSql.Factories;
 using Infrastructure.Common.Options;
 using Infrastructure.Health;
 using Infrastructure.Persistence;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,12 +33,16 @@ namespace Infrastructure.Extensions
                 .BindConfiguration(nameof(JwtOptions))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+            builder.Services.AddOptions<MailOptions>()
+                .BindConfiguration(nameof(MailOptions))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
             builder.Services.AddHangfire(config =>
                 config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                       .UseSimpleAssemblyNameTypeSerializer()
                       .UseRecommendedSerializerSettings()
-                      .UsePostgreSqlStorage(action => action.UseNpgsqlConnection(configuration.GetConnectionString("Hangfire")))
+                      .UsePostgreSqlStorage(action => action.UseNpgsqlConnection(configuration.GetConnectionString("HangfireConnection")))
             );
 
             builder.Services.AddHangfireServer();
@@ -45,6 +51,7 @@ namespace Infrastructure.Extensions
                 .AddHangfire(options => options.MinimumAvailableServers = 1)
                 .AddRedis(configuration.GetConnectionString("RedisConnection")!)
                 .AddCheck<MailHealthCheck>("mail service");
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
             // remember to regiseter identity
         }
     }
