@@ -2,3 +2,8 @@
 global using Domain.Errors;
 global using OneOf;
 global using Application.Features.Auth.Dtos;
+global using AutoMapper;
+global using Microsoft.AspNetCore.Identity;
+global using Domain.Entites;
+global using Microsoft.AspNetCore.Identity.UI.Services;
+global using Microsoft.Extensions.Caching.Hybrid;

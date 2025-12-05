@@ -4,7 +4,9 @@ using Hangfire.PostgreSql.Factories;
 using Infrastructure.Common.Options;
 using Infrastructure.Health;
 using Infrastructure.Persistence;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
+using Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -57,6 +59,8 @@ namespace Infrastructure.Extensions
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+            builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+            builder.Services.AddScoped<IRefreshRepository, RefreshRepository>();
         }
     }
 }
