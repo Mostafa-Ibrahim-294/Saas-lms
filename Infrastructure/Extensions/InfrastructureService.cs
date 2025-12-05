@@ -6,6 +6,7 @@ using Infrastructure.Health;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -46,13 +47,16 @@ namespace Infrastructure.Extensions
             );
 
             builder.Services.AddHangfireServer();
+
             builder.Services.AddHealthChecks()
                 .AddNpgSql(configuration.GetConnectionString("DefaultConnection")!)
                 .AddHangfire(options => options.MinimumAvailableServers = 1)
                 .AddRedis(configuration.GetConnectionString("RedisConnection")!)
                 .AddCheck<MailHealthCheck>("mail service");
             builder.Services.AddScoped<IEmailSender, EmailSender>();
-            // remember to regiseter identity
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
         }
     }
 }

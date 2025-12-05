@@ -1,4 +1,5 @@
 ﻿using Api.Middlewares;
+using Infrastructure.Constants;
 using Infrastructure.Common.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -28,8 +29,7 @@ namespace Api.Extensions
                {
                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-               }
-            ).AddCookie(options => options.Cookie.Name = "AccessToken")
+               })
              .AddJwtBearer(
                options =>
                {
@@ -50,7 +50,7 @@ namespace Api.Extensions
                    {
                        OnMessageReceived = context =>
                        {
-                           context.Token = context.Request.Cookies["AccessToken"];
+                           context.Token = context.Request.Cookies[AuthConstants.AccessToken];
                             return Task.CompletedTask;
                        }
                    };
