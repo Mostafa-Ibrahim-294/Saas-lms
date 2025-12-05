@@ -22,7 +22,7 @@ namespace Api.Extensions
                 configuration.ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
             );
-            // remember to register cors
+            // remember to register cors test
             var jwtSettings = builder.Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
             builder.Services.AddAuthentication(
                options =>
