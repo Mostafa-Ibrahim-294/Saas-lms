@@ -4,7 +4,5 @@ using System.Text;
 
 namespace Application.Features.Auth.Commands.Logout
 {
-    internal class LogoutCommand
-    {
-    }
+    public sealed record LogoutCommand : IRequest<OneOf<bool, Error>>;
 }

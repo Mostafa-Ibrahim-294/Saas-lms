@@ -17,6 +17,8 @@ namespace Domain.Errors
             new Error("User.EmailNotConfirmed", "Email not confirmed", HttpStatusCode.Unauthorized);
         public static Error EmailNotFound =>
             new Error("User.EmailNotFound", "Email does not exist", HttpStatusCode.NotFound);
+        public static Error Unauthorized =>
+            new Error("User.Unauthorized", "Unauthorized", HttpStatusCode.Unauthorized);
 
     }
 }
