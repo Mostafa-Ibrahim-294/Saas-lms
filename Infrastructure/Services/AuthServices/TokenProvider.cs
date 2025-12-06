@@ -1,5 +1,5 @@
 ﻿
-using Infrastructure.Constants;
+using Application.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System;

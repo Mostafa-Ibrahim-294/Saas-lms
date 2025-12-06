@@ -1,5 +1,5 @@
 ﻿using Api.Middlewares;
-using Infrastructure.Constants;
+using Application.Constants;
 using Infrastructure.Common.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

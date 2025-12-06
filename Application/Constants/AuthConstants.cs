@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infrastructure.Constants
+namespace Application.Constants
 {
     public static class AuthConstants
     {
