@@ -10,6 +10,10 @@ namespace Infrastructure.Persistence
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         internal DbSet<RefreshToken> RefreshTokens { get; set; }
+        internal DbSet<Plan> Plans { get; set; }
+        internal DbSet<PlanPricing> PlanPricings { get; set; }
+        internal DbSet<PlanFeature> plansFeature { get; set; }
+        internal DbSet<Feature> Features  { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

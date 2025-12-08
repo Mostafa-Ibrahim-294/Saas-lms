@@ -4,6 +4,8 @@ using Infrastructure.Extensions;
 using Application.Extensions;
 using Api.Extensions;
 using Application.Constants;
+using Microsoft.OpenApi;
+using Infrastructure.Seeders.Plan;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,12 @@ builder.AddInfrastructureServices(builder.Configuration);
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var planSeeder = scope.ServiceProvider.GetRequiredService<IPlanSeeder>();
+    await planSeeder.SeedAsync();
+}
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
