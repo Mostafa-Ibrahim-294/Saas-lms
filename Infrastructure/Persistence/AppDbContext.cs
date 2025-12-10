@@ -14,6 +14,13 @@ namespace Infrastructure.Persistence
         internal DbSet<PlanPricing> PlanPricings { get; set; }
         internal DbSet<PlanFeature> plansFeature { get; set; }
         internal DbSet<Feature> Features  { get; set; }
+        internal DbSet<Tenant> Tenants { get; set; }
+        internal DbSet<TenantRole> TenantRoles { get; set; }
+        internal DbSet<TenantMember> TenantMembers { get; set; }
+        internal DbSet<Grade> Grades { get; set; }
+        internal DbSet<TeachingLevel> TeachingLevels { get; set; }
+        internal DbSet<Subject> Subjects { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

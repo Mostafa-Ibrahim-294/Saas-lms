@@ -65,6 +65,7 @@ namespace Infrastructure.Extensions
 
             builder.Services.AddScoped<ISeeder, Seeder>();
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+            builder.Services.AddScoped<ITenantRepository, TenantRepository>();
         }
     }
 }

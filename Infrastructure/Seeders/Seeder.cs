@@ -1,5 +1,7 @@
-﻿using Domain.Entites;
+﻿using Domain.Constants;
+using Domain.Entites;
 using Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,13 @@ namespace Infrastructure.Seeders
     internal sealed class Seeder : ISeeder
     {
         private readonly AppDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public Seeder(AppDbContext context)
+
+        public Seeder(AppDbContext context, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _roleManager = roleManager;
         }
 
         public async Task SeedAsync()
@@ -29,6 +34,21 @@ namespace Infrastructure.Seeders
                     var plans = GetPlans(features);
                     await _context.Plans.AddRangeAsync(plans);
                     await _context.SaveChangesAsync();
+                }
+                if (!await _context.Roles.AnyAsync())
+                {
+                    var OwnerRole = new IdentityRole
+                    {
+                        Name = RolesConstants.Owner,
+                        NormalizedName = RolesConstants.Owner.ToUpper()
+                    };
+                    var AssistantRole = new IdentityRole
+                    {
+                        Name = RolesConstants.Assistant,
+                        NormalizedName = RolesConstants.Assistant.ToUpper()
+                    };
+                    await _roleManager.CreateAsync(OwnerRole);
+                    await _roleManager.CreateAsync(AssistantRole);
                 }
             }
         }

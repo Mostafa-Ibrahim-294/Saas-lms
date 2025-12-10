@@ -13,6 +13,7 @@ namespace Domain.Entites
     public string LastActiveTenantSubDomain { get; set; } = string.Empty;
     public bool HasOnboarded { get; set; }
     public bool IsSubscribed { get; set; } 
+    public string? ProfilePicture { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
