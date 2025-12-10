@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Contracts.Repositories
 {
     public interface ITenantRepository
     {
-        Task<int> CreateTenantAsync (Tenant tenant, CancellationToken cancellationToken);
         Task<bool> IsSubDomainExistsAsync(string subDomain, CancellationToken cancellationToken);
-        Task SaveAsync(CancellationToken cancellationToken);
+        Task<int> CreateTenantAsync(Tenant tenant, CancellationToken cancellationToken);
         Task AddTenantRoles(int tenantId, CancellationToken cancellationToken);
-        Task<TenantRole?> FindTenantRoleByTenantId(int tenantId, string Name, CancellationToken cancellationToken);
-        Task AddTenantMemberAsync(TenantMember tenantMember, CancellationToken cancellationToken);
+        Task<TenantRole?> FindTenantRoleByTenantId(int tenantId, string roleName, CancellationToken cancellationToken);
+        Task AddTenantMemberAsync(TenantMember member, CancellationToken cancellationToken);
+        Task SaveAsync(CancellationToken cancellationToken);
+
+        Task BeginTransactionAsync(CancellationToken cancellationToken);
+        Task CommitTransactionAsync(CancellationToken cancellationToken);
+        Task RollbackTransactionAsync(CancellationToken cancellationToken);
     }
 }
