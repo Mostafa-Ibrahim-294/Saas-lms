@@ -33,6 +33,10 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
 
         public async Task<OneOf<OnboardingDto, Error>> Handle(CreateOnboardingCommand request, CancellationToken cancellationToken)
         {
+            request = request with
+            {
+                SubDomain = request.SubDomain.Trim().ToLowerInvariant()
+            };
             var isSubDomainExists = await _tenantRepository.IsSubDomainExistsAsync(request.SubDomain, cancellationToken);
             if (isSubDomainExists)
             {

@@ -7,8 +7,8 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
         public CreateOnboardingCommandValidator()
         {
             RuleFor(x => x.SubDomain)
-                .Must(s => s == s.ToLowerInvariant()).WithMessage("حروف صغيرة فقط")
-                .Matches("^[a-z0-9]+(?:-[a-z0-9]+)*$").WithMessage("SubDomain must contain only lowercase letters, numbers, and hyphens, and cannot start or end with a hyphen.");
+    .Matches("^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$")
+    .WithMessage("SubDomain must contain only letters, numbers, and hyphens, cannot start or end with a hyphen, and cannot contain special characters.");
         }
     }
 }
