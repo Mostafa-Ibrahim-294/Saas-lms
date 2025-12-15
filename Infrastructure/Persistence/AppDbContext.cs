@@ -20,6 +20,7 @@ namespace Infrastructure.Persistence
         internal DbSet<Grade> Grades { get; set; }
         internal DbSet<TeachingLevel> TeachingLevels { get; set; }
         internal DbSet<Subject> Subjects { get; set; }
+        internal DbSet<Permission> permissions { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
