@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using Application.Contracts.Files;
+using Hangfire;
 using Hangfire.PostgreSql;
 using Infrastructure.Health;
 using Infrastructure.Repositories;
@@ -34,6 +35,14 @@ namespace Infrastructure.Extensions
                 .BindConfiguration(nameof(MailOptions))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+            builder.Services.AddOptions<BunnyOptions>()
+                .BindConfiguration(nameof(BunnyOptions))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+            builder.Services.AddOptions<Common.Options.FileOptions>()
+                .BindConfiguration(nameof(Common.Options.FileOptions))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
             builder.Services.AddHangfire(config =>
                 config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
@@ -60,6 +69,8 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             builder.Services.AddScoped<ITenantRepository, TenantRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IFileRepository, FileRepository>();
+            builder.Services.AddScoped<IFileService, FileService>();
         }
     }
 }

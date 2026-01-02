@@ -21,7 +21,7 @@ namespace Infrastructure.Persistence
         internal DbSet<TeachingLevel> TeachingLevels { get; set; }
         internal DbSet<Subject> Subjects { get; set; }
         internal DbSet<Permission> permissions { get; set; }
-
+        internal DbSet<Domain.Entites.File> Files { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

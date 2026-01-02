@@ -10,7 +10,7 @@ namespace Application.Helpers
         {
             var basePath = AppContext.BaseDirectory;
             var path = Path.Combine(basePath, "Templates", $"{template}.html");
-            var body = File.ReadAllText(path);
+            var body = System.IO.File.ReadAllText(path);
             foreach (var placeholder in placeholders)
             {
                 body = body.Replace(placeholder.Key, placeholder.Value);

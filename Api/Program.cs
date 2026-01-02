@@ -9,8 +9,8 @@ using Infrastructure.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddApplicationServices();
 builder.AddPresentationServices();
+builder.AddApplicationServices();
 builder.AddInfrastructureServices(builder.Configuration);
 
 
