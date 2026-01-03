@@ -19,7 +19,7 @@ namespace Application.Features.Plan.DTOs
 
             CreateMap<PlanFeature, PlanFeatureResponse>()
                 .ForMember(dest => dest.FeatureName, opt => opt.MapFrom(src => src.Feature.Name))
-                .ForMember(dest => dest.FeatureDescription, opt => opt.MapFrom(src => src.Feature.Description))
+                .ForMember(dest => dest.FeatureDescription, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.FeatureKey, opt => opt.MapFrom(src => src.Feature.Key));
         }
     }

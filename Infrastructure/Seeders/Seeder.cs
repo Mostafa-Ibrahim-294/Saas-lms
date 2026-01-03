@@ -1,13 +1,6 @@
 ﻿using Domain.Constants;
-using Domain.Entites;
 using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Seeders
 {
@@ -70,123 +63,113 @@ namespace Infrastructure.Seeders
                     new Feature
                     {
                         Id = Guid.NewGuid(),
+                        Key = "student_limit",
                         Name = "عدد الطلاب",
-                        Description = "إدارة حتى 100 طالب في المنصة.",
-                        Key = "student_limit_basic",
                         CreatedAt = seedDate,
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "عدد الدروس",
-                        Description = "إنشاء ما يصل إلى 50 درسًا.",
-                        Key = "lesson_limit_basic",
+                        Key = "course_limit",
+                        Name = "عدد الكورسات",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "الاختبارات والواجبات",
-                        Description = "أنشئ اختبارات وواجبات بسيطة لتقييم الطلاب.",
-                        Key = "quiz_assignment_basic",
+                        Key = "videos_per_course_monthly",
+                        Name = "الفيديوهات لكل كورس شهريًا",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "دعم فني أساسي",
-                        Description = "دعم عبر البريد الإلكتروني خلال أيام العمل.",
-                        Key = "support_basic",
-                        CreatedAt = seedDate
-                    },
-
-                    new Feature
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "عدد الطلاب",
-                        Description = "إدارة حتى 500 طالب.",
-                        Key = "student_limit_growth",
+                        Key = "video_storage_gb",
+                        Name = "مساحة تخزين الفيديو",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "عدد الدروس والدورات",
-                        Description = "إنشاء حتى 200 درس و10 دورات متكاملة.",
-                        Key = "lesson_limit_growth",
+                        Key = "ai_quiz_generation",
+                        Name = "توليد اختبارات بالذكاء الاصطناعي",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "الاختبارات الذكية",
-                        Description = "توليد اختبارات تلقائيًا باستخدام الذكاء الاصطناعي.",
-                        Key = "ai_quiz_generation_growth",
+                        Key = "ai_exam_creation",
+                        Name = "إنشاء امتحانات كاملة",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "التحليلات والتقارير",
-                        Description = "احصل على تقارير مفصلة حول تقدم الطلاب وتفاعلهم.",
-                        Key = "analytics_growth",
+                        Key = "ai_lesson_outline",
+                        Name = "إنشاء مخطط درس بالذكاء الاصطناعي",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "دعم فني متقدم",
-                        Description = "دعم سريع عبر البريد الإلكتروني والدردشة.",
-                        Key = "support_growth",
-                        CreatedAt = seedDate
-                    },
-
-                    new Feature
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "عدد الطلاب ",
-                        Description = "إدارة عدد 1000 من الطلاب.",
-                        Key = "student_limit_pro",
+                        Key = "ai_student_insights",
+                        Name = "تحليل أداء الطلاب بالذكاء الاصطناعي",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "عدد الدروس والدورات غير محدود",
-                        Description = "أنشئ عددًا غير محدود من الدروس والدورات.",
-                        Key = "lesson_limit_pro",
+                        Key = "ai_question_bank",
+                        Name = "بنك أسئلة بالذكاء الاصطناعي",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
+                        Key = "live_sessions",
                         Name = "جلسات بث مباشر",
-                        Description = "قم ببث محاضرات مباشرة والتفاعل مع الطلاب في الوقت الفعلي.",
-                        Key = "live_sessions_pro",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "موقع مخصص للأكاديمية",
-                        Description = "أنشئ موقعك التعليمي الكامل بعلامتك التجارية الخاصة.",
-                        Key = "custom_website_pro",
+                        Key = "analytics",
+                        Name = "تحليلات الطلاب",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "ذكاء اصطناعي متقدم",
-                        Description = "ميزات AI لإنشاء الدروس، الكورسات، والأسئلة تلقائيًا.",
-                        Key = "ai_features_pro",
+                        Key = "certificates",
+                        Name = "شهادات إتمام",
                         CreatedAt = seedDate
                     },
                     new Feature
                     {
                         Id = Guid.NewGuid(),
-                        Name = "دعم فني على مدار الساعة",
-                        Description = "دعم متميز متوفر 24/7 عبر جميع القنوات.",
-                        Key = "support_pro",
+                        Key = "custom_certificates",
+                        Name = "شهادات مخصصة",
+                        CreatedAt = seedDate
+                    },
+                    new Feature
+                    {
+                        Id = Guid.NewGuid(),
+                        Key = "custom_domain",
+                        Name = "دومين مخصص",
+                        CreatedAt = seedDate
+                    },
+                    new Feature
+                    {
+                        Id = Guid.NewGuid(),
+                        Key = "support",
+                        Name = "الدعم الفني",
+                        CreatedAt = seedDate
+                    },
+                    new Feature
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "مدة التجربة",
+                        Key = "trial_duration",
                         CreatedAt = seedDate
                     }
                 };
@@ -196,51 +179,42 @@ namespace Infrastructure.Seeders
         {
             var baseDate = DateTime.UtcNow;
 
-            var studentLimitFeatureBasic = features.First(f => f.Key == "student_limit_basic");
-            var lessonLimitFeatureBasic = features.First(f => f.Key == "lesson_limit_basic");
-            var quizAssignmentFeatureBasic = features.First(f => f.Key == "quiz_assignment_basic");
-            var supportFeatureBasic = features.First(f => f.Key == "support_basic");
-
-            var studentLimitFeatureGrowth = features.First(f => f.Key == "student_limit_growth");
-            var lessonLimitFeatureGrowth = features.First(f => f.Key == "lesson_limit_growth");
-            var aiQuizFeatureGrowth = features.First(f => f.Key == "ai_quiz_generation_growth");
-            var analyticsFeatureGrowth = features.First(f => f.Key == "analytics_growth");
-            var supportFeatureGrowth = features.First(f => f.Key == "support_growth");
-
-            var studentLimitFeaturePro = features.First(f => f.Key == "student_limit_pro");
-            var lessonLimitFeaturePro = features.First(f => f.Key == "lesson_limit_pro");
-            var liveSessionsFeaturePro = features.First(f => f.Key == "live_sessions_pro");
-            var customWebsiteFeaturePro = features.First(f => f.Key == "custom_website_pro");
-            var aiFeaturesFeaturePro = features.First(f => f.Key == "ai_features_pro");
-            var supportFeaturePro = features.First(f => f.Key == "support_pro");
+            var studentLimitFeature = features.First(f => f.Key == "student_limit");
+            var courseLimitFeature = features.First(f => f.Key == "course_limit");
+            var videosPerCourseMonthlyFeature = features.First(f => f.Key == "videos_per_course_monthly");
+            var videoStorageGbFeature = features.First(f => f.Key == "video_storage_gb");
+            var aiQuizGenerationFeature = features.First(f => f.Key == "ai_quiz_generation");
+            var aiExamCreationFeature = features.First(f => f.Key == "ai_exam_creation");
+            var aiLessonOutlineFeature = features.First(f => f.Key == "ai_lesson_outline");
+            var aiStudentInsightsFeature = features.First(f => f.Key == "ai_student_insights");
+            var aiQuestionBankFeature = features.First(f => f.Key == "ai_question_bank");
+            var liveSessionsFeature = features.First(f => f.Key == "live_sessions");
+            var analyticsFeature = features.First(f => f.Key == "analytics");
+            var certificatesFeature = features.First(f => f.Key == "certificates");
+            var customCertificatesFeature = features.First(f => f.Key == "custom_certificates");
+            var customDomainFeature = features.First(f => f.Key == "custom_domain");
+            var supportFeature = features.First(f => f.Key == "support");
+            var trialDurationFeature = features.First(f => f.Key == "trial_duration");
 
             return new List<Plan>
                 {
-                    new Plan
+                // ================= FREE TRIAL =================
+                new Plan
                     {
                         Id = Guid.NewGuid(),
-                        Name = "الخطة الأساسية",
-                        Slug = "basic",
-                        Description = "ابدأ رحلتك التعليمية بالأدوات الأساسية لإنشاء الدروس وإدارة الطلاب بسهولة.",
+                        Name = "التجربة المجانية",
+                        Slug = "free-trial",
+                        Description = "جرب المنصة مجانًا لمدة 15 يومًا بدون الحاجة لبطاقة ائتمان.",
                         CreatedAt = baseDate,
                         PlanPricings = new List<PlanPricing>
                         {
                             new PlanPricing
                             {
                                 Id = Guid.NewGuid(),
-                                Price = 1200m,
+                                Price = 0m,
                                 Currency = "EGP",
-                                BillingCycle = BillingCycle.Monthly,
+                                BillingCycle = BillingCycle.Trial,
                                 DiscountPercent = 0,
-                                CreatedAt = baseDate
-                            },
-                            new PlanPricing
-                            {
-                                Id = Guid.NewGuid(),
-                                Price = 13000m,
-                                Currency = "EGP",
-                                BillingCycle = BillingCycle.Annually,
-                                DiscountPercent = 10,
                                 CreatedAt = baseDate
                             }
                         },
@@ -249,47 +223,76 @@ namespace Infrastructure.Seeders
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = studentLimitFeatureBasic.Id,
-                                LimitValue = 100,
+                                FeatureId = studentLimitFeature.Id,
+                                Description = "حتى 30 طالبًا.",
+                                LimitValue = 30,
                                 LimitUnit = "طالب"
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = lessonLimitFeatureBasic.Id,
-                                LimitValue = 50,
-                                LimitUnit = "درس"
+                                FeatureId = courseLimitFeature.Id,
+                                Description = "كورس واحد فقط.",
+                                LimitValue = 1,
+                                LimitUnit = "كورس"
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = quizAssignmentFeatureBasic.Id,
-                                LimitValue = 1,
-                                LimitUnit = "أساسي"
+                                FeatureId = videosPerCourseMonthlyFeature.Id,
+                                Description = "حتى 5 فيديوهات فقط.",
+                                LimitValue = 5,
+                                LimitUnit = "فيديو"
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = supportFeatureBasic.Id,
+                                FeatureId = videoStorageGbFeature.Id,
+                                Description = "حتى 5 جيجابايت.",
+                                LimitValue = 5,
+                                LimitUnit = "GB"
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiQuizGenerationFeature.Id,
+                                Description = "حتى 3 اختبارات .",
+                                LimitValue = 3,
+                                LimitUnit = "اختبار"
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = trialDurationFeature.Id,
+                                Description = "15 يومًا مجانية.",
+                                LimitValue = 15,
+                                LimitUnit = "يوم"
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = supportFeature.Id,
+                                Description = "دعم محدود عبر البريد الإلكتروني.",
                                 LimitValue = 1,
-                                LimitUnit = "أساسي"
+                                LimitUnit = "محدود"
                             }
                         }
                     },
 
-                    new Plan
+                // ================= BASIC =================
+                new Plan
                     {
                         Id = Guid.NewGuid(),
-                        Name = "خطة النمو",
-                        Slug = "growth",
-                        Description = "طور أكاديميتك مع مزيد من الإمكانيات والمرونة. تشمل جميع ميزات الخطة الأساسية.",
+                        Name = "الخطة الأساسية",
+                        Slug = "basic",
+                        Description = "مناسبة للمدرسين الأفراد لإدارة عدد محدود من الطلاب ونشر الدروس المسجلة بسهولة.",
                         CreatedAt = baseDate,
                         PlanPricings = new List<PlanPricing>
                         {
                             new PlanPricing
                             {
                                 Id = Guid.NewGuid(),
-                                Price = 2990m,
+                                Price = 1500m,
                                 Currency = "EGP",
                                 BillingCycle = BillingCycle.Monthly,
                                 DiscountPercent = 0,
@@ -298,7 +301,7 @@ namespace Infrastructure.Seeders
                             new PlanPricing
                             {
                                 Id = Guid.NewGuid(),
-                                Price = 29900m,
+                                Price = 15000m,
                                 Currency = "EGP",
                                 BillingCycle = BillingCycle.Annually,
                                 DiscountPercent = 15,
@@ -310,54 +313,84 @@ namespace Infrastructure.Seeders
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = studentLimitFeatureGrowth.Id,
-                                LimitValue = 500,
-                                LimitUnit = "طالب",
+                                FeatureId = studentLimitFeature.Id,
+                                Description = "حتى 150 طالبًا.",
+                                LimitValue = 150,
+                                LimitUnit = "طالب"
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = lessonLimitFeatureGrowth.Id,
-                                LimitValue = 200,
-                                LimitUnit = "درس",
+                                FeatureId = courseLimitFeature.Id,
+                                Description = "إنشاء حتى 3 كورسات.",
+                                LimitValue = 3,
+                                LimitUnit = "كورس"
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = aiQuizFeatureGrowth.Id,
+                                FeatureId = videosPerCourseMonthlyFeature.Id,
+                                Description = "حتى 8 فيديوهات شهريًا لكل كورس.",
+                                LimitValue = 8,
+                                LimitUnit = "فيديو"
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = videoStorageGbFeature.Id,
+                                Description = "حتى 30 جيجابايت.",
+                                LimitValue = 30,
+                                LimitUnit = "GB"
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiQuizGenerationFeature.Id,
+                                Description = "حتى 10 اختبارات شهريًا.",
+                                LimitValue = 10,
+                                LimitUnit = "شهريًا"
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiLessonOutlineFeature.Id,
+                                Description = "حتى 15 مرة شهريًا.",
+                                LimitValue = 15,
+                                LimitUnit = "شهريًا"
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = certificatesFeature.Id,
+                                Description = "شهادات أساسية للطلاب.",
                                 LimitValue = 1,
-                                LimitUnit = "نشط",
+                                LimitUnit = "أساسي"
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = analyticsFeatureGrowth.Id,
+                                FeatureId = supportFeature.Id,
+                                Description = "دعم عبر البريد الإلكتروني.",
                                 LimitValue = 1,
-                                LimitUnit = "نشط",
-                            },
-                            new PlanFeature
-                            {
-                                Id = Guid.NewGuid(),
-                                FeatureId = supportFeatureGrowth.Id,
-                                LimitValue = 1,
-                                LimitUnit = "متقدم",
+                                LimitUnit = "أساسي"
                             }
                         }
                     },
 
-                    new Plan
+                // ================= GROWTH =================
+                new Plan
                     {
                         Id = Guid.NewGuid(),
-                        Name = "الخطة الاحترافية",
-                        Slug = "pro",
-                        Description = "أقصى قدر من المرونة والميزات المخصصة. تشمل جميع ميزات خطط النمو والأساسية.",
+                        Name = "خطة النمو",
+                        Slug = "growth",
+                        Description = "مناسبة للمدرسين أصحاب العدد المتوسط من الطلاب مع أدوات ذكاء اصطناعي وتحليلات متقدمة.",
                         CreatedAt = baseDate,
                         PlanPricings = new List<PlanPricing>
                         {
                             new PlanPricing
                             {
                                 Id = Guid.NewGuid(),
-                                Price = 6990m,
+                                Price = 4000m,
                                 Currency = "EGP",
                                 BillingCycle = BillingCycle.Monthly,
                                 DiscountPercent = 0,
@@ -366,7 +399,7 @@ namespace Infrastructure.Seeders
                             new PlanPricing
                             {
                                 Id = Guid.NewGuid(),
-                                Price = 69900m,
+                                Price = 40000m,
                                 Currency = "EGP",
                                 BillingCycle = BillingCycle.Annually,
                                 DiscountPercent = 20,
@@ -378,42 +411,210 @@ namespace Infrastructure.Seeders
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = studentLimitFeaturePro.Id,
-                                LimitValue = 1000,
+                                FeatureId = studentLimitFeature.Id,
+                                Description = "حتى 500 طالب.",
+                                LimitValue = 500,
                                 LimitUnit = "طالب",
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = lessonLimitFeaturePro.Id,
+                                FeatureId = courseLimitFeature.Id,
+                                Description = "حتى 6 كورسات.",
+                                LimitValue = 6,
+                                LimitUnit = "كورس",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = videosPerCourseMonthlyFeature.Id,
+                                Description = "حتى 8 فيديوهات شهريًا لكل كورس.",
+                                LimitValue = 8,
+                                LimitUnit = "فيديو",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = videoStorageGbFeature.Id,
+                                Description = "حتى 80 جيجابايت.",
+                                LimitValue = 80,
+                                LimitUnit = "GB",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiQuizGenerationFeature.Id,
+                                Description = "حتى 50 اختبارًا شهريًا.",
+                                LimitValue = 50,
+                                LimitUnit = "شهريًا",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiExamCreationFeature.Id,
+                                Description = "حتى 10 امتحانات شهريًا.",
+                                LimitValue = 10,
+                                LimitUnit = "شهريًا",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiLessonOutlineFeature.Id,
+                                Description = "حتى 60 مرة شهريًا.",
+                                LimitValue = 60,
+                                LimitUnit = "شهريًا",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiQuestionBankFeature.Id,
+                                Description = "حتى 200 سؤال شهريًا.",
+                                LimitValue = 200,
+                                LimitUnit = "شهريًا",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = analyticsFeature.Id,
+                                Description = "تقارير متقدمة عن التقدم والمشاهدة.",
+                                LimitValue = 1,
+                                LimitUnit = "متقدم",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = customCertificatesFeature.Id,
+                                Description = "شهادات بتصميم مخصص.",
+                                LimitValue = 1,
+                                LimitUnit = "مخصص",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = supportFeature.Id,
+                                Description = "دعم عبر البريد والدردشة.",
+                                LimitValue = 1,
+                                LimitUnit = "متقدم",
+                            }
+                        }
+                    },
+
+                // ================= PRO =================
+                new Plan
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "الخطة الاحترافية",
+                        Slug = "pro",
+                        Description = "للمدرسين ذوي الأعداد الكبيرة من الطلاب مع إمكانيات كاملة وذكاء اصطناعي متقدم.",
+                        CreatedAt = baseDate,
+                        PlanPricings = new List<PlanPricing>
+                        {
+                            new PlanPricing
+                            {
+                                Id = Guid.NewGuid(),
+                                Price = 10000m,
+                                Currency = "EGP",
+                                BillingCycle = BillingCycle.Monthly,
+                                DiscountPercent = 0,
+                                CreatedAt = baseDate
+                            },
+                            new PlanPricing
+                            {
+                                Id = Guid.NewGuid(),
+                                Price = 100000m,
+                                Currency = "EGP",
+                                BillingCycle = BillingCycle.Annually,
+                                DiscountPercent = 25,
+                                CreatedAt = baseDate
+                            }
+                        },
+                        PlanFeatures = new List<PlanFeature>
+                        {
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = studentLimitFeature.Id,
+                                Description = "حتى 1500 طالب.",
+                                LimitValue = 1500,
+                                LimitUnit = "طالب",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = courseLimitFeature.Id,
+                                Description = "عدد غير محدود من الكورسات.",
                                 LimitValue = -1,
                                 LimitUnit = "غير محدود",
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = liveSessionsFeaturePro.Id,
+                                FeatureId = videosPerCourseMonthlyFeature.Id,
+                                Description = "حتى 8 فيديوهات شهريًا لكل كورس.",
+                                LimitValue = 8,
+                                LimitUnit = "فيديو",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = videoStorageGbFeature.Id,
+                                Description = "حتى 200 جيجابايت.",
+                                LimitValue = 200,
+                                LimitUnit = "GB",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiQuizGenerationFeature.Id,
+                                Description = "عدد غير محدود.",
+                                LimitValue = -1,
+                                LimitUnit = "غير محدد",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiExamCreationFeature.Id,
+                                Description = "عدد غير محدود.",
+                                LimitValue = -1,
+                                LimitUnit = "غير محدد",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiLessonOutlineFeature.Id,
+                                Description = "عدد غير محدود.",
+                                LimitValue = -1,
+                                LimitUnit = "غير محدد",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = aiStudentInsightsFeature.Id,
+                                Description = "تحليلات ذكية متقدمة.",
                                 LimitValue = 1,
                                 LimitUnit = "نشط",
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = customWebsiteFeaturePro.Id,
-                                LimitValue = 1,
-                                LimitUnit = "موقع",
-                            },
-                            new PlanFeature
-                            {
-                                Id = Guid.NewGuid(),
-                                FeatureId = aiFeaturesFeaturePro.Id,
+                                FeatureId = liveSessionsFeature.Id,
+                                Description = "محاضرات مباشرة مع الطلاب.",
                                 LimitValue = 1,
                                 LimitUnit = "نشط",
                             },
                             new PlanFeature
                             {
                                 Id = Guid.NewGuid(),
-                                FeatureId = supportFeaturePro.Id,
+                                FeatureId = customCertificatesFeature.Id,
+                                Description = "ربط دومين خاص بالأكاديمية.",
+                                LimitValue = 1,
+                                LimitUnit = "مسموح",
+                            },
+                            new PlanFeature
+                            {
+                                Id = Guid.NewGuid(),
+                                FeatureId = supportFeature.Id,
+                                Description = "دعم مميز 24/7.",
                                 LimitValue = 1,
                                 LimitUnit = "متميز",
                             }

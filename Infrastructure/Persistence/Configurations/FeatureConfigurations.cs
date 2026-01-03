@@ -15,10 +15,6 @@ namespace Infrastructure.Persistence.Configurations
                    .HasMaxLength(200)
                    .IsRequired();
 
-            builder.Property(f => f.Description)
-                   .HasMaxLength(1000)
-                   .IsRequired();
-
             builder.Property(f => f.Key) 
                    .HasMaxLength(100)
                    .IsRequired();

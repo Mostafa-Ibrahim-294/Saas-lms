@@ -21,6 +21,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(pf => pf.Note)
                    .HasMaxLength(500);
 
+            builder.Property(f => f.Description)
+                   .HasMaxLength(1000)
+                   .IsRequired();
+
             builder.HasOne(pf => pf.Plan)
                    .WithMany(p => p.PlanFeatures)
                    .HasForeignKey(pf => pf.PlanId)
