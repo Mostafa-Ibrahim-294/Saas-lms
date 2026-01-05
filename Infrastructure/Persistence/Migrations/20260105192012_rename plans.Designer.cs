@@ -3,17 +3,20 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260105192012_rename plans")]
+    partial class renameplans
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -435,53 +438,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("EndsAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsAutoRenew")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("PlanPricingId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Provider")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProviderSubscriptionId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("StartsAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlanPricingId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Subscriptions");
-                });
-
             modelBuilder.Entity("Domain.Entites.TeachingLevel", b =>
                 {
                     b.Property<int>("Id")
@@ -873,25 +829,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Tenant");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Subscription", b =>
-                {
-                    b.HasOne("Domain.Entites.PlanPricing", "PlanPricing")
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("PlanPricingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PlanPricing");
-
-                    b.Navigation("Tenant");
-                });
-
             modelBuilder.Entity("Domain.Entites.TeachingLevel", b =>
                 {
                     b.HasOne("Domain.Entites.Tenant", "Tenant")
@@ -1024,11 +961,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("PlanFeatures");
 
                     b.Navigation("PlanPricings");
-                });
-
-            modelBuilder.Entity("Domain.Entites.PlanPricing", b =>
-                {
-                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("Domain.Entites.Tenant", b =>

@@ -25,5 +25,11 @@ namespace Infrastructure.Repositories
                     .ProjectTo<PlanResponse>(_mapper.ConfigurationProvider) 
                     .ToListAsync(cancellationToken);
         }
+
+        public async Task<Guid> GetFreePlanPricingIdAsync(CancellationToken cancellationToken)
+        {
+            var planPricing = await _context.PlanPricings.FirstOrDefaultAsync(p => p.Price == 0);
+            return planPricing!.Id;
+        }
     }
 }

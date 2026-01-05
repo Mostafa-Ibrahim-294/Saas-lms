@@ -1,5 +1,7 @@
-﻿using Application.Contracts.Authentication;
+﻿using Application.Constants;
+using Application.Contracts.Authentication;
 using Application.Contracts.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,26 +15,41 @@ namespace Application.Features.Auth.Commands.VerifyOtp
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRefreshRepository _refreshRepository;
         private readonly ITokenProvider _tokenProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public VerifyOtpCommandHandler(HybridCache hybridCache, UserManager<ApplicationUser> userManager,
-            IRefreshRepository refreshRepository, ITokenProvider tokenProvider)
+            IRefreshRepository refreshRepository, ITokenProvider tokenProvider, IHttpContextAccessor httpContextAccessor)
         {
             _hybridCache = hybridCache;
             _userManager = userManager;
             _refreshRepository = refreshRepository;
             _tokenProvider = tokenProvider;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<OneOf<bool, Error>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
         {
-            var email = await _hybridCache.GetOrCreateAsync(request.OtpCode, async entry =>
+            var verificationCode = _httpContextAccessor?.HttpContext?.Request.Cookies[AuthConstants.VerificationCode];
+            if (verificationCode == null)
+            {
+                return UserErrors.InvalidVerificationToken;
+            }
+            var email = await _hybridCache.GetOrCreateAsync(verificationCode, async entry =>
             {
                return await Task.FromResult<string?>(null);
             }, cancellationToken: cancellationToken);
             if (email is null)
             {
+                return UserErrors.InvalidVerificationToken;
+            }
+            if (request.OtpCode != await _hybridCache.GetOrCreateAsync(email, async entry =>
+            {
+                return await Task.FromResult<string?>(null);
+            }, cancellationToken: cancellationToken))
+            {
                 return UserErrors.InvalidOtpCode;
             }
-
+            _httpContextAccessor?.HttpContext?.Response.Cookies.Delete(AuthConstants.VerificationCode);
             await _hybridCache.RemoveAsync(email);
+            await _hybridCache.RemoveAsync(verificationCode);
             var user = await _userManager.FindByEmailAsync(email);
             user?.EmailConfirmed = true;
             _tokenProvider.GenerateJwtToken(user!);

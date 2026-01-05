@@ -19,5 +19,6 @@ namespace Domain.Entites
 
         public Guid PlanId { get; set; } 
         public Plan Plan { get; set; } = null!;
+        public ICollection<Subscription> Subscriptions { get; set; } = [];
     }
 }

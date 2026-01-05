@@ -30,8 +30,7 @@ namespace Application.Features.Users.Queries.GetTenants
                 async ct => await _userRepository.GetTenantsAsync(userId, ct),
                 new HybridCacheEntryOptions
                 {
-                    Expiration = TimeSpan.FromHours(1),
-                    LocalCacheExpiration = TimeSpan.FromHours(1)
+                    Expiration = TimeSpan.FromHours(1)
                 },
                 cancellationToken: cancellationToken
             );

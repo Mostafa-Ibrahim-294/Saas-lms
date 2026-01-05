@@ -20,5 +20,6 @@ namespace Domain.Entites
         public ICollection<TenantMember> TenantMembers { get; set; } = new List<TenantMember>();
         public ICollection<TeachingLevel> TeachingLevels { get; set; } = new List<TeachingLevel>();
         public ICollection<Subject> Subjects { get; set; } = new List<Subject>();
+        public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     }
 }

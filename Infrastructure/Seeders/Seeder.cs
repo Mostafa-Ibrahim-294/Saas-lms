@@ -19,7 +19,7 @@ namespace Infrastructure.Seeders
         {
             if (await _context.Database.CanConnectAsync())
             {
-                if (!_context.Plans.Any())
+                if (!await _context.Plans.AnyAsync())
                 {
                     var features = GetFeatures();
                     await _context.Features.AddRangeAsync(features);
@@ -29,27 +29,11 @@ namespace Infrastructure.Seeders
                 }
 
                 // Seed permissions (idempotent on empty table)
-                if (!_context.permissions.Any())
+                if (!await _context.Permissions.AnyAsync())
                 {
                     var permissions = GetPermissions();
-                    await _context.permissions.AddRangeAsync(permissions);
+                    await _context.Permissions.AddRangeAsync(permissions);
                     await _context.SaveChangesAsync();
-                }
-
-                if (!await _context.Roles.AnyAsync())
-                {
-                    var ownerRole = new IdentityRole
-                    {
-                        Name = RolesConstants.Owner,
-                        NormalizedName = RolesConstants.Owner.ToUpper()
-                    };
-                    var assistantRole = new IdentityRole
-                    {
-                        Name = RolesConstants.Assistant,
-                        NormalizedName = RolesConstants.Assistant.ToUpper()
-                    };
-                    await _roleManager.CreateAsync(ownerRole);
-                    await _roleManager.CreateAsync(assistantRole);
                 }
             }
         }
@@ -682,6 +666,15 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "CHANGE_BRANDING", Name = "تغيير الهوية البصرية", Description = "السماح بتغيير الألوان والشعار", Module = "general" },
                     new Permission { Id = "MANAGE_INTEGRATIONS", Name = "إدارة التكاملات", Description = "السماح بإدارة ربط الخدمات الخارجية", Module = "general" },
                     new Permission { Id = "MANAGE_CALENDAR", Name = "إدارة التقويم", Description = "السماح بإدارة أحداث التقويم", Module = "general" },
+                    new Permission { Id = "CREATE_ASSIGNMENTS", Name = "إنشاء الواجبات", Description = "السماح بإنشاء واجبات جديدة", Module = "assignments" },
+                    new Permission { Id = "VIEW_ASSIGNMENTS", Name = "عرض الواجبات", Description = "السماح بمشاهدة قائمة الواجبات", Module = "assignments" },
+                    new Permission { Id = "MANAGE_ASSIGNMENTS", Name = "إدارة الواجبات", Description = "السماح بإضافة وتعديل وحذف الواجبات", Module = "assignments" },
+                    new Permission { Id = "GRADE_ASSIGNMENTS", Name = "تقييم الواجبات", Description = "السماح بتقييم الواجبات submitted من الطلاب", Module = "assignments" },
+                    new Permission { Id = "VIEW_MEMBER_PROFILE", Name = "عرض الملف الشخصي للأعضاء", Description = "السماح بمشاهدة ملفات الأعضاء الشخصية", Module = "members" },
+                    new Permission { Id = "CREATE_QUIZZES", Name = "إنشاء الاختبارات", Description = "السماح بإنشاء اختبارات جديدة", Module = "courses" },
+                    new Permission { Id = "VIEW_QUIZZES", Name = "عرض الاختبارات", Description = "السماح بمشاهدة قائمة الاختبارات", Module = "courses" },
+                    new Permission { Id = "VIEW_QUESTION_BANK", Name = "عرض بنك الأسئلة", Description = "السماح بالوصول إلى بنك الأسئلة", Module = "courses" },
+                    new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"}
                 };
         }
     }

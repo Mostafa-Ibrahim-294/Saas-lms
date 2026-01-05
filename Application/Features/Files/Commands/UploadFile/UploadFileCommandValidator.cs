@@ -33,9 +33,6 @@ namespace Application.Features.Files.Commands.UploadFile
             });
             RuleFor(x => x.Folder)
                 .NotEmpty().WithMessage("Folder cannot be empty.");
-
-
-
         }
 
     }

@@ -37,8 +37,7 @@ namespace Application.Features.Tenants.Queries.GetLastTenant
                 async ct => await _tenantRepository.GetLastTenantAsync(sunDomain, ct),
                 new HybridCacheEntryOptions
                 {
-                    Expiration = TimeSpan.FromHours(1),
-                    LocalCacheExpiration = TimeSpan.FromHours(1)
+                    Expiration = TimeSpan.FromHours(1)
                 },
                 cancellationToken: cancellationToken
             );

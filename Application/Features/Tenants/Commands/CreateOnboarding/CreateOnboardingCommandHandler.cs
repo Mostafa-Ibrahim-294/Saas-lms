@@ -14,6 +14,8 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
     internal sealed class CreateOnboardingCommandHandler : IRequestHandler<CreateOnboardingCommand, OneOf<OnboardingDto, Error>>
     {
         private readonly ITenantRepository _tenantRepository;
+        private readonly IPlanRepository _planRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,7 +23,8 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
         private readonly HybridCache _hybridCache;
 
         public CreateOnboardingCommandHandler(ITenantRepository tenantRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor
-            , UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId, HybridCache hybridCache)
+            , UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId, HybridCache hybridCache,
+            IPlanRepository planRepository, ISubscriptionRepository subscriptionRepository)
         {
             _tenantRepository = tenantRepository;
             _mapper = mapper;
@@ -29,6 +32,8 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
             _userManager = userManager;
             _currentUserId = currentUserId;
             _hybridCache = hybridCache;
+            _planRepository = planRepository;
+            _subscriptionRepository = subscriptionRepository;
         }
 
         public async Task<OneOf<OnboardingDto, Error>> Handle(CreateOnboardingCommand request, CancellationToken cancellationToken)
@@ -49,23 +54,32 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 var ownerId = _currentUserId.GetUserId();
                 var user = await _userManager.FindByIdAsync(ownerId!);
 
-                var tenant = _mapper.Map<Tenant>(request);
-                tenant.OwnerId = ownerId!;
+                var tenant = _mapper.Map<Tenant>(request, opt =>
+                    opt.AfterMap((src, dest) =>
+                    {
+                        dest.OwnerId = ownerId!;
+                    })
+                );
+              
                 var createdTenantId = await _tenantRepository.CreateTenantAsync(tenant, cancellationToken);
 
                 _mapper.Map(request, user!);
+                var freePlanPricingId = await _planRepository.GetFreePlanPricingIdAsync(cancellationToken);
+                await _subscriptionRepository.CreateFreeSubcscription(createdTenantId, freePlanPricingId, cancellationToken);
 
-                await _tenantRepository.AddTenantRoles(createdTenantId, cancellationToken);
+                var (ownerRoleId, assistantRoleId) = await _tenantRepository.AddTenantRoles(createdTenantId, cancellationToken);
                 await _tenantRepository.SaveAsync(cancellationToken);
 
-                var tenantMember = _mapper.Map<TenantMember>(request);
-                tenantMember.UserId = ownerId!;
-                var tenantRole = await _tenantRepository.FindTenantRoleByTenantId(createdTenantId, RolesConstants.Owner, cancellationToken);
-                tenantMember.TenantRole = tenantRole!;
-                tenantMember.TenantId = createdTenantId;
+                var tenantMember = _mapper.Map<TenantMember>(request, opt =>
+                    opt.AfterMap((src, dest) =>
+                    {
+                        dest.TenantId = createdTenantId;
+                        dest.UserId = ownerId!;
+                        dest.TenantRoleId = ownerRoleId;
+                    })
+                );
                 await _tenantRepository.AddTenantMemberAsync(tenantMember, cancellationToken);
-                await _userManager.AddToRoleAsync(user!, RolesConstants.Owner);
-                
+                await _tenantRepository.AssignAssistantPermissions(assistantRoleId, cancellationToken);
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
 
                 await _hybridCache.RemoveAsync($"{CacheKeysConstants.LastTenantKey}_{ownerId}", cancellationToken);

@@ -1,5 +1,12 @@
-﻿using Application.Contracts.Authentication;
+﻿using Application.Constants;
+using Application.Contracts.Authentication;
 using Application.Contracts.Repositories;
+using Application.Helpers;
+using Hangfire;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,24 +15,33 @@ namespace Application.Features.Auth.Commands.Login
 {
     internal sealed class LoginCommandHandler : IRequestHandler<LoginCommand, OneOf<LoginDto, Error>>
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRefreshRepository _refreshRepository;
         private readonly IMapper _mapper;
         private readonly ITokenProvider _tokenProvider;
+        private readonly HybridCache _hybridCache;
+        private readonly ILogger<LoginCommandHandler> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IEmailSender _emailSender;
         public LoginCommandHandler(
-            SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IRefreshRepository refreshRepository,
             IMapper mapper,
-            ITokenProvider tokenProvider
+            ITokenProvider tokenProvider,
+            HybridCache hybridCache,
+            ILogger<LoginCommandHandler> logger,
+            IHttpContextAccessor httpContextAccessor,
+            IEmailSender emailSender
             )
         {
-            _signInManager = signInManager;
             _userManager = userManager;
             _refreshRepository = refreshRepository;
             _mapper = mapper;
             _tokenProvider = tokenProvider;
+            _hybridCache = hybridCache;
+            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            _emailSender = emailSender; 
         }
 
         public async Task<OneOf<LoginDto, Error>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -35,20 +51,28 @@ namespace Application.Features.Auth.Commands.Login
             {
                 return UserErrors.InvalidCredentials;
             }
-            if(!user.EmailConfirmed)
+            var signInResult = await _userManager.CheckPasswordAsync(user, request.Password);
+            if (!signInResult)
             {
+                return UserErrors.InvalidCredentials;
+            }
+            if (!user.EmailConfirmed)
+            {
+                var otpCode = await GenerateOtpHelper.GenerateOtp(request.Email, _hybridCache, _httpContextAccessor, cancellationToken);
+                var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(EmailConstants.OtpTemplate, new Dictionary<string, string>
+            {
+                { "{{OTP_CODE}}", otpCode },
+                { "{{UserName}}", user.FirstName }
+            });
+                _logger.LogInformation("Enqueuing email confirmation job for {Email} and otp is {otpCode}", request.Email, otpCode);
+                BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.Email, EmailConstants.EmailConfirmationSubject, emailBody));
                 return UserErrors.EmailNotConfirmed;
             }
-            var signInResult = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (signInResult)
-            {
-                _tokenProvider.GenerateJwtToken(user!); 
-                var refreshToken = _tokenProvider.GenerateRefreshToken();
-                _refreshRepository.AddRefreshToken(user, refreshToken.token, refreshToken.expiresOn, cancellationToken);
-                await _refreshRepository.SaveAsync(cancellationToken);
-                return _mapper.Map<LoginDto>(user);
-            }
-            return UserErrors.InvalidCredentials;
+            _tokenProvider.GenerateJwtToken(user!);
+            var refreshToken = _tokenProvider.GenerateRefreshToken();
+            _refreshRepository.AddRefreshToken(user, refreshToken.token, refreshToken.expiresOn, cancellationToken);
+            await _refreshRepository.SaveAsync(cancellationToken);
+            return _mapper.Map<LoginDto>(user);
         }
     }
 }

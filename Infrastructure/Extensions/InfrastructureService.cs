@@ -9,6 +9,7 @@ using Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -70,6 +71,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ITenantRepository, TenantRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
+            builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<IFileService, FileService>();
         }
     }

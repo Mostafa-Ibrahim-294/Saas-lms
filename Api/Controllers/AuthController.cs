@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Auth.Commands.Logout;
+using Application.Features.Auth.Commands.ResendOtp;
 
 namespace Api.Controllers
 {
@@ -27,6 +28,15 @@ namespace Api.Controllers
             var result = await _mediator.Send(signupCommand, cancellationToken);
             return result.Match(
                 success => Created(),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ResendOtp(ResendOtpCommand resendOtpCommand, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(resendOtpCommand, cancellationToken);
+            return result.Match(
+                success => Ok(new { Message = "Success" }),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
         }

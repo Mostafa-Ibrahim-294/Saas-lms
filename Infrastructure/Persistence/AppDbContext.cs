@@ -12,7 +12,7 @@ namespace Infrastructure.Persistence
         internal DbSet<RefreshToken> RefreshTokens { get; set; }
         internal DbSet<Plan> Plans { get; set; }
         internal DbSet<PlanPricing> PlanPricings { get; set; }
-        internal DbSet<PlanFeature> plansFeature { get; set; }
+        internal DbSet<PlanFeature> PlanFeatures { get; set; }
         internal DbSet<Feature> Features  { get; set; }
         internal DbSet<Tenant> Tenants { get; set; }
         internal DbSet<TenantRole> TenantRoles { get; set; }
@@ -20,8 +20,10 @@ namespace Infrastructure.Persistence
         internal DbSet<Grade> Grades { get; set; }
         internal DbSet<TeachingLevel> TeachingLevels { get; set; }
         internal DbSet<Subject> Subjects { get; set; }
-        internal DbSet<Permission> permissions { get; set; }
+        internal DbSet<Permission> Permissions { get; set; }
         internal DbSet<Domain.Entites.File> Files { get; set; }
+        internal DbSet<RolePermission> RolePermissions { get; set; }
+        internal DbSet<Subscription> Subscriptions { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

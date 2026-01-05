@@ -24,5 +24,7 @@ namespace Domain.Errors
 
         public static Error Unauthorized =>
             new Error("User.Unauthorized", "غير مصرح", HttpStatusCode.Unauthorized);
+        public static Error InvalidVerificationToken =>
+            new Error("User.InvalidVerificationToken", "لقد انتهت جلستك", HttpStatusCode.BadRequest);
     }
 }

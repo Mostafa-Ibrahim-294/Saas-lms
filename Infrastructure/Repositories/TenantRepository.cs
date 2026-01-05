@@ -2,6 +2,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Constants;
+using Infrastructure.Constants;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Repositories
@@ -23,15 +24,19 @@ namespace Infrastructure.Repositories
             await _dbContext.TenantMembers.AddAsync(tenantMember, cancellationToken);
         }
 
-        public async Task AddTenantRoles(int tenantId, CancellationToken cancellationToken)
+        public async Task<(int ownerRoleId, int assistantRoleId)> AddTenantRoles(int tenantId, CancellationToken cancellationToken)
         {
             var roles = new List<TenantRole>
             {
-                new TenantRole { Name = RolesConstants.Owner, TenantId = tenantId },
+                new TenantRole { Name = RolesConstants.Owner, TenantId = tenantId, HasAllPermissions = true },
                 new TenantRole { Name = RolesConstants.Assistant, TenantId = tenantId }
             };
-            await _dbContext.TenantRoles.AddRangeAsync(roles, cancellationToken);
+            var ownerRole = await _dbContext.TenantRoles.AddAsync(roles[0], cancellationToken);
+             var assistantRole = await _dbContext.TenantRoles.AddAsync(roles[1], cancellationToken);
+                await SaveAsync(cancellationToken);
+            return (ownerRole.Entity.Id, assistantRole.Entity.Id);
         }
+
 
         public async Task<int> CreateTenantAsync(Tenant tenant, CancellationToken cancellationToken)
         {
@@ -39,13 +44,6 @@ namespace Infrastructure.Repositories
            await SaveAsync(cancellationToken);
             return tenant.Id;
         }
-
-        public async Task<TenantRole?> FindTenantRoleByTenantId(int tenantId, string Name, CancellationToken cancellationToken)
-        {
-           return await _dbContext.TenantRoles
-                .FirstOrDefaultAsync(tr => tr.TenantId == tenantId && tr.Name == Name, cancellationToken);
-        }
-
         public async Task<bool> IsSubDomainExistsAsync(string subDomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Tenants
@@ -90,6 +88,48 @@ namespace Infrastructure.Repositories
                 .AsNoTracking()
                 .ProjectTo<LastTenantDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(t => t.SubDomain == subDomain ,cancellationToken);
+        }
+
+        public async Task AssignAssistantPermissions(int assistantRoleId, CancellationToken cancellationToken)
+        {
+            var permissions = GetAssistantPermissions().Select(permission => new Permission
+            {
+               Id = permission
+            }).ToList();
+            _dbContext.AttachRange(permissions);
+            var rolePermissions = permissions.Select(permission => new RolePermission
+            {
+                TenantRoleId = assistantRoleId,
+                PermissionId = permission.Id
+            });
+            await _dbContext.RolePermissions.AddRangeAsync(rolePermissions, cancellationToken);
+        }
+        private List<string> GetAssistantPermissions()
+        {
+            return new List<string>
+            {
+                PermissionConstants.CREATE_ASSIGNMENTS,
+                PermissionConstants.VIEW_ASSIGNMENTS,
+                PermissionConstants.MANAGE_ASSIGNMENTS,
+                PermissionConstants.GRADE_ASSIGNMENTS,
+                PermissionConstants.VIEW_COURSES,
+                PermissionConstants.EDIT_COURSES,
+                PermissionConstants.MANAGE_LESSONS,
+                PermissionConstants.MANAGE_VIDEOS,
+                PermissionConstants.MANAGE_MODULE_ITEMS,
+                PermissionConstants.VIEW_MEMBERS,
+                PermissionConstants.VIEW_MEMBER_PROFILE,
+                PermissionConstants.VIEW_DASHBOARD,
+                PermissionConstants.VIEW_ANALYTICS,
+                PermissionConstants.VIEW_PERFORMANCE_CHART,
+                PermissionConstants.VIEW_RECORDINGS,
+                PermissionConstants.INVITE_STUDENTS,
+                PermissionConstants.MANAGE_QUIZZES,
+                PermissionConstants.CREATE_QUIZZES,
+                PermissionConstants.VIEW_QUIZZES,
+                PermissionConstants.VIEW_QUESTION_BANK,
+                PermissionConstants.GRADE_QUIZZES,
+            };
         }
     }
 }

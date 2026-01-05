@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Constants;
+using Application.Helpers;
 using Hangfire;
 using Newtonsoft.Json.Linq;
 using System;
@@ -35,12 +36,12 @@ namespace Application.Features.Auth.Commands.ForgetPassword
                 Expiration = TimeSpan.FromMinutes(2)
             }, cancellationToken: cancellationToken);
 
-            var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper("ForgetPasswordTemplate", new Dictionary<string, string>
+            var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(EmailConstants.ForgetPasswordTemplate, new Dictionary<string, string>
             {
                 { "{{name}}", user.FirstName },
                  { "{{action_url}}", $"/identity/forget-password?id={user.Id}&token={otpCode}" }
             });
-            BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "Reset Password", emailBody));
+            BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, EmailConstants.ResetPasswordSubject, emailBody));
             return true;
         }
     }

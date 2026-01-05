@@ -11,5 +11,6 @@ namespace Application.Constants
         public const string ApiScheme = "ApiScheme";
         public const string AllowedOrigins = "AllowedOrigins";
         public const string SubDomain = "SubDomain";
+        public const string VerificationCode = "ExtraInfo";
     }
 }
