@@ -16,10 +16,10 @@ namespace Domain.Entites
         public int? InvitedById { get; set; }
         public TenantMember? InvitedBy { get; set; }
         public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
-        public string ExperienceYears { get; set; } = string.Empty;
+        public int ExperienceYears { get; set; }
         public string JobTitle { get; set; } = string.Empty;
         public string? Bio { get; set; }
-        public string DisplayName { get; set; } = string.Empty;
+        public string? DisplayName { get; set; }
         public bool IsActive { get; set; } = true;
 
     }

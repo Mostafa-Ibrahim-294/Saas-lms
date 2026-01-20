@@ -39,7 +39,7 @@ namespace Application.Features.Auth.Commands.ForgetPassword
             var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(EmailConstants.ForgetPasswordTemplate, new Dictionary<string, string>
             {
                 { "{{name}}", user.FirstName },
-                 { "{{action_url}}", $"/identity/forget-password?id={user.Id}&token={otpCode}" }
+                 { "{{action_url}}", $"{EmailConstants.ForgetPasswordUrl}?token={otpCode}" }
             });
             BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, EmailConstants.ResetPasswordSubject, emailBody));
             return true;

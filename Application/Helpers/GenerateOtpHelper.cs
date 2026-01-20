@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Hybrid;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-
 namespace Application.Helpers
 {
     public static class GenerateOtpHelper
@@ -15,7 +15,7 @@ namespace Application.Helpers
             IHttpContextAccessor httpContextAccessor, CancellationToken cancellationToken)
         {
             var otpCode = new Random().Next(100000, 999999).ToString();
-            var verificationCode = new Guid().ToString();
+            var verificationCode = Guid.NewGuid().ToString();
             await hybridCache.SetAsync(verificationCode, email, cancellationToken: cancellationToken);
             await hybridCache.SetAsync(email, otpCode, new HybridCacheEntryOptions
             {
@@ -26,7 +26,8 @@ namespace Application.Helpers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                IsEssential = true
+                IsEssential = true,
+                Expires = DateTime.UtcNow.AddMinutes(15)
             });
             return otpCode;
         }

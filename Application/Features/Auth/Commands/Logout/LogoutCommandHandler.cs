@@ -33,8 +33,8 @@ namespace Application.Features.Auth.Commands.Logout
                 token.RevokedAt = DateTime.UtcNow;
             }
             await _refreshRepository.SaveAsync(cancellationToken);
-            httpContext.Response.Cookies.Delete(AuthConstants.AccessToken);
-            httpContext.Response.Cookies.Delete(AuthConstants.RefreshToken);
+            httpContext.Response.Cookies.Delete(AuthConstants.AccessToken, new CookieOptions { Domain = AuthConstants.CookieDomain});
+            httpContext.Response.Cookies.Delete(AuthConstants.RefreshToken, new CookieOptions { Domain = AuthConstants.CookieDomain});
             return true;
         }
     }

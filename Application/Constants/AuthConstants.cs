@@ -10,7 +10,8 @@ namespace Application.Constants
         public const string RefreshToken = "RefreshToken";
         public const string ApiScheme = "ApiScheme";
         public const string AllowedOrigins = "AllowedOrigins";
-        public const string SubDomain = "SubDomain";
+        public const string SubDomain = "subdomain";
         public const string VerificationCode = "ExtraInfo";
+        public const string CookieDomain = ".waey.online";
     }
 }
