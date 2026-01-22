@@ -552,7 +552,7 @@ namespace Infrastructure.Seeders
                                 FeatureId = aiQuizGenerationFeature.Id,
                                 Description = "عدد غير محدود.",
                                 LimitValue = -1,
-                                LimitUnit = "غير محدد",
+                                LimitUnit = "غير محدود",
                             },
                             new PlanFeature
                             {
@@ -560,7 +560,7 @@ namespace Infrastructure.Seeders
                                 FeatureId = aiExamCreationFeature.Id,
                                 Description = "عدد غير محدود.",
                                 LimitValue = -1,
-                                LimitUnit = "غير محدد",
+                                LimitUnit = "غير محدود",
                             },
                             new PlanFeature
                             {
@@ -568,7 +568,7 @@ namespace Infrastructure.Seeders
                                 FeatureId = aiLessonOutlineFeature.Id,
                                 Description = "عدد غير محدود.",
                                 LimitValue = -1,
-                                LimitUnit = "غير محدد",
+                                LimitUnit = "غير محدود",
                             },
                             new PlanFeature
                             {

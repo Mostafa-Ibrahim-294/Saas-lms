@@ -22,7 +22,8 @@ namespace Infrastructure.Repositories
             return await _context.Plans
                     .Where(p => p.Slug != "free-trial")
                     .AsNoTracking()
-                    .ProjectTo<PlanDto>(_mapper.ConfigurationProvider) 
+                    .ProjectTo<PlanDto>(_mapper.ConfigurationProvider)
+                    .OrderBy(p => p.Slug)
                     .ToListAsync(cancellationToken);
         }
 
