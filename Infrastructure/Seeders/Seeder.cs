@@ -35,6 +35,16 @@ namespace Infrastructure.Seeders
                     await _context.Permissions.AddRangeAsync(permissions);
                     await _context.SaveChangesAsync();
                 }
+
+                // Seed Roles
+                if (!await _context.Roles.AnyAsync())
+                {
+                    foreach (var roleName in GetRoles())
+                    {
+                        var role = new IdentityRole(roleName);
+                        await _roleManager.CreateAsync(role);
+                    }
+                }
             }
         }
 
@@ -677,5 +687,7 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"}
                 };
         }
+
+        private List<string> GetRoles() => new List<string> {"Student","Tenant", "Parent"};
     }
 }
