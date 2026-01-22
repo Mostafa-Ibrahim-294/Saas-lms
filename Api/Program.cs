@@ -32,9 +32,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.MapOpenApi();
-   app.UseHangfireDashboard();
+    app.UseHangfireDashboard();
 }
-app.UseSerilogRequestLogging(); 
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 app.UseCors();

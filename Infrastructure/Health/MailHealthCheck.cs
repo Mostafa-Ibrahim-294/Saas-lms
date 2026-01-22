@@ -1,9 +1,6 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
+﻿using Infrastructure.Constants;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RestSharp;
 
 namespace Infrastructure.Health
 {
@@ -18,16 +15,24 @@ namespace Infrastructure.Health
         {
             try
             {
-                using var smtp = new SmtpClient();
-                await smtp.ConnectAsync(_mailOptions.Value.SmtpServer, _mailOptions.Value.Port, SecureSocketOptions.StartTls, cancellationToken);
-                await smtp.AuthenticateAsync(_mailOptions.Value.Email, _mailOptions.Value.Password, cancellationToken);
-                await smtp.DisconnectAsync(true, cancellationToken);
+                if (string.IsNullOrWhiteSpace(_mailOptions.Value.BrevoApiKey))
+                    return HealthCheckResult.Unhealthy("Mail server is unreachable.");
+
+                var client = new RestClient(_mailOptions.Value.BaseUrl);
+                var request = new RestRequest("account", Method.Get);
+                request.AddHeader(BrevoHeaders.ApiKey, _mailOptions.Value.BrevoApiKey);
+
+                var response = await client.ExecuteAsync(request, cancellationToken);
+
+                if (response.IsSuccessful)
+                    return HealthCheckResult.Healthy("Mail server is reachable.");
+                else
+                    return HealthCheckResult.Unhealthy($"Brevo API returned error: {response.StatusCode}");
             }
-            catch
+            catch (Exception ex)
             {
-                return HealthCheckResult.Unhealthy("Mail server is unreachable.");
+                return HealthCheckResult.Unhealthy($"Mail server is unreachable: {ex.Message}");
             }
-            return HealthCheckResult.Healthy("Mail server is reachable.");
         }
     }
 }
