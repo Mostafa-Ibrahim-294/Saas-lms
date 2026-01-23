@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251215185157_add permissions")]
-    partial class addpermissions
+    [Migration("20260122115911_Update-TenantMemberTable")]
+    partial class UpdateTenantMemberTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,11 +128,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -152,6 +147,56 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Features");
+                });
+
+            modelBuilder.Entity("Domain.Entites.File", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Metadata")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("Size")
+                        .HasMaxLength(1100000000)
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("StorageProvider")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UploadedById")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("UploadedById");
+
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("Domain.Entites.Grade", b =>
@@ -203,7 +248,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("permissions");
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("Domain.Entites.Plan", b =>
@@ -247,6 +292,11 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
                     b.Property<Guid>("FeatureId")
                         .HasColumnType("uuid");
 
@@ -272,7 +322,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("PlanId", "FeatureId")
                         .IsUnique();
 
-                    b.ToTable("plansFeature");
+                    b.ToTable("PlanFeatures");
                 });
 
             modelBuilder.Entity("Domain.Entites.PlanPricing", b =>
@@ -345,6 +395,21 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("Domain.Entites.RolePermission", b =>
+                {
+                    b.Property<int>("TenantRoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PermissionId")
+                        .HasColumnType("text");
+
+                    b.HasKey("TenantRoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermissions");
+                });
+
             modelBuilder.Entity("Domain.Entites.Subject", b =>
                 {
                     b.Property<int>("Id")
@@ -371,6 +436,53 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("EndsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsAutoRenew")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PlanPricingId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Provider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderSubscriptionId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanPricingId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Domain.Entites.TeachingLevel", b =>
@@ -459,10 +571,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("ExperienceYears")
-                        .IsRequired()
+                    b.Property<int>("ExperienceYears")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("InvitedById")
                         .HasColumnType("integer");
@@ -514,6 +625,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("HasAllPermissions")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -661,6 +775,24 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entites.File", b =>
+                {
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Entites.ApplicationUser", "UploadedBy")
+                        .WithMany()
+                        .HasForeignKey("UploadedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("UploadedBy");
+                });
+
             modelBuilder.Entity("Domain.Entites.Grade", b =>
                 {
                     b.HasOne("Domain.Entites.Tenant", "Tenant")
@@ -713,6 +845,25 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entites.RolePermission", b =>
+                {
+                    b.HasOne("Domain.Entites.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.TenantRole", "TenantRole")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("TenantRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("TenantRole");
+                });
+
             modelBuilder.Entity("Domain.Entites.Subject", b =>
                 {
                     b.HasOne("Domain.Entites.Tenant", "Tenant")
@@ -720,6 +871,25 @@ namespace Infrastructure.Persistence.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Subscription", b =>
+                {
+                    b.HasOne("Domain.Entites.PlanPricing", "PlanPricing")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("PlanPricingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlanPricing");
 
                     b.Navigation("Tenant");
                 });
@@ -858,17 +1028,29 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("PlanPricings");
                 });
 
+            modelBuilder.Entity("Domain.Entites.PlanPricing", b =>
+                {
+                    b.Navigation("Subscriptions");
+                });
+
             modelBuilder.Entity("Domain.Entites.Tenant", b =>
                 {
                     b.Navigation("Grades");
 
                     b.Navigation("Subjects");
 
+                    b.Navigation("Subscriptions");
+
                     b.Navigation("TeachingLevels");
 
                     b.Navigation("TenantMembers");
 
                     b.Navigation("TenantRoles");
+                });
+
+            modelBuilder.Entity("Domain.Entites.TenantRole", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 #pragma warning restore 612, 618
         }

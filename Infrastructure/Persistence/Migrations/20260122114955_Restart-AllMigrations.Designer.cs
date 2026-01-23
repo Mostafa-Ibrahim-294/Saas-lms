@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260105192012_rename plans")]
-    partial class renameplans
+    [Migration("20260122114955_Restart-AllMigrations")]
+    partial class RestartAllMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -438,6 +438,53 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Subjects");
                 });
 
+            modelBuilder.Entity("Domain.Entites.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("EndsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsAutoRenew")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PlanPricingId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Provider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderSubscriptionId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanPricingId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("Domain.Entites.TeachingLevel", b =>
                 {
                     b.Property<int>("Id")
@@ -829,6 +876,25 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("Domain.Entites.Subscription", b =>
+                {
+                    b.HasOne("Domain.Entites.PlanPricing", "PlanPricing")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("PlanPricingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlanPricing");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("Domain.Entites.TeachingLevel", b =>
                 {
                     b.HasOne("Domain.Entites.Tenant", "Tenant")
@@ -963,11 +1029,18 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("PlanPricings");
                 });
 
+            modelBuilder.Entity("Domain.Entites.PlanPricing", b =>
+                {
+                    b.Navigation("Subscriptions");
+                });
+
             modelBuilder.Entity("Domain.Entites.Tenant", b =>
                 {
                     b.Navigation("Grades");
 
                     b.Navigation("Subjects");
+
+                    b.Navigation("Subscriptions");
 
                     b.Navigation("TeachingLevels");
 

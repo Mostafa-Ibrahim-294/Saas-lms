@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -568,10 +568,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("ExperienceYears")
-                        .IsRequired()
+                    b.Property<int>("ExperienceYears")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("InvitedById")
                         .HasColumnType("integer");
@@ -882,7 +881,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithMany()
+                        .WithMany("Subscriptions")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1036,6 +1035,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Grades");
 
                     b.Navigation("Subjects");
+
+                    b.Navigation("Subscriptions");
 
                     b.Navigation("TeachingLevels");
 

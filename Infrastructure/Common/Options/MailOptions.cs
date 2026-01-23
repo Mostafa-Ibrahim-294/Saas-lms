@@ -6,10 +6,10 @@ namespace Infrastructure.Common.Options
 {
     public sealed class MailOptions
     {
-        public string SmtpServer { get; set; } = string.Empty;
-        public int Port { get; set; }
         public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-
+        public string FromName { get; set; } = string.Empty;
+        public string BrevoApiKey { get; set; } = string.Empty;
+        public string BaseUrl { get; set; } = string.Empty;
+        public string Endpoint { get; set; } = string.Empty;
     }
 }

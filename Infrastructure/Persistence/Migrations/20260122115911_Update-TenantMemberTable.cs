@@ -5,18 +5,18 @@
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class jsonb : Migration
+    public partial class UpdateTenantMemberTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+           
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+           
         }
     }
 }

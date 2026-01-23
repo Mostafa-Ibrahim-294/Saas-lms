@@ -53,6 +53,7 @@ namespace Application.Features.Auth.Commands.Signup
                     return new Error("UserCreationFailed", error, HttpStatusCode.BadRequest);
                 }
             }
+            await _userManager.AddToRoleAsync(existingUser!, RoleConstants.Tenant);
             var otpCode = await GenerateOtpHelper.GenerateOtp(request.Email, _hybridCache, _httpContextAccessor, cancellationToken);
             var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(EmailConstants.OtpTemplate, new Dictionary<string, string>
             {

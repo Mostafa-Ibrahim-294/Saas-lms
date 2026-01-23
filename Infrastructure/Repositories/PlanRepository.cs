@@ -17,12 +17,13 @@ namespace Infrastructure.Repositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PlanResponse>> GetAllPlansWithDetailsAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<PlanDto>> GetAllPlansWithDetailsAsync(CancellationToken cancellationToken)
         {
             return await _context.Plans
                     .Where(p => p.Slug != "free-trial")
                     .AsNoTracking()
-                    .ProjectTo<PlanResponse>(_mapper.ConfigurationProvider) 
+                    .ProjectTo<PlanDto>(_mapper.ConfigurationProvider)
+                    .OrderBy(p => p.Slug)
                     .ToListAsync(cancellationToken);
         }
 
