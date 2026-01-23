@@ -12,12 +12,18 @@ namespace Application.Features.Users.Queries.GetProfile
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUserId _currentUserId;
+        private readonly IdentityUserRole<string> _userRole;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
-        public GetProfileQueryHandler(UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId
+        public GetProfileQueryHandler(UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId, 
+            IdentityUserRole<string> userRole,
+            RoleManager<IdentityRole> roleManager
             , IMapper mapper)
         {
             _userManager = userManager;
             _currentUserId = currentUserId;
+            _userRole = userRole;
+            _roleManager = roleManager;
             _mapper = mapper;
         }
 
@@ -25,7 +31,13 @@ namespace Application.Features.Users.Queries.GetProfile
         {
             var userId = _currentUserId.GetUserId();
             var user = await _userManager.FindByIdAsync(userId!);
-            return _mapper.Map<UserProfileDto>(user);
+
+            var roleId= _userRole.UserId;
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+            var userProfileDto = _mapper.Map<UserProfileDto>(user);
+            userProfileDto.Role = role?.Name ?? string.Empty;
+            return userProfileDto;
         }
     }
 }
