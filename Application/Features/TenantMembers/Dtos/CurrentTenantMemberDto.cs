@@ -8,7 +8,7 @@
         public string Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; } = string.Empty;
         public string? ProfilePicture { get; set; } = string.Empty;
-        public int TenantMemberId { get; set; }
+        public int Id { get; set; }
         public string JobTitle { get; set; } = string.Empty;
         public int ExperienceYears { get; set; }
         public string Bio { get; set; } = string.Empty;

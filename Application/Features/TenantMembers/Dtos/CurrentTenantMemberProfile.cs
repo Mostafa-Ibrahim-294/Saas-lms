@@ -13,7 +13,7 @@
                 .ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => src.User.ProfilePicture))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.TenantRole.Name))
                 .ForMember(dest => dest.HasFullAccess, opt => opt.MapFrom(src => src.TenantRole.HasAllPermissions))
-                .ForMember(dest => dest.TenantMemberId, opt => opt.MapFrom(src => src.Id));
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
         }
     }
 }
