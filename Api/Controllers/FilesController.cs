@@ -17,10 +17,14 @@ namespace Api.Controllers
             _mediator = mediator;
         }
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromBody] UploadFileCommand uploadFileCommand)
+        public async Task<IActionResult> UploadFile([FromForm] UploadFileCommand uploadFileCommand)
         {
             var result = await _mediator.Send(uploadFileCommand);
-            return Ok(result);
+
+            return result.Match<IActionResult>(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error)
+            );
         }
 
     }

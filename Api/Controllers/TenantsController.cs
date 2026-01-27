@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tenant")]
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthConstants.ApiScheme)]
 

@@ -9,6 +9,7 @@ namespace Domain.Entites
         public string Name { get; set; } = string.Empty;
         public long Size { get; set; }
         public FileType Type { get; set; }
+        public FileStatus Status { get; set; }
         public string Url { get; set; } = string.Empty;
         public string StorageProvider { get; set; } = "Bunny";
         public Dictionary<string, string>? Metadata { get; set; }

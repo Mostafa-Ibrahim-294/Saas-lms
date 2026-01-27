@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Files;
+﻿using Application.Constants;
+using Application.Contracts.Files;
 using FluentValidation;
 
 namespace Application.Features.Files.Commands.UploadFile
@@ -10,24 +11,35 @@ namespace Application.Features.Files.Commands.UploadFile
         {
             _fileService = fileService;
 
-            RuleFor(x => x.Size)
-                .GreaterThan(0).WithMessage("File size must be greater than zero.");
-            RuleFor(x => x)
-            .Custom((request, context) =>
-            {
-                var maxSize = _fileService.GetMaxSize(request.Type);
+            RuleFor(x => x.File)
+                .NotNull().WithMessage("File must be provided.")
+                .Must(file => file!.Length > 0)
+                .WithMessage("File size must be greater than zero.");
 
-                if (request.Size > maxSize)
+            RuleFor(x => x.File)
+                .Must(file => file != null &&
+                    (file.ContentType.StartsWith(FileConstants.Image) || 
+                    file.ContentType.StartsWith(FileConstants.Video) || 
+                    file.ContentType == FileConstants.Pdf))
+                .WithMessage("Unsupported file type.");
+                
+
+            RuleFor(x => x.File)
+                .Must((request, file) =>
                 {
-                    context.AddFailure(
-                        nameof(request.Size),
-                        $"File size exceeds allowed limit for {request.Type}"
-                    );
-                }
-            });
-            RuleFor(x => x.Folder)
-                .NotEmpty().WithMessage("Folder cannot be empty.");
-        }
+                    var type = _fileService.GetFileType(file!.ContentType);
+                    return file.Length <= _fileService.GetMaxSize(type);
+                })
+                .When(x => x.File != null)
+                .WithMessage(request =>
+                {
+                    var type = _fileService.GetFileType(request.File!.ContentType);
+                    return $"File size exceeds allowed limit for {type}.";
+                });
 
+            RuleFor(x => x.Folder)
+                .Must(folder => string.IsNullOrEmpty(folder) || folder.Length <= 100)
+                .WithMessage("Folder name is too long.");
+        }
     }
 }
