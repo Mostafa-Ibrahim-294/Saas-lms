@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class ResetAllMigration : Migration
+    public partial class addcourses : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,9 +33,8 @@ namespace Infrastructure.Persistence.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    LastActiveTenantSubDomain = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    LastActiveTenantSubDomain = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     HasOnboarded = table.Column<bool>(type: "boolean", nullable: false),
-                    IsSubscribed = table.Column<bool>(type: "boolean", nullable: false),
                     ProfilePicture = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -464,6 +463,59 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Currency = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    VideoUrl = table.Column<string>(type: "text", nullable: true),
+                    ThumbnailUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Discount = table.Column<byte>(type: "smallint", nullable: false),
+                    CourseStatus = table.Column<int>(type: "integer", nullable: false),
+                    PricingType = table.Column<int>(type: "integer", nullable: false),
+                    BillingCycle = table.Column<int>(type: "integer", nullable: true),
+                    Tags = table.Column<string[]>(type: "text[]", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedById = table.Column<string>(type: "text", nullable: false),
+                    SubjectId = table.Column<int>(type: "integer", nullable: false),
+                    GradeId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courses_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Courses_Grades_GradeId",
+                        column: x => x.GradeId,
+                        principalTable: "Grades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Courses_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Courses_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RolePermissions",
                 columns: table => new
                 {
@@ -568,6 +620,26 @@ namespace Infrastructure.Persistence.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_CreatedById",
+                table: "Courses",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_GradeId",
+                table: "Courses",
+                column: "GradeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_SubjectId",
+                table: "Courses",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_TenantId",
+                table: "Courses",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Features_Key",
@@ -698,10 +770,10 @@ namespace Infrastructure.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Files");
+                name: "Courses");
 
             migrationBuilder.DropTable(
-                name: "Grades");
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "PlanFeatures");
@@ -711,9 +783,6 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "RolePermissions");
-
-            migrationBuilder.DropTable(
-                name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "Subscriptions");
@@ -726,6 +795,12 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Grades");
+
+            migrationBuilder.DropTable(
+                name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "Features");

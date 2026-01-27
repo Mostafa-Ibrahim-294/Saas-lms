@@ -12,11 +12,13 @@ namespace Domain.Entites
         public ApplicationUser Owner { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-        public ICollection<Grade> Grades { get; set; } = new List<Grade>();
-        public ICollection<TenantRole> TenantRoles { get; set; } = new List<TenantRole>();
-        public ICollection<TenantMember> TenantMembers { get; set; } = new List<TenantMember>();
-        public ICollection<TeachingLevel> TeachingLevels { get; set; } = new List<TeachingLevel>();
-        public ICollection<Subject> Subjects { get; set; } = new List<Subject>();
-        public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+        public ICollection<Grade> Grades { get; set; } = [];
+        public ICollection<TenantRole> TenantRoles { get; set; } = [];
+        public ICollection<TenantMember> TenantMembers { get; set; } = [];
+        public ICollection<TeachingLevel> TeachingLevels { get; set; } = [];
+        public ICollection<Subject> Subjects { get; set; } = [];
+        public ICollection<Subscription> Subscriptions { get; set; } = [];
+
+        public ICollection<Course> Courses = [];
     }
 }

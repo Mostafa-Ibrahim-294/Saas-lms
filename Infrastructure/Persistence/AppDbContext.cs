@@ -20,6 +20,10 @@ namespace Infrastructure.Persistence
         internal DbSet<Domain.Entites.File> Files { get; set; }
         internal DbSet<RolePermission> RolePermissions { get; set; }
         internal DbSet<Subscription> Subscriptions { get; set; }
+        internal DbSet<Course> Courses { get; set; }
+        internal DbSet<Student> Students { get; set; }
+        internal DbSet<Enrollment> Enrollments { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
