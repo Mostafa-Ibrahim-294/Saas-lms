@@ -2,9 +2,10 @@
 {
     public sealed class UploadFileDto
     {
-        public string UploadUrl { get; init; } = string.Empty;
-        public string CdnUrl { get; init; } = string.Empty;
-        public string Path { get; init; } = string.Empty;
-        public Dictionary<string, string>? Metadata { get; init; }
+        public string FileId { get; set; }  = string.Empty;
+        public string FileType { get; set; } = string.Empty;
+        public string? Url { get; init; } = string.Empty;
+        public string OriginalName { get; set; } = string.Empty;
+        public long Size { get; set; }
     }
 }
