@@ -3,6 +3,7 @@ using Application.Contracts.Files;
 using Application.Contracts.Repositories;
 using Application.Features.Files.Dtos;
 using Domain.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Files.Commands.UploadFile
 {
@@ -12,12 +13,16 @@ namespace Application.Features.Files.Commands.UploadFile
         private readonly IFileRepository _fileRepository;
         private readonly IMapper _mapper;
         private readonly ICurrentUserId _currentUserId;
-        public UploadFileCommandHandler(IFileService fileService, IFileRepository fileRepository, IMapper mapper, ICurrentUserId currentUserId)
+        private readonly ILogger<UploadFileCommandHandler> _logger;
+
+        public UploadFileCommandHandler(IFileService fileService, IFileRepository fileRepository, 
+            IMapper mapper, ICurrentUserId currentUserId, ILogger<UploadFileCommandHandler> logger)
         {
             _fileService = fileService;
             _fileRepository = fileRepository;
             _mapper = mapper;
             _currentUserId = currentUserId;
+            _logger = logger;
         }
         public async Task<OneOf<UploadFileDto, Error>> Handle(UploadFileCommand request, CancellationToken cancellationToken)
         {
@@ -25,7 +30,12 @@ namespace Application.Features.Files.Commands.UploadFile
             var fileId = Guid.NewGuid().ToString();
             var path = _fileService.GetPath(fileId, request.Name, request.Folder, request.File.FileName);
             var userId = _currentUserId.GetUserId();
+
+            _logger.LogWarning("Uploading file {FileName} with Id {FileId} for user {UserId}", request.Name, fileId, userId);
+
             string? cdnUrl = await _fileService.UploadAsync(request.File, path, request.Folder);
+
+            
 
             if (cdnUrl == null)
                 return FileError.UploadFailed;
