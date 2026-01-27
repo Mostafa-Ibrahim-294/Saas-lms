@@ -3,7 +3,6 @@ using Application.Contracts.Files;
 using Application.Contracts.Repositories;
 using Application.Features.Files.Dtos;
 using Domain.Enums;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Files.Commands.UploadFile
 {
@@ -13,29 +12,24 @@ namespace Application.Features.Files.Commands.UploadFile
         private readonly IFileRepository _fileRepository;
         private readonly IMapper _mapper;
         private readonly ICurrentUserId _currentUserId;
-        private readonly ILogger<UploadFileCommandHandler> _logger;
 
-        public UploadFileCommandHandler(IFileService fileService, IFileRepository fileRepository, 
-            IMapper mapper, ICurrentUserId currentUserId, ILogger<UploadFileCommandHandler> logger)
+        public UploadFileCommandHandler(IFileService fileService, IFileRepository fileRepository,
+            IMapper mapper, ICurrentUserId currentUserId)
         {
             _fileService = fileService;
             _fileRepository = fileRepository;
             _mapper = mapper;
             _currentUserId = currentUserId;
-            _logger = logger;
         }
         public async Task<OneOf<UploadFileDto, Error>> Handle(UploadFileCommand request, CancellationToken cancellationToken)
         {
             var fileType = _fileService.GetFileType(request.File.ContentType);
             var fileId = Guid.NewGuid().ToString();
-            var path = _fileService.GetPath(fileId, request.Name, request.Folder, request.File.FileName);
+            var fileName = request.Name ?? request.File.FileName;
+            var path = _fileService.GetPath(fileId, fileName, request.Folder, request.File.FileName);
             var userId = _currentUserId.GetUserId();
 
-            _logger.LogWarning("Uploading file {FileName} with Id {FileId} for user {UserId}", request.Name, fileId, userId);
-
             string? cdnUrl = await _fileService.UploadAsync(request.File, path, request.Folder);
-
-            
 
             if (cdnUrl == null)
                 return FileError.UploadFailed;
@@ -43,7 +37,9 @@ namespace Application.Features.Files.Commands.UploadFile
             var file = new Domain.Entites.File
             {
                 Id = fileId,
-                Name = request.Name,
+                Name = request.Name != null
+                    ? request.Name
+                    : request.File.FileName,
                 Size = request.File.Length,
                 Type = fileType,
                 Url = cdnUrl,
@@ -61,7 +57,9 @@ namespace Application.Features.Files.Commands.UploadFile
                 FileId = fileId,
                 FileType = fileType.ToString(),
                 Url = cdnUrl,
-                OriginalName = request.Name,
+                OriginalName = request.Name != null
+                    ? request.Name
+                    : request.File.FileName,
                 Size = request.File.Length
             };
         }
