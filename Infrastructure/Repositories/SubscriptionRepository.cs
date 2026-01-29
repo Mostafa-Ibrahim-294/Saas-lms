@@ -9,7 +9,7 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task CreateFreeSubcscription(int TenantId, Guid PlanPricingId, CancellationToken cancellationToken)
+        public async Task<int> CreateFreeSubcscription(int TenantId, Guid PlanPricingId, CancellationToken cancellationToken)
         {
             var subscription = new Subscription
             {
@@ -20,6 +20,8 @@ namespace Infrastructure.Repositories
                 Status = SubscriptionStatus.Trialed
             };
             await _context.Subscriptions.AddAsync(subscription, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            return  subscription.Id;
         }
 
         public async Task<bool> HasActiveSubscriptionByTenantDomain(string subdomain, CancellationToken cancellationToken)

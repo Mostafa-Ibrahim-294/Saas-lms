@@ -2,6 +2,8 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Constants;
+using Domain.Entites;
+using Domain.Enums;
 using Infrastructure.Constants;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -131,5 +133,76 @@ namespace Infrastructure.Repositories
                 PermissionConstants.GRADE_QUIZZES,
             };
         }
+        public Task<int> GetTenantIdAsync(string subDomain, CancellationToken cancellationToken)
+        {
+            return _dbContext.Tenants
+                .AsNoTracking()
+                .Where(t => t.SubDomain == subDomain)
+                .Select(t => t.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<TenantUsageDto> GetTenantUsageAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            var result = await (from s in _dbContext.Subscriptions.AsNoTracking()
+                                join tu in _dbContext.TenantUsage on s.Id equals tu.SubscriptionId
+                                join pf in _dbContext.PlanFeatures on tu.PlanFeatureId equals pf.Id
+                                join p in _dbContext.Plans on pf.PlanId equals p.Id
+                                join f in _dbContext.Features on pf.FeatureId equals f.Id
+                                where s.TenantId == tenantId
+                                group new { tu, pf, f } by new
+                                {
+                                    s.Id,
+                                    s.Status,
+                                    s.StartsAt,
+                                    s.EndsAt,
+                                    PlanId = p.Id,
+                                    PlanName = p.Name
+                                } into g
+                                select new TenantUsageDto
+                                {
+                                    Subscription = new SubscriptionDto
+                                    {
+                                        Id = g.Key.Id,
+                                        Status = g.Key.Status.ToString(),
+                                        Start = g.Key.StartsAt,
+                                        End = g.Key.EndsAt,
+                                        Plan = new SubscriptionPlanDto
+                                        {
+                                            Id = g.Key.PlanId,
+                                            Name = g.Key.PlanName
+                                        }
+                                    },
+                                    Usage = g.Select(x => new UsageDto
+                                    {
+                                        FeatureKey = x.f.Key,
+                                        Name = x.f.Name,
+                                        Used = x.tu.Used,
+                                        Limit = x.pf.LimitValue,
+                                        Unit = x.pf.LimitUnit
+                                    }).ToList()
+                                }
+                    ).FirstOrDefaultAsync(cancellationToken);
+
+            return result!;
+        }
+
+        public async Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId)
+        {
+            foreach(var planFeatureId in PlanFeatureId)
+            {
+                var tenantUsage = new TenantUsage
+                {
+                    Used = 0,
+                    CreatedAt = DateTime.UtcNow,
+                    PlanFeatureId = planFeatureId,
+                    SubscriptionId = SubscriptionId,
+                    TenantId = TenantId
+                };
+                _dbContext.TenantUsage.Add(tenantUsage);
+            }
+            await _dbContext.SaveChangesAsync();
+        }
+
     }
 }

@@ -64,7 +64,7 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 await _userManager.UpdateAsync(user);
 
                 var freePlanPricingId = await _planRepository.GetFreePlanPricingIdAsync(cancellationToken);
-                await _subscriptionRepository.CreateFreeSubcscription(createdTenantId, freePlanPricingId, cancellationToken);
+                var subscriptionId = await _subscriptionRepository.CreateFreeSubcscription(createdTenantId, freePlanPricingId, cancellationToken);
 
                 var (ownerRoleId, assistantRoleId) = await _tenantRepository.AddTenantRoles(createdTenantId, cancellationToken);
                 await _tenantRepository.SaveAsync(cancellationToken);
@@ -80,6 +80,17 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 await _tenantRepository.AddTenantMemberAsync(tenantMember, cancellationToken);
                 await _tenantRepository.AssignAssistantPermissions(assistantRoleId, cancellationToken);
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
+
+
+
+
+                var planId = await _planRepository.GetPlanIdAsync(freePlanPricingId, cancellationToken);
+                var planFeatureIds = await _planRepository.GetPlanFeatureIdsAsync(planId, cancellationToken);
+                await _tenantRepository.InitializeTenantUsageAsync(planFeatureIds, subscriptionId, createdTenantId);
+
+
+
+
 
                 await _hybridCache.RemoveAsync($"{CacheKeysConstants.LastTenantKey}_{ownerId}", cancellationToken);
                 await _hybridCache.RemoveAsync($"{CacheKeysConstants.UserTenantsKey}_{ownerId}", cancellationToken);

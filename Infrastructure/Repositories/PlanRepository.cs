@@ -29,5 +29,21 @@ namespace Infrastructure.Repositories
             var planPricing = await _context.PlanPricings.FirstOrDefaultAsync(p => p.Price == 0);
             return planPricing!.Id;
         }
+
+
+        public Task<Guid> GetPlanIdAsync(Guid PlanPricingId, CancellationToken cancellationToken)
+        {
+            return _context.PlanPricings
+                    .Where(pp => pp.Id == PlanPricingId)
+                    .Select(pp => pp.PlanId)
+                    .FirstOrDefaultAsync(cancellationToken);
+        }
+        public Task<List<Guid>> GetPlanFeatureIdsAsync(Guid PlanId, CancellationToken cancellationToken)
+        {
+            return _context.PlanFeatures
+                    .Where(pf => pf.PlanId == PlanId)
+                    .Select(pf => pf.Id)
+                    .ToListAsync(cancellationToken);
+        }
     }
 }
