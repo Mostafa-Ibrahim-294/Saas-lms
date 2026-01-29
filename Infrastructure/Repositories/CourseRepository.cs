@@ -15,18 +15,23 @@ namespace Infrastructure.Repositories
         }
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)
         {
-            var response =  await _dbContext.Tenants
+            var response = await _dbContext.Tenants
                 .Where(t => t.SubDomain == tenantSubdomain)
                 .Select(t => new StatisticsDto
                 {
                     TotalCourses = t.Courses.Count(),
                     ActiveCourses = t.Courses.Count(c => c.CourseStatus == CourseStatus.Published),
-                    TotalStudentsEnrolled = t.Courses.SelectMany(e => e.Enrollments).Select(x => x.StudentId).Distinct().Count()
+                    TotalStudentsEnrolled = t.Courses.SelectMany(e => e.Enrollments).Select(x => x.StudentId).Distinct().Count(),
+                
                 })
                 .FirstOrDefaultAsync(cancellationToken);
             if (response != null)
             {
                 response.DraftCourses = response.TotalCourses - response.ActiveCourses;
+                var averages = await _dbContext.Courses.Where(c => c.Tenant.SubDomain == tenantSubdomain)
+                    .SelectMany(c => c.CourseProgresses).Where(p => p.TotalLessons > 0)
+                    .Select(p => (double)p.CompletedLessons / p.TotalLessons).ToListAsync(cancellationToken);
+                response.AverageCompletionRate = averages.Count > 0 ? averages.Average() : 0.0;
             }
             return response!;
         }

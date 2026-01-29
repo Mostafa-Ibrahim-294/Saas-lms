@@ -23,6 +23,7 @@ namespace Infrastructure.Persistence
         internal DbSet<Course> Courses { get; set; }
         internal DbSet<Student> Students { get; set; }
         internal DbSet<Enrollment> Enrollments { get; set; }
+        internal DbSet<CourseProgress> CourseProgresses { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
