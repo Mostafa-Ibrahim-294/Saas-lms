@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Features.Tenants.Queries.GetLastTenant;
+using Application.Features.Tenants.Queries.GetTenantUsage;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,12 @@ namespace Api.Controllers
         {
             var tenant = await _mediator.Send(new GetLastTenantQuery(), cancellationToken);
             return Ok(tenant);
+        }
+        [HttpGet("usage")]
+        public async Task<IActionResult> GetTenantUsage(CancellationToken cancellationToken)
+        {
+            var usage = await _mediator.Send(new GetTenantUsageQuery(), cancellationToken);
+            return Ok(usage);
         }
     }
 }

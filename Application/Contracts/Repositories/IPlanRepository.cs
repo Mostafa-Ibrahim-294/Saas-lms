@@ -6,6 +6,7 @@ namespace Application.Contracts.Repositories
     {
         Task<IEnumerable<PlanDto>> GetAllPlansWithDetailsAsync(CancellationToken cancellationToken);
         Task<Guid> GetFreePlanPricingIdAsync(CancellationToken cancellationToken);
-
+        Task<List<Guid>> GetPlanFeatureIdsAsync(Guid PlanId, CancellationToken cancellationToken);
+        Task<Guid> GetPlanIdAsync(Guid PlanPricingId, CancellationToken cancellationToken);
     }
 }
