@@ -6,6 +6,7 @@ using Domain.Entites;
 using Domain.Enums;
 using Infrastructure.Constants;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq;
 
 namespace Infrastructure.Repositories
 {
@@ -189,20 +190,52 @@ namespace Infrastructure.Repositories
 
         public async Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId)
         {
-            foreach(var planFeatureId in PlanFeatureId)
+            var tenantUsages = PlanFeatureId.Select(planFeatureId => new TenantUsage
             {
-                var tenantUsage = new TenantUsage
-                {
-                    Used = 0,
-                    CreatedAt = DateTime.UtcNow,
-                    PlanFeatureId = planFeatureId,
-                    SubscriptionId = SubscriptionId,
-                    TenantId = TenantId
-                };
-                _dbContext.TenantUsage.Add(tenantUsage);
-            }
-            await _dbContext.SaveChangesAsync();
+                PlanFeatureId = planFeatureId,
+                SubscriptionId = SubscriptionId,
+                TenantId = TenantId
+            }).ToList();
+
+            _dbContext.TenantUsage.AddRange(tenantUsages);
         }
 
+
+        public async Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q, CancellationToken cancellationToken)
+        {
+            var query = _dbContext.Files
+                .AsNoTracking()
+                .Where(f => f.TenantId == TenantId && f.Type == Type);
+
+            if (!string.IsNullOrWhiteSpace(Q))
+                query = query.Where(f => f.Name.Contains(Q));
+
+            var files = await query.ToListAsync(cancellationToken);
+
+            return new ContentLibraryResourceDto
+            {
+                Resources = new ResourceDto
+                {
+                    Documents = Type == FileType.Document ? _mapper.Map<List<DocumentDto>>(files) : new(),
+                    Videos = Type == FileType.Video ? _mapper.Map<List<VideoDto>>(files) : new(),
+                    Images = Type == FileType.Image ? _mapper.Map<List<ImageDto>>(files) : new(),
+                }
+            };
+        }
+
+        public async Task<ContentLibraryStatisticsDto> GetStatisticsAsync(int TenantId, CancellationToken cancellationToken)
+        {
+            var files = await _dbContext.Files
+                .Where(f => f.TenantId == TenantId)
+                .ToListAsync(cancellationToken);
+
+            return new ContentLibraryStatisticsDto
+            {
+                TotalFiles = files.Count,
+                TotalDocuments = files.Count(f => f.Type == FileType.Document),
+                TotalVideos = files.Count(f => f.Type == FileType.Video),
+                TotalImages = files.Count(f => f.Type == FileType.Image),
+            };
+        }
     }
 }

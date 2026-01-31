@@ -123,7 +123,8 @@ namespace Infrastructure.Services
             if (!uploadResponse.IsSuccessStatusCode)
                 return null;
 
-            return $"{FileConstants.BunnyEmbedBaseUrl}/{_bunnyOptions.Value.VideoLibraryId}/{videoInfo.guid}";
+            var extension = Path.GetExtension(video.FileName).TrimStart('.');
+            return $"{FileConstants.BunnyEmbedBaseUrl}/{_bunnyOptions.Value.VideoLibraryId}/{videoInfo.guid}.{extension}";
         }
         public Task<string?> UploadAsync(IFormFile file, string path, string? folder = null)
         {
