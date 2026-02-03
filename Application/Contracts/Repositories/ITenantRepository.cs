@@ -23,7 +23,11 @@ namespace Application.Contracts.Repositories
         Task<TenantUsageDto> GetTenantUsageAsync(int tenantId, CancellationToken cancellationToken);
         Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId);
 
+
         Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q , CancellationToken cancellationToken );
         Task<ContentLibraryStatisticsDto> GetStatisticsAsync(int TenantId, CancellationToken cancellationToken);
+
+
+        Task<int> GetPlanFeatureUsageAsync(Guid PlanFeatureId, CancellationToken cancellationToken);
     }
 }

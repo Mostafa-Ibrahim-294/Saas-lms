@@ -2,11 +2,9 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Constants;
-using Domain.Entites;
 using Domain.Enums;
 using Infrastructure.Constants;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Linq;
 
 namespace Infrastructure.Repositories
 {
@@ -201,6 +199,7 @@ namespace Infrastructure.Repositories
         }
 
 
+
         public async Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q, CancellationToken cancellationToken)
         {
             var query = _dbContext.Files
@@ -222,7 +221,6 @@ namespace Infrastructure.Repositories
                 }
             };
         }
-
         public async Task<ContentLibraryStatisticsDto> GetStatisticsAsync(int TenantId, CancellationToken cancellationToken)
         {
             var files = await _dbContext.Files
@@ -236,6 +234,17 @@ namespace Infrastructure.Repositories
                 TotalVideos = files.Count(f => f.Type == FileType.Video),
                 TotalImages = files.Count(f => f.Type == FileType.Image),
             };
+        }
+
+
+
+        public Task<int> GetPlanFeatureUsageAsync(Guid PlanFeatureId, CancellationToken cancellationToken)
+        {
+            return _dbContext.TenantUsage
+                .AsNoTracking()
+                .Where(tu => tu.PlanFeatureId == PlanFeatureId)
+                .Select(tu => tu.Used)
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

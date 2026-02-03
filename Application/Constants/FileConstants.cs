@@ -13,9 +13,9 @@
         public const string BunnyEmbedBaseUrl = "https://iframe.mediadelivery.net/embed";
 
 
-        public const string AiRequestAudio = "audio";
+        public const string AiRequestFile = "file";
         public const string AiRequestFileId = "fileId";
-        public const string AiRequestJobId = "jobId";
-        public const string AiRequestCallBackUrl = "callbackurl";
+        public const string AiRequestFileType = "fileType";
+        public const string AiRequestCallBackUrl = "callbackUrl";
     }
 }

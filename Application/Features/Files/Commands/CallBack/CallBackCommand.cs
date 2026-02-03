@@ -2,5 +2,5 @@
 
 namespace Application.Features.Files.Commands.CallBack
 {
-    public record CallBackCommand(string JobId, FileStatus Status, string FileId) : IRequest<Unit> { }
+    public record CallBackCommand(FileStatus Status, string FileId) : IRequest<Unit> { }
 }
