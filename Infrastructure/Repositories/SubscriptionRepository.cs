@@ -23,7 +23,6 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
             return  subscription.Id;
         }
-
         public async Task<bool> HasActiveSubscriptionByTenantDomain(string subdomain, CancellationToken cancellationToken)
         {
             return await (from s in _context.Subscriptions
@@ -33,6 +32,16 @@ namespace Infrastructure.Repositories
                                     s.Status == SubscriptionStatus.Trialed)
                                     && s.EndsAt > DateTime.UtcNow
                            select s).AnyAsync(cancellationToken);
+        }
+        
+
+        public Task<Guid> GetPlanPricingIdAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            return _context.Subscriptions.Where(s => s.TenantId == tenantId &&
+                                (s.Status == SubscriptionStatus.Active || s.Status == SubscriptionStatus.Trialed) &&
+                                s.EndsAt > DateTime.UtcNow)
+                    .Select(s => s.PlanPricingId)
+                    .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

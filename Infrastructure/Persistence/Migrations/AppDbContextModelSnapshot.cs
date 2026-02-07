@@ -1261,7 +1261,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.TenantRole", "TenantRole")
-                        .WithMany()
+                        .WithMany("TenantMembers")
                         .HasForeignKey("TenantRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1436,6 +1436,8 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.TenantRole", b =>
                 {
                     b.Navigation("RolePermissions");
+
+                    b.Navigation("TenantMembers");
                 });
 #pragma warning restore 612, 618
         }
