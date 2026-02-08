@@ -78,9 +78,18 @@ namespace Infrastructure.Repositories
         public Task UpdateRoleMemberAsync(int memberId, int roleId, CancellationToken cancellationToken)
         {
             return _context.TenantMembers
-                .Where(tm => tm.Id == memberId && tm.Id == roleId)
+                .Where(tm => tm.Id == memberId)
                 .ExecuteUpdateAsync(setters => setters
                     .SetProperty(tm => tm.TenantRoleId, roleId), cancellationToken);
+        }
+        public Task<MemberProfileDto> GetMemberProfileAsync(int memberId, CancellationToken cancellationToken)
+        {
+            var memberProfile = _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.Id == memberId)
+                .ProjectTo<MemberProfileDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+            return memberProfile!;
         }
     }
 }

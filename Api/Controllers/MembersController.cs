@@ -6,6 +6,7 @@ using Application.Features.TenantMembers.Commands.RemoveMember;
 using Application.Features.TenantMembers.Commands.UpdateMemberRole;
 using Application.Features.TenantMembers.Commands.ValidateTenanInvite;
 using Application.Features.TenantMembers.Queries.GetCurrentTenantMember;
+using Application.Features.TenantMembers.Queries.GetMemberProfile;
 using Application.Features.TenantMembers.Queries.GetTenantMembers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -98,6 +99,17 @@ namespace Api.Controllers
                 success => Ok(success),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
+        }
+
+
+        [HttpGet("{memberId}/profile")]
+        public async Task<IActionResult> GetMemberProfile([FromRoute] int memberId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetMemberProfileQuery(memberId), cancellationToken);
+            return result.Match(
+               success => Ok(success),
+               error => StatusCode((int)error.HttpStatusCode, error.Message)
+           );
         }
     }
 }
