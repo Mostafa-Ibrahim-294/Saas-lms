@@ -10,6 +10,9 @@ namespace Domain.Errors
         public static Error InviteExpired =>
             new Error("Invite.Expired", "انتهت صلاحية الدعوة", HttpStatusCode.Gone);
 
+        public static Error InviteError =>
+           new Error("Invite.Error", "حدث خطأ اثناء قبول الدعوة", HttpStatusCode.Conflict);
+
         public static Error InviteNotFound =>
             new Error("Invite.NotFound", "الدعوة غير موجودة", HttpStatusCode.NotFound);
     }
