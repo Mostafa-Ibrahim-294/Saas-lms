@@ -2,6 +2,7 @@
 using Application.Features.TenantMembers.Commands.AcceptTenanInvite;
 using Application.Features.TenantMembers.Commands.DeclineTenanInvite;
 using Application.Features.TenantMembers.Commands.InviteTenantMember;
+using Application.Features.TenantMembers.Commands.RemoveMember;
 using Application.Features.TenantMembers.Commands.ValidateTenanInvite;
 using Application.Features.TenantMembers.Queries.GetCurrentTenantMember;
 using Application.Features.TenantMembers.Queries.GetTenantMembers;
@@ -74,6 +75,17 @@ namespace Api.Controllers
         {
             var result = await _mediator.Send(new DeclineTenanInviteCommand(token), cancellationToken);
             return Ok(result);
+        }
+
+
+        [HttpDelete("{memberId}")]
+        public async Task<IActionResult> RemoveMember([FromRoute] int memberId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new RemoveMemberCommand(memberId), cancellationToken);
+            return result.Match(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
         }
     }
 }

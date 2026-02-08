@@ -9,5 +9,8 @@ namespace Application.Contracts.Repositories
         Task<List<TenantMembersDto>> GetTenantMembersAsync(int tenantId, CancellationToken cancellationToken);
         Task<List<int>> GetTenantIdsAsync(string userId, CancellationToken cancellationToken);
         Task<int> GetMemberIdByUserIdAsync(string userId, int tenantId, CancellationToken cancellationToken);
+        Task<TenantMember?> GetMemberByIdAsync(int memberId, CancellationToken cancellationToken);
+        Task<bool> IsOwnerAsync(int memberId, CancellationToken cancellationToken);
+        Task RemoveMemberAsync(int memberId, CancellationToken cancellationToken);
     }
 }

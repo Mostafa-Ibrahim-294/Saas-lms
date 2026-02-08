@@ -1,0 +1,16 @@
+using System.Net;
+
+namespace Domain.Errors
+{
+    public static class TenantMemberError
+    {
+        public static Error MemberNotFound =>
+            new Error("Member.NotFound", "????? ??? ?????", HttpStatusCode.NotFound);
+
+        public static Error CannotRemoveOwner =>
+            new Error("Member.CannotRemoveOwner", "?? ???? ????? ???? ??????", HttpStatusCode.Forbidden);
+
+        public static Error CannotRemoveSelf =>
+            new Error("Member.CannotRemoveSelf", "?? ????? ????? ????", HttpStatusCode.Forbidden);
+    }
+}
