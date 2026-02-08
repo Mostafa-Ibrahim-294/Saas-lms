@@ -258,5 +258,15 @@ namespace Infrastructure.Repositories
                 .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
         }
+        
+        public Task<string> GetSubDomainAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            var SubDomain = _dbContext.Tenants
+                .AsNoTracking()
+                .Where(t => t.Id == tenantId)
+                .Select(t => t.SubDomain)
+                .FirstOrDefaultAsync(cancellationToken);
+            return SubDomain!;
+        }
     }
 }
