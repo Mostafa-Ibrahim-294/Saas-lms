@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.Features.TenantMembers.Dtos;
 
 namespace Application.Contracts.Repositories
 {
@@ -6,5 +6,6 @@ namespace Application.Contracts.Repositories
     {
         Task CreateTenantInviteAsync(TenantInvite tenantInvite, CancellationToken cancellationToken);
         Task<int> SaveAsync(CancellationToken cancellationToken);
+        Task<ValidateTenanInviteDto> GetValidateTenanInviteAsync(string token, CancellationToken cancellationToken);
     }
 }

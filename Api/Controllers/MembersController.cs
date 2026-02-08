@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Features.TenantMembers.Commands.InviteTenantMember;
+using Application.Features.TenantMembers.Commands.ValidateTenanInvite;
 using Application.Features.TenantMembers.Queries.GetCurrentTenantMember;
 using Application.Features.TenantMembers.Queries.GetTenantMembers;
 using MediatR;
@@ -44,6 +45,14 @@ namespace Api.Controllers
                 success => Ok(success),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
+        }
+
+
+        [HttpPost("invite/validate")]
+        public async Task<IActionResult> Create([FromQuery] string token, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new ValidateTenanInviteCommand(token), cancellationToken);
+            return Ok(result);
         }
     }
 }
