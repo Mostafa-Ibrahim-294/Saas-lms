@@ -11,5 +11,6 @@ namespace Application.Contracts.Repositories
         Task<string> GetInvitedMemberEmailAsync(string token, CancellationToken cancellationToken);
         Task<TenantInvite?> GetInviteByTokenAsync(string token, CancellationToken cancellationToken);
         Task AcceptInviteAsync(string token, CancellationToken cancellationToken);
+        Task DeclineInviteAsync(string token, CancellationToken cancellationToken);
     }
 }

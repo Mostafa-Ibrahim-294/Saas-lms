@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Features.TenantMembers.Commands.AcceptTenanInvite;
+using Application.Features.TenantMembers.Commands.DeclineTenanInvite;
 using Application.Features.TenantMembers.Commands.InviteTenantMember;
 using Application.Features.TenantMembers.Commands.ValidateTenanInvite;
 using Application.Features.TenantMembers.Queries.GetCurrentTenantMember;
@@ -65,6 +66,14 @@ namespace Api.Controllers
                 success => Ok(success),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
+        }
+
+
+        [HttpPost("invite/decline")]
+        public async Task<IActionResult> DeclineInvite([FromQuery] string token, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeclineTenanInviteCommand(token), cancellationToken);
+            return Ok(result);
         }
     }
 }

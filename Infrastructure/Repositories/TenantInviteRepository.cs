@@ -60,5 +60,12 @@ namespace Infrastructure.Repositories
                     .SetProperty(ti => ti.AcceptedAt, DateTime.UtcNow)
                     .SetProperty(ti => ti.Status, TenantInviteStatus.Accepted),cancellationToken);
         }
+        public Task DeclineInviteAsync(string token, CancellationToken cancellationToken)
+        {
+            return _context.TenantInvites
+                .Where(ti => ti.Token == token)
+                .ExecuteUpdateAsync(updates => updates
+                    .SetProperty(ti => ti.Status, TenantInviteStatus.Declined), cancellationToken);
+        }
     }
 }
