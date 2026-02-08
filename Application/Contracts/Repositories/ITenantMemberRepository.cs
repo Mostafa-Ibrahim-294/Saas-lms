@@ -12,5 +12,6 @@ namespace Application.Contracts.Repositories
         Task<TenantMember?> GetMemberByIdAsync(int memberId, CancellationToken cancellationToken);
         Task<bool> IsOwnerAsync(int memberId, CancellationToken cancellationToken);
         Task RemoveMemberAsync(int memberId, CancellationToken cancellationToken);
+        Task UpdateRoleMemberAsync(int memberId, int roleId, CancellationToken cancellationToken);
     }
 }

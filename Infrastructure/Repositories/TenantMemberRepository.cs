@@ -75,5 +75,12 @@ namespace Infrastructure.Repositories
                 .Where(tm => tm.Id == memberId)
                 .ExecuteDeleteAsync(cancellationToken);
         }
+        public Task UpdateRoleMemberAsync(int memberId, int roleId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .Where(tm => tm.Id == memberId && tm.Id == roleId)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(tm => tm.TenantRoleId, roleId), cancellationToken);
+        }
     }
 }
