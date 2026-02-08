@@ -48,7 +48,7 @@ namespace Api.Controllers
         }
 
 
-        [HttpPost("invite/validate")]
+        [HttpGet("invite/validate")]
         public async Task<IActionResult> Create([FromQuery] string token, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new ValidateTenanInviteCommand(token), cancellationToken);
