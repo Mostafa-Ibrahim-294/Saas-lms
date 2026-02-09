@@ -7,3 +7,6 @@ global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Identity.UI.Services;
 global using Microsoft.Extensions.Caching.Hybrid;
 global using OneOf;
+global using Application.Common;
+global using Application.Constants;
+

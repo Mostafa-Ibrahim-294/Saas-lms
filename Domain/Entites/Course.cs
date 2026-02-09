@@ -12,10 +12,13 @@ namespace Domain.Entites
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Currency { get; set; } = string.Empty;
+        public string Curriculum { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? VideoUrl { get; set; }
         public string ThumbnailUrl { get; set; } = string.Empty;
         public byte Discount { get; set; }
+        public string? Year { get; set; }
+        public string? Semester { get; set; }
         public CourseStatus CourseStatus { get; set; }
         public PricingType PricingType { get; set; }
         public BillingCycle? BillingCycle { get; set; }

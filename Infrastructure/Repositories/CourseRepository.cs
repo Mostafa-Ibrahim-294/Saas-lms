@@ -1,5 +1,6 @@
 ﻿using Application.Features.Courses.Dtos;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Enums;
 using Infrastructure.Constants;
 namespace Infrastructure.Repositories
@@ -7,12 +8,21 @@ namespace Infrastructure.Repositories
     internal sealed class CourseRepository : ICourseRepository
     {
         private readonly AppDbContext _dbContext;
-        public CourseRepository(AppDbContext dbContext)
+        private readonly IMapper _mapper;
+        public CourseRepository(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
-        public async Task<AllCoursesDto> GetAllCoursesAsync(string subDomain, string? q, int? gradeId, int? subjectId, string? sortDate, string? sortStudents, string? sortCompletion, int? cursor, CancellationToken cancellationToken)
+        public async Task<int> CreateCourse(Course course, CancellationToken cancellationToken)
+        {
+            await _dbContext.Courses.AddAsync(course);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return course.Id;
+        }
+
+        public async Task<AllCoursesDto> GetAllCoursesAsync(string subDomain, string? q, int? gradeId, int? subjectId, string? sortDate, string? sortStudents, string? sortCompletion, int? cursor, string? lastSortValue, CancellationToken cancellationToken)
         {
             var query = _dbContext.Courses.Where(c => c.Tenant.SubDomain == subDomain).AsNoTracking();
             if (!string.IsNullOrEmpty(q))
@@ -26,10 +36,6 @@ namespace Infrastructure.Repositories
             if (subjectId.HasValue)
             {
                 query = query.Where(c => c.SubjectId == subjectId.Value);
-            }
-            if (cursor.HasValue)
-            {
-                query = query.Where(c => c.Id > cursor.Value);
             }
             var studentCountQuery = _dbContext.Enrollments.AsNoTracking().Where(e => e.Course.Tenant.SubDomain == subDomain)
                 .GroupBy(e => e.CourseId)
@@ -45,24 +51,43 @@ namespace Infrastructure.Repositories
                 queryWithCounts = sortDate == SortDirections.Ascending
                     ? queryWithCounts.OrderBy(c => c.Course.CreatedAt)
                     : queryWithCounts.OrderByDescending(c => c.Course.CreatedAt);
+                if (!string.IsNullOrEmpty(lastSortValue) && DateTime.TryParse(lastSortValue, out var lastDate))
+                {
+                    queryWithCounts = sortDate == SortDirections.Ascending
+                        ? queryWithCounts.Where(c => c.Course.CreatedAt >= lastDate)
+                        : queryWithCounts.Where(c => c.Course.CreatedAt <= lastDate);
+                }
             }
             else if (!string.IsNullOrEmpty(sortStudents))
             {
                 queryWithCounts = sortStudents == SortDirections.Ascending
                     ? queryWithCounts.OrderBy(c => c.StudentCount)
                     : queryWithCounts.OrderByDescending(c => c.StudentCount);
+                if (!string.IsNullOrEmpty(lastSortValue) && int.TryParse(lastSortValue, out var lastCount))
+                {
+                    queryWithCounts = sortStudents == SortDirections.Ascending
+                        ? queryWithCounts.Where(c => c.StudentCount != null && int.Parse(c.StudentCount) >= lastCount)
+                        : queryWithCounts.Where(c => c.StudentCount != null && int.Parse(c.StudentCount) <= lastCount);
+                }
             }
             else if (!string.IsNullOrEmpty(sortCompletion))
             {
                 queryWithCounts = sortCompletion == SortDirections.Ascending
                     ? queryWithCounts.OrderBy(c => c.CompletionRate)
                     : queryWithCounts.OrderByDescending(c => c.CompletionRate);
+                if (!string.IsNullOrEmpty(lastSortValue) && double.TryParse(lastSortValue, out var lastRate))
+                {
+                    queryWithCounts = sortCompletion == SortDirections.Ascending
+                        ? queryWithCounts.Where(c => c.CompletionRate != null && double.Parse(c.CompletionRate) >= lastRate)
+                        : queryWithCounts.Where(c => c.CompletionRate != null && double.Parse(c.CompletionRate) <= lastRate);
+                }
             }
             else
             {
                 queryWithCounts = queryWithCounts.OrderBy(c => c.Course.Id);
             }
             var courses = await queryWithCounts
+                .Where(c => c.Course.Id > (cursor ?? 0))
                 .Take(PaginationLimits.CoursesPageSize + 1)
                 .Select(a => new CourseResponseDto
                 {
@@ -83,12 +108,29 @@ namespace Infrastructure.Repositories
                 courses.RemoveAt(courses.Count - 1);
             }
             var nextCursor = courses.LastOrDefault()?.Id;
+            var lastSort = !string.IsNullOrEmpty(sortDate) ? courses.LastOrDefault()?.CreatedAt.ToString("o") :
+                !string.IsNullOrEmpty(sortStudents) ? courses.LastOrDefault()?.StudentsCount.ToString() :
+                !string.IsNullOrEmpty(sortCompletion) ? courses.LastOrDefault()?.CompletionRate.ToString() : null;
             return new AllCoursesDto
             {
                 Data = courses,
                 HasMore = hasMore,
-                NextCursor = nextCursor ?? 0
+                NextCursor = nextCursor ?? 0,
+                LastSortValue = lastSort
             };
+        }
+
+        public async Task<IEnumerable<LookupDto>> GetAllCoursesTitlesAsync(string subDomain, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Courses
+                .Where(c => c.Tenant.SubDomain == subDomain)
+                .ProjectTo<LookupDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Course?> GetCourseByIdAsync(int courseId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == courseId, cancellationToken);
         }
 
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)
@@ -112,6 +154,17 @@ namespace Infrastructure.Repositories
                 response.AverageCompletionRate = averages.Count > 0 ? averages.Average() : 0.0;
             }
             return response!;
+        }
+
+        public async Task RemoveCourseAsync(Course course, CancellationToken cancellationToken)
+        {
+            _dbContext.Courses.Remove(course);
+            await SaveAsync(cancellationToken);
+        }
+
+        public async Task<int> SaveAsync(CancellationToken cancellationToken)
+        {
+            return await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

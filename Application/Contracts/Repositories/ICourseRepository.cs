@@ -9,6 +9,11 @@ namespace Application.Contracts.Repositories
     {
         Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken);
         Task<AllCoursesDto> GetAllCoursesAsync(string subDomain, string? q, int? gradeId, int? subjectId, string? sortDate, string? sortStudents, string? sortCompletion,
-            int? cursor, CancellationToken cancellationToken);
+            int? cursor, string? lastSortValue, CancellationToken cancellationToken);
+        Task<IEnumerable<LookupDto>> GetAllCoursesTitlesAsync(string subDomain, CancellationToken cancellationToken);
+        Task<int> CreateCourse(Course course, CancellationToken cancellationToken);
+        Task<Course?> GetCourseByIdAsync(int courseId, CancellationToken cancellationToken);
+        Task RemoveCourseAsync(Course course, CancellationToken cancellationToken);
+        Task<int> SaveAsync(CancellationToken cancellationToken);
     }
 }
