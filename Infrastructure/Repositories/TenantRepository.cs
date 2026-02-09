@@ -259,7 +259,6 @@ namespace Infrastructure.Repositories
                 .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
         }
-<<<<<<< HEAD
 
         public async Task<bool> IsFeatureUsingEnded(string subDomain, string featureName, CancellationToken cancellationToken)
         {
@@ -277,7 +276,7 @@ namespace Infrastructure.Repositories
             await _dbContext.TenantUsage
                 .Where(tu => tu.Tenant.SubDomain == subDomain && tu.PlanFeature.Feature.Key == featureName)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used + Size), cancellationToken);
-=======
+        }
         
         public Task<string> GetSubDomainAsync(int tenantId, CancellationToken cancellationToken)
         {
@@ -287,7 +286,6 @@ namespace Infrastructure.Repositories
                 .Select(t => t.SubDomain)
                 .FirstOrDefaultAsync(cancellationToken);
             return SubDomain!;
->>>>>>> 36cfa8f4a023bd1a5e6e1bb8fe31b43d28877137
         }
     }
 }
