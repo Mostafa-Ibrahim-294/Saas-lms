@@ -3,10 +3,12 @@ using Application.Features.Tenants.Commands.DeleteContentLibraryResource;
 using Application.Features.Tenants.Queries.GetContentLibraryResources;
 using Application.Features.Tenants.Queries.GetContentLibraryStatistics;
 using Application.Features.Tenants.Queries.GetLastTenant;
+using Application.Features.Tenants.Queries.GetTenantPermissions;
 using Application.Features.Tenants.Queries.GetTenantUsage;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -64,6 +66,13 @@ namespace Api.Controllers
                 success => Ok(success),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
+        }
+
+
+        [HttpGet("permissions")]
+        public async Task<IActionResult> GetTenantPermissions(CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(new TenantPermissionsQuery(), cancellationToken));
         }
     }
 }
