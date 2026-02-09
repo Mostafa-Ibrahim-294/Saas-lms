@@ -32,6 +32,11 @@ namespace Application.Contracts.Repositories
         Task InCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
         Task IncreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, long Size, CancellationToken cancellationToken);
         Task DeCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
+<<<<<<< HEAD
         Task<bool> IsFeatureUsingEnded(string subDomain, string featureName, CancellationToken cancellationToken);
+=======
+
+        Task<string> GetSubDomainAsync(int tenantId, CancellationToken cancellationToken);
+>>>>>>> 36cfa8f4a023bd1a5e6e1bb8fe31b43d28877137
     }
 }
