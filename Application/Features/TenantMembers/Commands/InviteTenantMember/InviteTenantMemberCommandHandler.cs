@@ -57,11 +57,9 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
             var tenantInvite = new TenantInvite
             {
                 Email = request.email,
-                Status = TenantInviteStatus.Pending,
                 TenantId = tenantId,
                 TenantRoleId = request.roleId,
-                InvitedBy = invitedByMemberId,
-                ExpiresAt = DateTime.UtcNow.AddHours(24)
+                InvitedBy = invitedByMemberId
             };
             await _tenantInviteRepository.CreateTenantInviteAsync(tenantInvite, cancellationToken);
             await _tenantInviteRepository.SaveAsync(cancellationToken);

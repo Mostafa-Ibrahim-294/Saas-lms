@@ -51,7 +51,6 @@ namespace Application.Features.TenantMembers.Commands.AcceptTenanInvite
                 UserId = userId,
                 TenantRoleId = invite.TenantRoleId,
                 InvitedById = invite.InvitedBy,
-                JoinedAt = DateTime.UtcNow,
                 JobTitle = "-",
                 DisplayName = $"{user.FirstName} {user.LastName}"
             };
