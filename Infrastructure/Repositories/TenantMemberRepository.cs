@@ -1,4 +1,5 @@
-﻿using Application.Features.TenantMembers.Dtos;
+﻿using Application.Constants;
+using Application.Features.TenantMembers.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
@@ -37,6 +38,58 @@ namespace Infrastructure.Repositories
                 .Where(tm => tm.TenantId == tenantId)
                 .ProjectTo<TenantMembersDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+        public Task<List<int>> GetTenantIdsAsync(string userId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.UserId == userId)
+                .Select(tm => tm.TenantId)
+                .ToListAsync(cancellationToken);
+        }
+        public Task<int> GetMemberIdByUserIdAsync(string userId, int tenantId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.UserId == userId && tm.TenantId == tenantId)
+                .Select(tm => tm.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        public Task<TenantMember?> GetMemberByIdAsync(int memberId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(tm => tm.Id == memberId, cancellationToken);
+        }
+        public async Task<bool> IsOwnerAsync(int memberId, CancellationToken cancellationToken)
+        {
+            return await _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.Id == memberId)
+                .Select(tm => tm.TenantRole.Name == TenantRoleConstants.Owner)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task RemoveMemberAsync(int memberId, CancellationToken cancellationToken)
+        {
+            await _context.TenantMembers
+                .Where(tm => tm.Id == memberId)
+                .ExecuteDeleteAsync(cancellationToken);
+        }
+        public Task UpdateRoleMemberAsync(int memberId, int roleId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .Where(tm => tm.Id == memberId)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(tm => tm.TenantRoleId, roleId), cancellationToken);
+        }
+        public Task<MemberProfileDto> GetMemberProfileAsync(int memberId, CancellationToken cancellationToken)
+        {
+            var memberProfile = _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.Id == memberId)
+                .ProjectTo<MemberProfileDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+            return memberProfile!;
         }
     }
 }
