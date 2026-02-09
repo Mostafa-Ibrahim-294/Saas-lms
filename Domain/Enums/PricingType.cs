@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Domain.Enums;
 
-namespace Domain.Enums
+public enum PricingType
 {
-    public enum PricingType
-    {
-        OneTime,
-        Subscription,
-        Free,
-        PerSemester
-    }
+    OneTime,
+    Subscription,
+    Free,
+    PerSemester
 }

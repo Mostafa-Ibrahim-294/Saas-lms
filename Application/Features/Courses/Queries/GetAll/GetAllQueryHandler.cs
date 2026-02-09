@@ -34,6 +34,7 @@ namespace Application.Features.Courses.Queries.GetAll
                         sortStudents: request.SortStudents,
                         sortCompletion: request.SortCompletion,
                         cursor: request.Cursor,
+                        lastSortValue: request.LastSortValue,
                         cancellationToken: cancellationToken
                     );
                 },

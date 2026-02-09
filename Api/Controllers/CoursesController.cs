@@ -1,9 +1,16 @@
 ﻿using Application.Constants;
+using Application.Features.Courses.Commands.CreateCourse;
+using Application.Features.Courses.Commands.DeleteCourse;
+using Application.Features.Courses.Commands.UpdateCourse;
+using Application.Features.Courses.Dtos;
 using Application.Features.Courses.Queries.GetAll;
+using Application.Features.Courses.Queries.GetLookup;
 using Application.Features.Courses.Queries.GetStatistics;
+using Domain.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OneOf;
 
 namespace Api.Controllers
 {
@@ -28,6 +35,40 @@ namespace Api.Controllers
         {
             var result = await _mediator.Send(getAllQuery, cancellationToken);
             return Ok(result);
+        }
+        [HttpGet("lookup")]
+        public async Task<IActionResult> GetAllForLookup(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetLookupQuery(), cancellationToken);
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateCourse(CreateCourseCommand createCourseCommand, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(createCourseCommand, cancellationToken);
+            return result.Match(
+                success => Created(string.Empty, success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+        [HttpPut("{courseId}")]
+        public async Task<IActionResult> UpdateCourse([FromRoute] int courseId, UpdateCourseCommand updateCourseCommand, CancellationToken cancellationToken)
+        {
+            updateCourseCommand = updateCourseCommand with { CourseId = courseId };
+            var result = await _mediator.Send(updateCourseCommand, cancellationToken);
+            return result.Match(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+        [HttpDelete("{courseId}")]
+        public async Task<IActionResult> DeleteCourse([FromRoute] int courseId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeleteCourseCommand(courseId), cancellationToken);
+            return result.Match(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
         }
     }
 }

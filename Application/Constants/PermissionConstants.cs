@@ -1,9 +1,11 @@
-﻿namespace Infrastructure.Constants
+﻿namespace Application.Constants
 {
     public static class PermissionConstants
     {
         public const string VIEW_COURSES = "VIEW_COURSES";
         public const string EDIT_COURSES = "EDIT_COURSES";
+        public const string CREATE_COURSES = "CREATE_COURSES";
+        public const string DELETE_COURSES = "DELETE_COURSES";
         public const string MANAGE_LESSONS = "MANAGE_LESSONS";
         public const string MANAGE_VIDEOS = "MANAGE_VIDEOS";
         public const string MANAGE_MODULE_ITEMS = "MANAGE_MODULE_ITEMS";

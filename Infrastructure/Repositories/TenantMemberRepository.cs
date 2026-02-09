@@ -1,6 +1,7 @@
 ﻿using Application.Features.TenantMembers.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using System.Linq;
 
 namespace Infrastructure.Repositories
 {
@@ -37,6 +38,14 @@ namespace Infrastructure.Repositories
                 .Where(tm => tm.TenantId == tenantId)
                 .ProjectTo<TenantMembersDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<bool> IsPermittedMember(string userId, string permission, CancellationToken cancellationToken)
+        {
+            var isPermitted = await _context.TenantMembers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(tm => tm.UserId == userId && (tm.TenantRole.HasAllPermissions || tm.TenantRole.RolePermissions.Any(p => p.PermissionId == permission)), cancellationToken);
+            return isPermitted != null;
         }
     }
 }
