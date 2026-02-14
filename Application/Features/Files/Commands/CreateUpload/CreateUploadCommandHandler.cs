@@ -1,5 +1,3 @@
-using Application.Common;
-using Application.Constants;
 using Application.Contracts.Files;
 using Application.Contracts.Repositories;
 using Application.Features.Files.Dtos;
@@ -59,7 +57,7 @@ namespace Application.Features.Files.Commands.CreateUpload
             if (credentials == null)
                 return FileError.UploadFailed;
 
-            var fileEntity = await CreateFileEntity(credentials.VideoId, request.Title, request.Size, credentials.EmbedUrl, tenantId, userId);
+            var fileEntity = await CreateFileEntity(credentials.VideoId, request.Title, requestMB, credentials.EmbedUrl, tenantId, userId);
             await _fileRepository.CreateAsync(fileEntity, cancellationToken);
             await _fileRepository.SaveAsync(cancellationToken);
             return credentials;

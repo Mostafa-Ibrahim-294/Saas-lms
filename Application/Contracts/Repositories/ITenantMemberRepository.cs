@@ -1,4 +1,6 @@
-﻿using Application.Features.TenantMembers.Dtos;
+﻿using Application.Features.TenantMembers.Commands.UpdateCurrentMember;
+using Application.Features.TenantMembers.Dtos;
+using Application.Features.Tenants.Dtos;
 
 namespace Application.Contracts.Repositories
 {
@@ -15,5 +17,6 @@ namespace Application.Contracts.Repositories
         Task RemoveMemberAsync(int memberId, CancellationToken cancellationToken);
         Task UpdateRoleMemberAsync(int memberId, int roleId, CancellationToken cancellationToken);
         Task<MemberProfileDto> GetMemberProfileAsync(int memberId, CancellationToken cancellationToken);
+        Task UpdateCurrentMemberAsync(int tenantId, int memberId, UpdateCurrentMemberCommand updateCurrentMember, CancellationToken cancellationToken);
     }
 }

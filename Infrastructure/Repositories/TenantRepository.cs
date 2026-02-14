@@ -117,6 +117,7 @@ namespace Infrastructure.Repositories
                 PermissionConstants.VIEW_COURSES,
                 PermissionConstants.EDIT_COURSES,
                 PermissionConstants.MANAGE_LESSONS,
+                PermissionConstants.MANAGE_MEMBERS,
                 PermissionConstants.MANAGE_VIDEOS,
                 PermissionConstants.MANAGE_MODULE_ITEMS,
                 PermissionConstants.VIEW_MEMBERS,

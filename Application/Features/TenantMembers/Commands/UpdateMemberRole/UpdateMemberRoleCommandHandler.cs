@@ -1,6 +1,4 @@
-﻿using Application.Common;
-using Application.Constants;
-using Application.Contracts.Repositories;
+﻿using Application.Contracts.Repositories;
 using Application.Features.TenantMembers.Dtos;
 
 namespace Application.Features.TenantMembers.Commands.UpdateMemberRole
@@ -23,6 +21,11 @@ namespace Application.Features.TenantMembers.Commands.UpdateMemberRole
 
         public async Task<OneOf<UpdateMemberRoleDto, Error>> Handle(UpdateMemberRoleCommand request, CancellationToken cancellationToken)
         {
+            var currentUserId = _currentUserId.GetUserId();
+            var isPermitted = await _tenantMemberRepository.IsPermittedMember(currentUserId, PermissionConstants.MANAGE_MEMBERS, cancellationToken);
+            if (!isPermitted)
+                return MemberErrors.NotAllowed;
+
             var member = await _tenantMemberRepository.GetMemberByIdAsync(request.MemberId, cancellationToken);
             if (member == null)
                 return TenantMemberError.MemberNotFound;
@@ -31,7 +34,6 @@ namespace Application.Features.TenantMembers.Commands.UpdateMemberRole
             if (isOwner)
                 return TenantMemberError.CannotChangeOwnerRole;
 
-            var currentUserId = _currentUserId.GetUserId();
             if (member.UserId == currentUserId)
                 return TenantMemberError.CannotChangeOwnRole;
 
