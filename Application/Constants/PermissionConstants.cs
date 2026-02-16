@@ -7,6 +7,8 @@
         public const string CREATE_COURSES = "CREATE_COURSES";
         public const string DELETE_COURSES = "DELETE_COURSES";
         public const string MANAGE_LESSONS = "MANAGE_LESSONS";
+        public const string MANAGE_MEMBERS = "MANAGE_MEMBERS";
+        public const string MANAGE_PERMISSIONS = "MANAGE_PERMISSIONS";
         public const string MANAGE_VIDEOS = "MANAGE_VIDEOS";
         public const string MANAGE_MODULE_ITEMS = "MANAGE_MODULE_ITEMS";
         public const string MANAGE_QUIZZES = "MANAGE_QUIZZES";
@@ -25,5 +27,6 @@
         public const string VIEW_DASHBOARD = "VIEW_DASHBOARD";
         public const string VIEW_ANALYTICS = "VIEW_ANALYTICS";
         public const string VIEW_PERFORMANCE_CHART = "VIEW_PERFORMANCE_CHART";
+        public const string INVITE_MEMBERS = "INVITE_MEMBERS";
     }
 }

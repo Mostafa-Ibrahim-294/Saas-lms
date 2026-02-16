@@ -1,9 +1,6 @@
-﻿using Application.Common;
-using Application.Constants;
-using Application.Contracts.Repositories;
+﻿using Application.Contracts.Repositories;
 using Application.Features.TenantMembers.Dtos;
 using Application.Helpers;
-using Domain.Enums;
 using Hangfire;
 using Microsoft.AspNetCore.Http;
 
@@ -36,6 +33,11 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
         }
         public async Task<OneOf<InviteTenantMemberDto, Error>> Handle(InviteTenantMemberCommand request, CancellationToken cancellationToken)
         {
+            var currentUserId = _currentUserId.GetUserId();
+            var isPermitted = await _tenantMemberRepository.IsPermittedMember(currentUserId, PermissionConstants.INVITE_MEMBERS, cancellationToken);
+            if (!isPermitted)
+                return MemberErrors.NotAllowed;
+
             var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
             var user = await _userManager.FindByEmailAsync(request.email);
@@ -48,7 +50,6 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
                     return TenantInviteError.UserAlreadyExists;
             }
 
-            var currentUserId = _currentUserId.GetUserId();
             var invitedByMemberId = await _tenantMemberRepository.GetMemberIdByUserIdAsync(currentUserId, tenantId, cancellationToken);
 
             var tenant = await _tenantRepository.GetLastTenantAsync(subDomain, cancellationToken);

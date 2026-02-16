@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260207211152_add TenantInvites Table")]
-    partial class addTenantInvitesTable
+    [Migration("20260209180956_ResetAll")]
+    partial class ResetAll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,6 +140,10 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Curriculum")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -156,6 +160,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<int>("PricingType")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Semester")
+                        .HasColumnType("text");
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer");
@@ -181,6 +188,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("VideoUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Year")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

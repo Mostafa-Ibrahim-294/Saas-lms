@@ -3,6 +3,7 @@ using Application.Features.TenantMembers.Commands.AcceptTenanInvite;
 using Application.Features.TenantMembers.Commands.DeclineTenanInvite;
 using Application.Features.TenantMembers.Commands.InviteTenantMember;
 using Application.Features.TenantMembers.Commands.RemoveMember;
+using Application.Features.TenantMembers.Commands.UpdateCurrentMember;
 using Application.Features.TenantMembers.Commands.UpdateMemberRole;
 using Application.Features.TenantMembers.Commands.ValidateTenanInvite;
 using Application.Features.TenantMembers.Queries.GetCurrentTenantMember;
@@ -110,6 +111,13 @@ namespace Api.Controllers
                success => Ok(success),
                error => StatusCode((int)error.HttpStatusCode, error.Message)
            );
+        }
+
+
+        [HttpPatch("current")]
+        public async Task<IActionResult> UpdateCurrentMember([FromBody] UpdateCurrentMemberCommand updateCurrentMemberCommand, CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(updateCurrentMemberCommand, cancellationToken));
         }
     }
 }

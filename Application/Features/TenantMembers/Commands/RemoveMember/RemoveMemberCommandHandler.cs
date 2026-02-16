@@ -12,21 +12,28 @@ namespace Application.Features.TenantMembers.Commands.RemoveMember
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICurrentUserId _currentUserId;
+        private readonly HybridCache _hybridCache;
 
         public RemoveMemberCommandHandler(
             ITenantMemberRepository tenantMemberRepository,
             ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor,
-            ICurrentUserId currentUserId)
+            ICurrentUserId currentUserId, HybridCache hybridCache)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _tenantRepository = tenantRepository;
             _httpContextAccessor = httpContextAccessor;
             _currentUserId = currentUserId;
+            _hybridCache = hybridCache;
         }
 
         public async Task<OneOf<RemoveMemberDto, Error>> Handle(RemoveMemberCommand request, CancellationToken cancellationToken)
         {
+            var userId = _currentUserId.GetUserId();
+            var isPermitted = await _tenantMemberRepository.IsPermittedMember(userId, PermissionConstants.MANAGE_MEMBERS, cancellationToken);
+            if (!isPermitted)
+                return MemberErrors.NotAllowed;
+
             var member = await _tenantMemberRepository.GetMemberByIdAsync(request.MemberId, cancellationToken);
             if (member == null)
                 return TenantMemberError.MemberNotFound;
@@ -35,11 +42,13 @@ namespace Application.Features.TenantMembers.Commands.RemoveMember
             if (isOwner)
                 return TenantMemberError.CannotRemoveOwner;
 
-            var currentUserId = _currentUserId.GetUserId();
-            if (member.UserId == currentUserId)
+            if (member.UserId == userId)
                 return TenantMemberError.CannotRemoveSelf;
 
             await _tenantMemberRepository.RemoveMemberAsync(request.MemberId, cancellationToken);
+
+            var cacheKey = $"{CacheKeysConstants.CurrentTenantMemberKey}_{member.UserId}";
+            await _hybridCache.RemoveAsync(cacheKey);
             return new RemoveMemberDto { Message = TenantMemberConstants.RemoveMemberResponse };
         }
     }

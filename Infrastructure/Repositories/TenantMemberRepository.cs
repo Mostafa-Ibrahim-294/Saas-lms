@@ -1,8 +1,9 @@
 ﻿using Application.Constants;
+using Application.Features.TenantMembers.Commands.UpdateCurrentMember;
 using Application.Features.TenantMembers.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using System.Linq;
+using MediatR;
 
 namespace Infrastructure.Repositories
 {
@@ -40,7 +41,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<TenantMembersDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
-<<<<<<< HEAD
 
         public async Task<bool> IsPermittedMember(string userId, string permission, CancellationToken cancellationToken)
         {
@@ -48,7 +48,7 @@ namespace Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(tm => tm.UserId == userId && (tm.TenantRole.HasAllPermissions || tm.TenantRole.RolePermissions.Any(p => p.PermissionId == permission)), cancellationToken);
             return isPermitted != null;
-=======
+        }
         public Task<List<int>> GetTenantIdsAsync(string userId, CancellationToken cancellationToken)
         {
             return _context.TenantMembers
@@ -100,7 +100,54 @@ namespace Infrastructure.Repositories
                 .ProjectTo<MemberProfileDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
             return memberProfile!;
->>>>>>> 36cfa8f4a023bd1a5e6e1bb8fe31b43d28877137
+        }
+        public async Task UpdateCurrentMemberAsync(int tenantId, int memberId, UpdateCurrentMemberCommand request, CancellationToken cancellationToken)
+        {
+            var member = await _context.TenantMembers
+                .FirstOrDefaultAsync(tm => tm.Id == memberId, cancellationToken);
+
+            member!.DisplayName = request.DisplayName;
+            member.ExperienceYears = request.ExperienceYears;
+            member.JobTitle = request.JobTitle;
+            member.Bio = request.Bio;
+
+            await _context.Subjects
+                .Where(s => s.TenantId == tenantId)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            var newSubjects = request.Subjects.Select(s => new Subject
+            {
+                TenantId = tenantId,
+                Label = s.Label,
+                Value = s.Value
+            });
+            await _context.Subjects.AddRangeAsync(newSubjects, cancellationToken);
+
+            await _context.TeachingLevels
+                .Where(t => t.TenantId == tenantId)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            var newTeachingLevels = request.TeachingLevels.Select(t => new TeachingLevel
+            {
+                TenantId = tenantId,
+                Label = t.Label,
+                Value = t.Value
+            });
+            await _context.TeachingLevels.AddRangeAsync(newTeachingLevels, cancellationToken);
+
+            await _context.Grades
+                .Where(g => g.TenantId == tenantId)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            var newGrades = request.Grades.Select(g => new Grade
+            {
+                TenantId = tenantId,
+                Label = g.Label,
+                Value = g.Value
+            });
+            await _context.Grades.AddRangeAsync(newGrades, cancellationToken);
+
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
