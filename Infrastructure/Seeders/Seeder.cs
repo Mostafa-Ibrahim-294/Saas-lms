@@ -637,6 +637,7 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "INVITE_MEMBERS", Name = "دعوة أعضاء", Description = "السماح بدعوة أعضاء جدد", Module = "members" },
                     new Permission { Id = "REMOVE_MEMBERS", Name = "إزالة الأعضاء", Description = "السماح بإزالة الأعضاء من المنظمة", Module = "members" },
                     new Permission { Id = "MANAGE_PERMISSIONS", Name = "إدارة الصلاحيات", Description = "السماح بتعديل صلاحيات الأدوار", Module = "members" },
+                    new Permission { Id = "MANAGE_MEMBERS", Name = "إدارة الاعضاء", Description = "السماح بإدارة الاعضاء بشكل كامل", Module = "members" },
 
                     // Website Builder
                     new Permission { Id = "EDIT_PAGES", Name = "تعديل صفحات الموقع", Description = "السماح بتعديل صفحات الموقع", Module = "website" },

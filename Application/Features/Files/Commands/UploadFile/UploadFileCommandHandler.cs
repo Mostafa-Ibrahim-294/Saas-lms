@@ -36,8 +36,11 @@ namespace Application.Features.Files.Commands.UploadFile
 
             int? tenantId = null;
             var subdomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-            if (subdomain != null)
-                tenantId = await _tenantRepository.GetTenantIdAsync(subdomain, cancellationToken);
+            if (!string.IsNullOrEmpty(subdomain))
+            {
+                var id = await _tenantRepository.GetTenantIdAsync(subdomain, cancellationToken);
+                tenantId = id > 0 ? id : null; 
+            }
 
             var cdnUrl = await _fileService.UploadFileAsync(request.File, path);
             if (cdnUrl == null)

@@ -117,6 +117,7 @@ namespace Infrastructure.Repositories
                 PermissionConstants.VIEW_COURSES,
                 PermissionConstants.EDIT_COURSES,
                 PermissionConstants.MANAGE_LESSONS,
+                PermissionConstants.MANAGE_MEMBERS,
                 PermissionConstants.MANAGE_VIDEOS,
                 PermissionConstants.MANAGE_MODULE_ITEMS,
                 PermissionConstants.VIEW_MEMBERS,
@@ -259,6 +260,10 @@ namespace Infrastructure.Repositories
                 .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> a7a08a95443506f15c4ee108cba5ab2c61c4c4fe
         public async Task<bool> IsFeatureUsingEnded(string subDomain, string featureName, CancellationToken cancellationToken)
         {
             var isEnded = await _dbContext.TenantUsage
@@ -275,7 +280,12 @@ namespace Infrastructure.Repositories
             await _dbContext.TenantUsage
                 .Where(tu => tu.Tenant.SubDomain == subDomain && tu.PlanFeature.Feature.Key == featureName)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used + Size), cancellationToken);
+<<<<<<< HEAD
         }        
+=======
+        }
+        
+>>>>>>> a7a08a95443506f15c4ee108cba5ab2c61c4c4fe
         public Task<string> GetSubDomainAsync(int tenantId, CancellationToken cancellationToken)
         {
             var SubDomain = _dbContext.Tenants
@@ -284,6 +294,7 @@ namespace Infrastructure.Repositories
                 .Select(t => t.SubDomain)
                 .FirstOrDefaultAsync(cancellationToken);
             return SubDomain!;
+<<<<<<< HEAD
         }
 
         public async Task DecreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, CancellationToken cancellationToken, long Size = 1)
@@ -291,6 +302,8 @@ namespace Infrastructure.Repositories
             await _dbContext.TenantUsage
                 .Where(tu => tu.Tenant.SubDomain == subDomain && tu.PlanFeature.Feature.Key == featureName)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
+=======
+>>>>>>> a7a08a95443506f15c4ee108cba5ab2c61c4c4fe
         }
     }
 }
