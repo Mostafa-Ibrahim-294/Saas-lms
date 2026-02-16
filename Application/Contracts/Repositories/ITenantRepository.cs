@@ -1,5 +1,6 @@
 ﻿using Application.Features.Tenants.Dtos;
 using Domain.Enums;
+using System.Drawing;
 
 namespace Application.Contracts.Repositories
 {
@@ -30,13 +31,11 @@ namespace Application.Contracts.Repositories
 
         Task<int> GetPlanFeatureUsageAsync(Guid PlanFeatureId, CancellationToken cancellationToken);
         Task InCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
-        Task IncreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, long Size, CancellationToken cancellationToken);
-        Task DeCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
-<<<<<<< HEAD
-        Task<bool> IsFeatureUsingEnded(string subDomain, string featureName, CancellationToken cancellationToken);
-=======
+        Task IncreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, CancellationToken cancellationToken, long Size = 1);
+        Task DecreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, CancellationToken cancellationToken, long Size = 1);
 
+        Task DeCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
+        Task<bool> IsFeatureUsingEnded(string subDomain, string featureName, CancellationToken cancellationToken);
         Task<string> GetSubDomainAsync(int tenantId, CancellationToken cancellationToken);
->>>>>>> 36cfa8f4a023bd1a5e6e1bb8fe31b43d28877137
     }
 }

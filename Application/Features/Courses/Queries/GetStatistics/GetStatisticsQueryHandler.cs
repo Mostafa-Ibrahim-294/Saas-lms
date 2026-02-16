@@ -30,6 +30,7 @@ namespace Application.Features.Courses.Queries.GetStatistics
                 {
                     Expiration = TimeSpan.FromMinutes(30)
                 },
+                tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{subdomain}" },
                 cancellationToken: cancellationToken
             );
             return statistics;

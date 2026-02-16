@@ -20,7 +20,7 @@ namespace Application.Features.Courses.Queries.GetAll
         public async Task<AllCoursesDto> Handle(GetAllQuery request, CancellationToken cancellationToken)
         {
             var subDomain = _httpContextAccessor?.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-            var cacheKey = $"{CacheKeysConstants.AllCoursesKey}_{request.Q}_{request.GradeId}_{request.SubjectId}_{request.SortDate}_{request.SortStudents}_{request.SortCompletion}_{request.Cursor}_{subDomain}";
+            var cacheKey = $"{CacheKeysConstants.AllCoursesKey}_{request.Q}_{request.GradeId}_{request.SubjectId}_{request.SortBy}_{request.SortOrder}_{request.LastSortValue}_{request.Status}_{request.Cursor}_{subDomain}";
             var courses = await _hybridCache.GetOrCreateAsync(
                 cacheKey,
                 async cacheEntry =>
@@ -30,9 +30,9 @@ namespace Application.Features.Courses.Queries.GetAll
                         q: request.Q,
                         gradeId: request.GradeId,
                         subjectId: request.SubjectId,
-                        sortDate: request.SortDate,
-                        sortStudents: request.SortStudents,
-                        sortCompletion: request.SortCompletion,
+                        sortBy: request.SortBy,
+                        sortOrder: request.SortOrder,
+                        status: request.Status,
                         cursor: request.Cursor,
                         lastSortValue: request.LastSortValue,
                         cancellationToken: cancellationToken
@@ -42,6 +42,7 @@ namespace Application.Features.Courses.Queries.GetAll
                 {
                     Expiration = TimeSpan.FromMinutes(30)
                 },
+                tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{subDomain}"},
                 cancellationToken: cancellationToken
             );
             return courses;

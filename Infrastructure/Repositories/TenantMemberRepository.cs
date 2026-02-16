@@ -40,7 +40,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<TenantMembersDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
-<<<<<<< HEAD
 
         public async Task<bool> IsPermittedMember(string userId, string permission, CancellationToken cancellationToken)
         {
@@ -48,7 +47,7 @@ namespace Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(tm => tm.UserId == userId && (tm.TenantRole.HasAllPermissions || tm.TenantRole.RolePermissions.Any(p => p.PermissionId == permission)), cancellationToken);
             return isPermitted != null;
-=======
+        }
         public Task<List<int>> GetTenantIdsAsync(string userId, CancellationToken cancellationToken)
         {
             return _context.TenantMembers
@@ -100,7 +99,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<MemberProfileDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
             return memberProfile!;
->>>>>>> 36cfa8f4a023bd1a5e6e1bb8fe31b43d28877137
         }
     }
 }

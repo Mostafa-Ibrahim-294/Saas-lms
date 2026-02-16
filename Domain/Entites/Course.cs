@@ -12,17 +12,17 @@ namespace Domain.Entites
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Currency { get; set; } = string.Empty;
-        public string Curriculum { get; set; } = string.Empty;
+        public string? Curriculum { get; set; }
         public decimal Price { get; set; }
         public string? VideoUrl { get; set; }
         public string ThumbnailUrl { get; set; } = string.Empty;
         public byte Discount { get; set; }
-        public string? Year { get; set; }
+        public string Year { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow).Year.ToString();
         public string? Semester { get; set; }
         public CourseStatus CourseStatus { get; set; }
         public PricingType PricingType { get; set; }
         public BillingCycle? BillingCycle { get; set; }
-        public string[] Tags { get; set; } = [];
+        public string[]? Tags { get; set; }
         public int TenantId { get; set; }
         public Tenant Tenant { get; set; } = null!;
         public string CreatedById { get; set; } = string.Empty;

@@ -9,16 +9,17 @@ using System.Text;
 
 namespace Application.Features.Courses.Commands.CreateCourse
 {
-    internal sealed class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, OneOf<CourseDto, Error>>
+    internal sealed class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, OneOf<SuccessDto, Error>>
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ITenantMemberRepository _tenantMemberRepository;
         private readonly ICurrentUserId _currentUserId;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HybridCache _hybridCache;
         private readonly IMapper _mapper;
         public CreateCourseCommandHandler(ICourseRepository courseRepository, ICurrentUserId currentUserId, IMapper mapper,
-            ITenantMemberRepository tenantMemberRepository, ITenantRepository tenantRepository, IHttpContextAccessor httpContextAccessor)
+            ITenantMemberRepository tenantMemberRepository, ITenantRepository tenantRepository, IHttpContextAccessor httpContextAccessor, HybridCache hybridCache)
         {
             _courseRepository = courseRepository;
             _currentUserId = currentUserId;
@@ -26,9 +27,10 @@ namespace Application.Features.Courses.Commands.CreateCourse
             _tenantMemberRepository = tenantMemberRepository;
             _tenantRepository = tenantRepository;
             _httpContextAccessor = httpContextAccessor;
+            _hybridCache = hybridCache;
         }
 
-        public async Task<OneOf<CourseDto, Error>> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
+        public async Task<OneOf<SuccessDto, Error>> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
         {
             var userId = _currentUserId.GetUserId();
             var isPermitted = await _tenantMemberRepository.IsPermittedMember(userId, PermissionConstants.CREATE_COURSES, cancellationToken);
@@ -51,11 +53,12 @@ namespace Application.Features.Courses.Commands.CreateCourse
                 })
                 );
             var courseId = await _courseRepository.CreateCourse(course, cancellationToken);
-            await _tenantRepository.IncreasePlanFeatureUsageByKeyAsync(subDomain!, FeatureConstants.COURSE_LIMIT, 1, cancellationToken);
-            return new CourseDto
+            await _tenantRepository.IncreasePlanFeatureUsageByKeyAsync(subDomain!, FeatureConstants.COURSE_LIMIT, cancellationToken);
+            await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{subDomain}" }, cancellationToken);
+            return new SuccessDto
             {
                 Id = courseId.ToString(),
-                Message = SuccessConstatns.CourseCreated
+                Message = $"{nameof(Course)} {SuccessConstatns.ItemCreated}"
             };
         }
     }

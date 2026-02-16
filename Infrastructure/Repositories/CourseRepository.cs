@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
             return course.Id;
         }
 
-        public async Task<AllCoursesDto> GetAllCoursesAsync(string subDomain, string? q, int? gradeId, int? subjectId, string? sortDate, string? sortStudents, string? sortCompletion, int? cursor, string? lastSortValue, CancellationToken cancellationToken)
+        public async Task<AllCoursesDto> GetAllCoursesAsync(string subDomain, string? q, int? gradeId, int? subjectId, string? sortBy, string? sortOrder, CourseStatus? status, int? cursor, string? lastSortValue, CancellationToken cancellationToken)
         {
             var query = _dbContext.Courses.Where(c => c.Tenant.SubDomain == subDomain).AsNoTracking();
             if (!string.IsNullOrEmpty(q))
@@ -37,6 +37,10 @@ namespace Infrastructure.Repositories
             {
                 query = query.Where(c => c.SubjectId == subjectId.Value);
             }
+            if(status.HasValue)
+            {
+                query = query.Where(c => c.CourseStatus == status.Value);
+            }
             var studentCountQuery = _dbContext.Enrollments.AsNoTracking().Where(e => e.Course.Tenant.SubDomain == subDomain)
                 .GroupBy(e => e.CourseId)
                 .Select(g => new { CourseId = g.Key, StudentCount = g.Select(e => e.StudentId).Count().ToString()})
@@ -46,40 +50,43 @@ namespace Infrastructure.Repositories
                 .Select(g => new { CourseId = g.Key, CompletionRate = g.Where(p => p.TotalLessons > 0).Average(p => (double)p.CompletedLessons / p.TotalLessons).ToString()});
             var queryWithCounts = query.LeftJoin(studentCountQuery, c => c.Id, sc => sc.CourseId, (c, sc) => new { Course = c, StudentCount = sc != null ? sc.StudentCount : null! })
                 .LeftJoin(courseProgressQuery, c => c.Course.Id, cp => cp.CourseId, (c, cp) => new { c.Course, c.StudentCount, CompletionRate = cp != null ? cp.CompletionRate: null! });
-            if (!string.IsNullOrEmpty(sortDate))
+            if (!string.IsNullOrEmpty(sortBy))
             {
-                queryWithCounts = sortDate == SortDirections.Ascending
+                if(sortBy == SortBy.Date)
+                {
+                    queryWithCounts = sortOrder == SortDirections.Ascending
                     ? queryWithCounts.OrderBy(c => c.Course.CreatedAt)
                     : queryWithCounts.OrderByDescending(c => c.Course.CreatedAt);
-                if (!string.IsNullOrEmpty(lastSortValue) && DateTime.TryParse(lastSortValue, out var lastDate))
-                {
-                    queryWithCounts = sortDate == SortDirections.Ascending
-                        ? queryWithCounts.Where(c => c.Course.CreatedAt >= lastDate)
-                        : queryWithCounts.Where(c => c.Course.CreatedAt <= lastDate);
+                    if (!string.IsNullOrEmpty(lastSortValue) && DateTime.TryParse(lastSortValue, out var lastDate))
+                    {
+                        queryWithCounts = sortOrder == SortDirections.Ascending
+                            ? queryWithCounts.Where(c => c.Course.CreatedAt >= lastDate)
+                            : queryWithCounts.Where(c => c.Course.CreatedAt <= lastDate);
+                    }
                 }
-            }
-            else if (!string.IsNullOrEmpty(sortStudents))
-            {
-                queryWithCounts = sortStudents == SortDirections.Ascending
+                else if(sortBy == SortBy.Students)
+                {
+                    queryWithCounts = sortOrder == SortDirections.Ascending
                     ? queryWithCounts.OrderBy(c => c.StudentCount)
                     : queryWithCounts.OrderByDescending(c => c.StudentCount);
-                if (!string.IsNullOrEmpty(lastSortValue) && int.TryParse(lastSortValue, out var lastCount))
-                {
-                    queryWithCounts = sortStudents == SortDirections.Ascending
-                        ? queryWithCounts.Where(c => c.StudentCount != null && int.Parse(c.StudentCount) >= lastCount)
-                        : queryWithCounts.Where(c => c.StudentCount != null && int.Parse(c.StudentCount) <= lastCount);
+                    if (!string.IsNullOrEmpty(lastSortValue) && int.TryParse(lastSortValue, out var lastCount))
+                    {
+                        queryWithCounts = sortOrder == SortDirections.Ascending
+                            ? queryWithCounts.Where(c => c.StudentCount != null && int.Parse(c.StudentCount) >= lastCount)
+                            : queryWithCounts.Where(c => c.StudentCount != null && int.Parse(c.StudentCount) <= lastCount);
+                    }
                 }
-            }
-            else if (!string.IsNullOrEmpty(sortCompletion))
-            {
-                queryWithCounts = sortCompletion == SortDirections.Ascending
+                else if(sortBy == SortBy.Completion)
+                 {
+                    queryWithCounts = sortOrder == SortDirections.Ascending
                     ? queryWithCounts.OrderBy(c => c.CompletionRate)
                     : queryWithCounts.OrderByDescending(c => c.CompletionRate);
-                if (!string.IsNullOrEmpty(lastSortValue) && double.TryParse(lastSortValue, out var lastRate))
-                {
-                    queryWithCounts = sortCompletion == SortDirections.Ascending
-                        ? queryWithCounts.Where(c => c.CompletionRate != null && double.Parse(c.CompletionRate) >= lastRate)
-                        : queryWithCounts.Where(c => c.CompletionRate != null && double.Parse(c.CompletionRate) <= lastRate);
+                    if (!string.IsNullOrEmpty(lastSortValue) && double.TryParse(lastSortValue, out var lastRate))
+                    {
+                        queryWithCounts = sortOrder == SortDirections.Ascending
+                            ? queryWithCounts.Where(c => c.CompletionRate != null && double.Parse(c.CompletionRate) >= lastRate)
+                            : queryWithCounts.Where(c => c.CompletionRate != null && double.Parse(c.CompletionRate) <= lastRate);
+                    }
                 }
             }
             else
@@ -108,9 +115,9 @@ namespace Infrastructure.Repositories
                 courses.RemoveAt(courses.Count - 1);
             }
             var nextCursor = courses.LastOrDefault()?.Id;
-            var lastSort = !string.IsNullOrEmpty(sortDate) ? courses.LastOrDefault()?.CreatedAt.ToString("o") :
-                !string.IsNullOrEmpty(sortStudents) ? courses.LastOrDefault()?.StudentsCount.ToString() :
-                !string.IsNullOrEmpty(sortCompletion) ? courses.LastOrDefault()?.CompletionRate.ToString() : null;
+            var lastSort = !string.IsNullOrEmpty(sortBy) && sortBy == SortBy.Date ? courses.LastOrDefault()?.CreatedAt.ToString("o") :
+                !string.IsNullOrEmpty(sortBy) && sortBy == SortBy.Students ? courses.LastOrDefault()?.StudentsCount.ToString() :
+                !string.IsNullOrEmpty(sortBy) && sortBy == SortBy.Completion ? courses.LastOrDefault()?.CompletionRate.ToString() : null;
             return new AllCoursesDto
             {
                 Data = courses,
@@ -128,9 +135,9 @@ namespace Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Course?> GetCourseByIdAsync(int courseId, CancellationToken cancellationToken)
+        public async Task<Course?> GetCourseByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken)
         {
-            return await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == courseId, cancellationToken);
+            return await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.Tenant.SubDomain == subdomain, cancellationToken);
         }
 
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)

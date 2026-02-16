@@ -4,6 +4,7 @@ using Application.Features.Courses.Commands.DeleteCourse;
 using Application.Features.Courses.Commands.UpdateCourse;
 using Application.Features.Courses.Dtos;
 using Application.Features.Courses.Queries.GetAll;
+using Application.Features.Courses.Queries.GetCourse;
 using Application.Features.Courses.Queries.GetLookup;
 using Application.Features.Courses.Queries.GetStatistics;
 using Domain.Errors;
@@ -35,6 +36,15 @@ namespace Api.Controllers
         {
             var result = await _mediator.Send(getAllQuery, cancellationToken);
             return Ok(result);
+        }
+        [HttpGet("{courseId}")]
+        public async Task<IActionResult> GetById([FromRoute] int courseId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCourseQuery(courseId), cancellationToken);
+            return result.Match(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
         }
         [HttpGet("lookup")]
         public async Task<IActionResult> GetAllForLookup(CancellationToken cancellationToken)

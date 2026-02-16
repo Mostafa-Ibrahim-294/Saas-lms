@@ -6,5 +6,5 @@ using System.Text;
 namespace Application.Features.Courses.Commands.DeleteCourse
 {
     public sealed record DeleteCourseCommand(int CourseId)
-         : IRequest<OneOf<CourseDto, Error>>;
+         : IRequest<OneOf<SuccessDto, Error>>;
 }

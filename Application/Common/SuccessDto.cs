@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Features.Courses.Dtos
+namespace Application.Common
 {
-    public sealed class CourseDto
+    public sealed class SuccessDto
     {
         public string Id { get; set; } = null!;
         public string Message { get; set; } = null!;

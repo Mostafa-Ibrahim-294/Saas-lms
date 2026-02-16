@@ -1,10 +1,11 @@
 ﻿using Application.Features.Courses.Dtos;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Application.Features.Courses.Queries.GetAll
 {
-    public sealed record GetAllQuery(string? Q, int? GradeId, int? SubjectId, string? SortDate, string? SortStudents, string? SortCompletion, int? Cursor, string? LastSortValue)
+    public sealed record GetAllQuery(string? Q, int? GradeId, int? SubjectId, string? SortBy, string? SortOrder, CourseStatus? Status, int? Cursor, string? LastSortValue)
         : IRequest<AllCoursesDto>;
 }
