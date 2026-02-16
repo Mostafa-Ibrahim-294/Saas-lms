@@ -3,7 +3,6 @@ using Application.Features.Tenants.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Constants;
-using Domain.Entites;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -142,7 +141,6 @@ namespace Infrastructure.Repositories
                 .Select(t => t.Id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task<TenantUsageDto> GetTenantUsageAsync(int tenantId, CancellationToken cancellationToken)
         {
             var result = await (from s in _dbContext.Subscriptions.AsNoTracking()
@@ -187,7 +185,6 @@ namespace Infrastructure.Repositories
 
             return result!;
         }
-
         public async Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId)
         {
             var tenantUsages = PlanFeatureId.Select(planFeatureId => new TenantUsage
@@ -199,9 +196,6 @@ namespace Infrastructure.Repositories
 
             _dbContext.TenantUsage.AddRange(tenantUsages);
         }
-
-
-
         public async Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q, CancellationToken cancellationToken)
         {
             var query = _dbContext.Files
@@ -260,16 +254,13 @@ namespace Infrastructure.Repositories
                 .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> a7a08a95443506f15c4ee108cba5ab2c61c4c4fe
         public async Task<bool> IsFeatureUsingEnded(string subDomain, string featureName, CancellationToken cancellationToken)
         {
             var isEnded = await _dbContext.TenantUsage
                 .AsNoTracking()
                 .Where(tu => tu.Tenant.SubDomain == subDomain && (tu.Subscription.Status == SubscriptionStatus.Active || tu.Subscription.Status == SubscriptionStatus.Trialed) &&
-                 tu.Subscription.EndsAt > DateTime.UtcNow &&  tu.PlanFeature.Feature.Key == featureName)
+                 tu.Subscription.EndsAt > DateTime.UtcNow && tu.PlanFeature.Feature.Key == featureName)
                 .Select(tu => new { tu.Used, tu.PlanFeature.LimitValue })
                 .FirstOrDefaultAsync(cancellationToken);
             return isEnded != null && isEnded.Used >= isEnded.LimitValue;
@@ -280,12 +271,7 @@ namespace Infrastructure.Repositories
             await _dbContext.TenantUsage
                 .Where(tu => tu.Tenant.SubDomain == subDomain && tu.PlanFeature.Feature.Key == featureName)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used + Size), cancellationToken);
-<<<<<<< HEAD
-        }        
-=======
         }
-        
->>>>>>> a7a08a95443506f15c4ee108cba5ab2c61c4c4fe
         public Task<string> GetSubDomainAsync(int tenantId, CancellationToken cancellationToken)
         {
             var SubDomain = _dbContext.Tenants
@@ -294,7 +280,6 @@ namespace Infrastructure.Repositories
                 .Select(t => t.SubDomain)
                 .FirstOrDefaultAsync(cancellationToken);
             return SubDomain!;
-<<<<<<< HEAD
         }
 
         public async Task DecreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, CancellationToken cancellationToken, long Size = 1)
@@ -302,8 +287,6 @@ namespace Infrastructure.Repositories
             await _dbContext.TenantUsage
                 .Where(tu => tu.Tenant.SubDomain == subDomain && tu.PlanFeature.Feature.Key == featureName)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
-=======
->>>>>>> a7a08a95443506f15c4ee108cba5ab2c61c4c4fe
         }
     }
 }

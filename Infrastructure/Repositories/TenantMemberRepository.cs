@@ -100,8 +100,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<MemberProfileDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
             return memberProfile!;
-<<<<<<< HEAD
-=======
         }
         public async Task UpdateCurrentMemberAsync(int tenantId, int memberId, UpdateCurrentMemberCommand request, CancellationToken cancellationToken)
         {
@@ -150,7 +148,6 @@ namespace Infrastructure.Repositories
             await _context.Grades.AddRangeAsync(newGrades, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
->>>>>>> a7a08a95443506f15c4ee108cba5ab2c61c4c4fe
         }
     }
 }
