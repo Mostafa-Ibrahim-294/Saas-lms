@@ -33,8 +33,6 @@ namespace Infrastructure.Repositories
                                     && s.EndsAt > DateTime.UtcNow
                            select s).AnyAsync(cancellationToken);
         }
-        
-
         public Task<Guid> GetPlanPricingIdAsync(int tenantId, CancellationToken cancellationToken)
         {
             return _context.Subscriptions.Where(s => s.TenantId == tenantId &&
@@ -42,6 +40,18 @@ namespace Infrastructure.Repositories
                                 s.EndsAt > DateTime.UtcNow)
                     .Select(s => s.PlanPricingId)
                     .FirstOrDefaultAsync(cancellationToken);
+        }
+        public Task<bool> TenantHasFeatureAsync(int tenantId, string featureKey, CancellationToken cancellationToken)
+        {
+            return (from s in _context.Subscriptions
+                    join pp in _context.PlanPricings on s.PlanPricingId equals pp.Id
+                    join pf in _context.PlanFeatures on pp.PlanId equals pf.PlanId
+                    join f in _context.Features on pf.FeatureId equals f.Id
+                    where s.TenantId == tenantId
+                      && (s.Status == SubscriptionStatus.Active || s.Status == SubscriptionStatus.Trialed) 
+                      && s.EndsAt > DateTime.UtcNow 
+                      && f.Key == featureKey
+                    select s.Id).AnyAsync(cancellationToken);
         }
     }
 }

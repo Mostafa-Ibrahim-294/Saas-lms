@@ -380,7 +380,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Grades");
                 });
 
+<<<<<<< Updated upstream
             modelBuilder.Entity("Domain.Entites.Module", b =>
+=======
+            modelBuilder.Entity("Domain.Entites.LiveSession", b =>
+>>>>>>> Stashed changes
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -388,6 +392,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+<<<<<<< Updated upstream
                     b.Property<int>("CourseId")
                         .HasColumnType("integer");
 
@@ -402,17 +407,110 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
+=======
+                    b.Property<DateTime?>("ActualEndTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ActualStartTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HostMemberId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RecordingDuration")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RecordingUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("ScheduledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("TenantId")
+>>>>>>> Stashed changes
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
+<<<<<<< Updated upstream
                         .HasColumnType("text");
+=======
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ZoomHostEmail")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ZoomHostId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("ZoomIntegrationId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ZoomJoinUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("ZoomMeetingId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ZoomPassword")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ZoomStartUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+>>>>>>> Stashed changes
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
+<<<<<<< Updated upstream
                     b.ToTable("Modules");
+=======
+                    b.HasIndex("HostMemberId");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("ZoomIntegrationId");
+
+                    b.HasIndex("ZoomMeetingId")
+                        .IsUnique();
+
+                    b.ToTable("LiveSessions");
+>>>>>>> Stashed changes
                 });
 
             modelBuilder.Entity("Domain.Entites.Permission", b =>
@@ -596,6 +694,98 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("PermissionId");
 
                     b.ToTable("RolePermissions");
+                });
+
+            modelBuilder.Entity("Domain.Entites.SessionParticipant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("AttendancePercentage")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
+
+                    b.Property<bool>("Attended")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeviceType")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int?>("Duration")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsManuallyMarked")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("JoinCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("JoinedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LeftAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LiveSessionId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("MarkedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MarkedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("ParticipantEmail")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ParticipantName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TotalDuration")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ZoomParticipantId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ZoomParticipantUuid")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Attended");
+
+                    b.HasIndex("LiveSessionId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("SessionParticipants");
                 });
 
             modelBuilder.Entity("Domain.Entites.Student", b =>
@@ -972,6 +1162,120 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("TenantUsage");
                 });
 
+            modelBuilder.Entity("Domain.Entites.ZoomIntegration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastSyncAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TokenExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ZoomAccountId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ZoomAccountType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ZoomDisplayName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ZoomEmail")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ZoomUserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("UserId", "TenantId")
+                        .IsUnique();
+
+                    b.ToTable("ZoomIntegrations");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ZoomOAuthState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("StateToken")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StateToken")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ZoomOAuthStates");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1206,15 +1510,49 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
                 });
 
+<<<<<<< Updated upstream
             modelBuilder.Entity("Domain.Entites.Module", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
                         .WithMany()
+=======
+            modelBuilder.Entity("Domain.Entites.LiveSession", b =>
+                {
+                    b.HasOne("Domain.Entites.Course", "Course")
+                        .WithMany("LiveSessions")
+>>>>>>> Stashed changes
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+<<<<<<< Updated upstream
                     b.Navigation("Course");
+=======
+                    b.HasOne("Domain.Entites.TenantMember", "Host")
+                        .WithMany("LiveSessions")
+                        .HasForeignKey("HostMemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("LiveSessions")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ZoomIntegration", "ZoomIntegration")
+                        .WithMany("LiveSessions")
+                        .HasForeignKey("ZoomIntegrationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Host");
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("ZoomIntegration");
+>>>>>>> Stashed changes
                 });
 
             modelBuilder.Entity("Domain.Entites.PlanFeature", b =>
@@ -1275,6 +1613,25 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("TenantRole");
+                });
+
+            modelBuilder.Entity("Domain.Entites.SessionParticipant", b =>
+                {
+                    b.HasOne("Domain.Entites.LiveSession", "LiveSession")
+                        .WithMany("Participants")
+                        .HasForeignKey("LiveSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Student", "Student")
+                        .WithMany("SessionParticipants")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("LiveSession");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Domain.Entites.Student", b =>
@@ -1454,6 +1811,44 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("Domain.Entites.ZoomIntegration", b =>
+                {
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("ZoomIntegrations")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ApplicationUser", "User")
+                        .WithMany("ZoomIntegrations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ZoomOAuthState", b =>
+                {
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("ZoomOAuthStates")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ApplicationUser", "User")
+                        .WithMany("ZoomOAuthStates")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1508,6 +1903,10 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.ApplicationUser", b =>
                 {
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("ZoomIntegrations");
+
+                    b.Navigation("ZoomOAuthStates");
                 });
 
             modelBuilder.Entity("Domain.Entites.Course", b =>
@@ -1515,11 +1914,18 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("CourseProgresses");
 
                     b.Navigation("Enrollments");
+
+                    b.Navigation("LiveSessions");
                 });
 
             modelBuilder.Entity("Domain.Entites.Feature", b =>
                 {
                     b.Navigation("PlanFeatures");
+                });
+
+            modelBuilder.Entity("Domain.Entites.LiveSession", b =>
+                {
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("Domain.Entites.Plan", b =>
@@ -1542,6 +1948,8 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.Student", b =>
                 {
                     b.Navigation("Enrollments");
+
+                    b.Navigation("SessionParticipants");
                 });
 
             modelBuilder.Entity("Domain.Entites.Subscription", b =>
@@ -1554,6 +1962,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("Grades");
+
+                    b.Navigation("LiveSessions");
 
                     b.Navigation("Subjects");
 
@@ -1568,10 +1978,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("TenantRoles");
 
                     b.Navigation("TenantUsages");
+
+                    b.Navigation("ZoomIntegrations");
+
+                    b.Navigation("ZoomOAuthStates");
                 });
 
             modelBuilder.Entity("Domain.Entites.TenantMember", b =>
                 {
+                    b.Navigation("LiveSessions");
+
                     b.Navigation("TenantInvites");
                 });
 
@@ -1582,6 +1998,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("TenantInvites");
 
                     b.Navigation("TenantMembers");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ZoomIntegration", b =>
+                {
+                    b.Navigation("LiveSessions");
                 });
 #pragma warning restore 612, 618
         }

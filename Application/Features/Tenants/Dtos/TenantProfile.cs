@@ -42,6 +42,21 @@ namespace Application.Features.Tenants.Dtos
                 .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Size / 1024))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.Extension, opt => opt.MapFrom(src => Path.GetExtension(src.Url).TrimStart('.')));
+
+
+            CreateMap<LiveSession, LiveSessionDto>()
+               .ForMember(dest => dest.Course, opt => opt.MapFrom(src => new CourseDto
+               {
+                   Id = src.Course.Id,
+                   Name = src.Course.Title
+               }))
+               .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.ScheduledAt))
+               .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => src.ZoomIntegration!.ZoomDisplayName))
+               .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+               .ForMember(dest => dest.Attendance, opt => opt.MapFrom(src => src.Participants.Count))
+               .ForMember(dest => dest.Recorded, opt => opt.MapFrom(src => src.RecordingUrl != null))
+               .ForMember(dest => dest.JoinUrl, opt => opt.MapFrom(src => src.ZoomJoinUrl))
+               .ForMember(dest => dest.TotalStudents, opt => opt.MapFrom(src => src.Course.Enrollments.Count));
         }
     }
 }

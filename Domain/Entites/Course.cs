@@ -35,5 +35,6 @@ namespace Domain.Entites
         public ICollection<CourseProgress> CourseProgresses { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public ICollection<LiveSession> LiveSessions { get; set; } = [];
     }
 }

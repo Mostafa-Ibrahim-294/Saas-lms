@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Files;
+using Application.Contracts.Zoom;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Infrastructure.Health;
@@ -55,6 +56,10 @@ namespace Infrastructure.Extensions
                 .BindConfiguration(nameof(Common.Options.FileOptions))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+            builder.Services.AddOptions<Common.Options.ZoomOptions>()
+                .BindConfiguration(nameof(Common.Options.ZoomOptions))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
 
             builder.Services.AddOptions<AiTranscriptionOptions>()
@@ -102,6 +107,10 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ITenantInviteRepository, TenantInviteRepository>();
             builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+            builder.Services.AddScoped<IZoomService, ZoomService>();
+            builder.Services.AddScoped<IZoomIntegrationRepository, ZoomIntegrationRepository>();
+            builder.Services.AddScoped<IZoomOAuthStateRepository, ZoomOAuthStateRepository>();
+            builder.Services.AddScoped<ILiveSessionRepository, LiveSessionRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

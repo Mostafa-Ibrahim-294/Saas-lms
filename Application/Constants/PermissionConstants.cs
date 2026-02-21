@@ -28,5 +28,7 @@
         public const string VIEW_ANALYTICS = "VIEW_ANALYTICS";
         public const string VIEW_PERFORMANCE_CHART = "VIEW_PERFORMANCE_CHART";
         public const string INVITE_MEMBERS = "INVITE_MEMBERS";
+        public const string CREATE_SESSIONS = "CREATE_SESSIONS";
+        public const string EDIT_SESSIONS = "EDIT_SESSIONS";
     }
 }

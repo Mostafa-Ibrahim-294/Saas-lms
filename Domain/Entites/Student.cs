@@ -20,6 +20,6 @@ namespace Domain.Entites
         public ICollection<Enrollment> Enrollments { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-
+        public ICollection<SessionParticipant> SessionParticipants { get; set; } = [];
     }
 }
