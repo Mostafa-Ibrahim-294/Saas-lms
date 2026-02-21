@@ -26,7 +26,14 @@ namespace Infrastructure.Persistence
         internal DbSet<CourseProgress> CourseProgresses { get; set; }
         internal DbSet<TenantUsage> TenantUsage { get; set; }
         internal DbSet<TenantInvite> TenantInvites { get; set; }
+<<<<<<< Updated upstream
         internal DbSet<Module> Modules { get; set; }
+=======
+        internal DbSet<LiveSession> LiveSessions { get; set; }
+        internal DbSet<ZoomIntegration> ZoomIntegrations { get; set; }
+        internal DbSet<ZoomOAuthState> ZoomOAuthStates { get; set; }
+        internal DbSet<SessionParticipant> SessionParticipants { get; set; }
+>>>>>>> Stashed changes
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

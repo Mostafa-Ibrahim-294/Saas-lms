@@ -1,0 +1,409 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة لحضور جلسة مباشرة - {{session_title}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #22bc66 0%, #1a9952 100%);
+            color: #ffffff;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .session-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-right: 4px solid #22bc66;
+        }
+
+        .session-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #22bc66;
+            margin-bottom: 15px;
+        }
+
+        .session-info {
+            margin: 15px 0;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 12px;
+            flex-shrink: 0;
+        }
+
+        .info-label {
+            color: #6c757d;
+            font-size: 14px;
+            min-width: 100px;
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .meeting-details {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .meeting-details h3 {
+            color: #856404;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .meeting-id {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #333;
+            background: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .meeting-password {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+            background: #fff;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .join-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #22bc66 0%, #1a9952 100%);
+            color: #ffffff;
+            padding: 18px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 10px 30px rgba(34, 188, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .join-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(34, 188, 102, 0.4);
+        }
+
+        .alternative-link {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .alternative-link a {
+            color: #22bc66;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .add-to-calendar {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .calendar-button {
+            display: inline-block;
+            background: #ffffff;
+            color: #22bc66;
+            padding: 12px 25px;
+            border: 2px solid #22bc66;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-button:hover {
+            background: #22bc66;
+            color: #ffffff;
+        }
+
+        .tips {
+            background: #e7f3ff;
+            border-right: 4px solid #0d6efd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .tips h3 {
+            color: #084298;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .tips ul {
+            margin: 0;
+            padding-right: 20px;
+            color: #084298;
+        }
+
+        .tips li {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .footer-logo {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        .unsubscribe {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .unsubscribe a {
+            color: #6c757d;
+            text-decoration: underline;
+        }
+
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .content {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .session-title {
+                font-size: 18px;
+            }
+
+            .join-button {
+                padding: 15px 35px;
+                font-size: 16px;
+            }
+
+            .info-row {
+                flex-direction: column;
+            }
+
+            .info-label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="header">
+            <h1>دعوة لحضور جلسة مباشرة</h1>
+            <p>تم تحديد موعد جلسة جديدة لك</p>
+        </div>
+
+        <div class="content">
+            <p class="greeting">مرحباً <strong>{{student_name}}</strong>،</p>
+
+            <p style="margin: 15px 0; color: #555; font-size: 16px;">
+                تمت دعوتك لحضور جلسة مباشرة مهمة. يرجى التأكد من حضورك في الموعد المحدد.
+            </p>
+
+            <div class="session-card">
+                <div class="session-title">{{session_title}}</div>
+
+                <div class="session-info">
+                    <div class="info-row">
+                        <span class="info-icon">📝</span>
+                        <div style="flex: 1;">
+                            <div class="info-label">الوصف:</div>
+                            <div class="info-value">{{session_description}}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">👨‍🏫</span>
+                        <div style="flex: 1;">
+                            <div class="info-label">المعلم:</div>
+                            <div class="info-value">{{instructor_name}}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">📚</span>
+                        <div style="flex: 1;">
+                            <div class="info-label">الدورة:</div>
+                            <div class="info-value">{{course_name}}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">📅</span>
+                        <div style="flex: 1;">
+                            <div class="info-label">التاريخ:</div>
+                            <div class="info-value">{{session_date}}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">🕐</span>
+                        <div style="flex: 1;">
+                            <div class="info-label">الوقت:</div>
+                            <div class="info-value">{{session_time}}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">⏱️</span>
+                        <div style="flex: 1;">
+                            <div class="info-label">المدة:</div>
+                            <div class="info-value">{{session_duration}} دقيقة</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="meeting-details">
+                <h3>🔑 معلومات الدخول:</h3>
+                <div style="margin: 10px 0;">
+                    <div style="font-size: 13px; color: #856404; margin-bottom: 5px;">رقم الجلسة:</div>
+                    <div class="meeting-id">{{zoom_meeting_id}}</div>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="font-size: 13px; color: #856404; margin-bottom: 5px;">كلمة المرور:</div>
+                    <div class="meeting-password">{{zoom_password}}</div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <a href="{{join_url}}" class="join-button">
+                    🚀 انضم إلى الجلسة الآن
+                </a>
+                <div class="alternative-link">
+                    أو انسخ الرابط التالي:<br>
+                    <a href="{{join_url}}">{{join_url}}</a>
+                </div>
+            </div>
+
+            <div class="tips">
+                <h3>💡 نصائح للحصول على أفضل تجربة:</h3>
+                <ul>
+                    <li>تأكد من اتصال إنترنت مستقر قبل بدء الجلسة</li>
+                    <li>قم بتحميل تطبيق Zoom مسبقاً من <a href="https://zoom.us/download" style="color: #0d6efd;">هنا</a></li>
+                    <li>انضم قبل 5 دقائق من الموعد المحدد للتأكد من جاهزية الكاميرا والميكروفون</li>
+                    <li>اختر مكاناً هادئاً ومضاءً جيداً</li>
+                    <li>جهز أدواتك الدراسية (دفتر، قلم، كتاب إن لزم)</li>
+                </ul>
+            </div>
+
+        <div class="footer">
+            <p>
+                <strong>{{platform_name}}</strong><br>
+                منصتك التعليمية المفضلة
+            </p>
+        </div>
+    </div>
+</body>
+</html>

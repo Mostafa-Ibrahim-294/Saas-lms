@@ -76,7 +76,7 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
                     { "{{year}}", DateTime.UtcNow.Year.ToString() }
                 });
 
-            BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.email, EmailConstants.TenantInviteSubject, emailBody));
+            BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.email, EmailConstants.Subject, emailBody));
 
             return new InviteTenantMemberDto
             {

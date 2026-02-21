@@ -21,5 +21,8 @@ namespace Domain.Entites
         public ICollection<Course> Courses { get; set; } = [];
         public ICollection<TenantUsage> TenantUsages { get; set; } = [];
         public ICollection<TenantInvite> TenantInvites { get; set; } = [];
+        public ICollection<LiveSession> LiveSessions { get; set; } = [];
+        public ICollection<ZoomIntegration> ZoomIntegrations { get; set; } = [];
+        public ICollection<ZoomOAuthState> ZoomOAuthStates { get; set; } = [];
     }
 }
