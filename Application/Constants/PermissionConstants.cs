@@ -30,5 +30,6 @@
         public const string INVITE_MEMBERS = "INVITE_MEMBERS";
         public const string CREATE_SESSIONS = "CREATE_SESSIONS";
         public const string EDIT_SESSIONS = "EDIT_SESSIONS";
+        public const string MANAGE_ORDERS = "MANAGE_ORDERS";
     }
 }

@@ -23,7 +23,12 @@ namespace Infrastructure.Extensions
             builder.Services.AddDbContextPool<AppDbContext>(options =>
             {
                 var connectionString = BuildPostgresConnectionString(configuration);
-                options.UseNpgsql(connectionString);
+
+                var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+                dataSourceBuilder.EnableDynamicJson();
+                var dataSource = dataSourceBuilder.Build();
+
+                options.UseNpgsql(dataSource);
             });
             builder.Services.AddStackExchangeRedisCache(options =>
             {
@@ -111,6 +116,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IZoomIntegrationRepository, ZoomIntegrationRepository>();
             builder.Services.AddScoped<IZoomOAuthStateRepository, ZoomOAuthStateRepository>();
             builder.Services.AddScoped<ILiveSessionRepository, LiveSessionRepository>();
+            builder.Services.AddScoped<ITenantWebsiteRepository, TenantWebsiteRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

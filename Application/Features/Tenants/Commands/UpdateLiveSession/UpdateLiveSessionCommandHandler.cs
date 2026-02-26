@@ -46,7 +46,7 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
             var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
             var tenant = await _tenantRepository.GetLastTenantAsync(subDomain, cancellationToken);
 
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, cancellationToken);
+            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subDomain!, cancellationToken);
             if (course == null)
                 return CourseErrors.CourseNotFound;
 

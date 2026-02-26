@@ -53,7 +53,7 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
             if (!hasFeature)
                 return LiveSessionError.ZoomIntegrationNotAvailable;
 
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, cancellationToken);
+            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subDomain!, cancellationToken);
             if (course == null)
                 return CourseErrors.CourseNotFound;
 

@@ -70,7 +70,7 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
             if (!deleted)
                 return ZoomError.ZoomMeetingDeleteFailed;
 
-            var course = await _courseRepository.GetCourseByIdAsync(session.CourseId, cancellationToken);
+            var course = await _courseRepository.GetCourseByIdAsync(session.CourseId, subDomain!, cancellationToken);
             if (course != null && session.Status != LiveSessionStatus.Completed)
             {
                 foreach (var enrollment in course.Enrollments)
