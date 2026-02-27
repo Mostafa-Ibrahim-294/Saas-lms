@@ -113,7 +113,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Domain.Entites.Assignment", b =>
                 {
                     b.Property<int>("ModuleItemId")
@@ -155,7 +154,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("ModuleId");
 
                     b.ToTable("Assignments");
-=======
+                });
+
             modelBuilder.Entity("Domain.Entites.BlockType", b =>
                 {
                     b.Property<string>("Id")
@@ -183,7 +183,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BlockTypes");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 });
 
             modelBuilder.Entity("Domain.Entites.Course", b =>
@@ -454,7 +453,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Grades");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Domain.Entites.Lesson", b =>
                 {
                     b.Property<int>("ModuleItemId")
@@ -487,7 +485,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("ModuleId");
 
                     b.ToTable("Lessons");
-=======
+                });
+
             modelBuilder.Entity("Domain.Entites.LiveSession", b =>
                 {
                     b.Property<int>("Id")
@@ -590,7 +589,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("LiveSessions");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 });
 
             modelBuilder.Entity("Domain.Entites.Module", b =>
@@ -628,11 +626,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Modules");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
-=======
-            modelBuilder.Entity("Domain.Entites.Order", b =>
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -640,13 +634,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
                     b.Property<bool>("AllowDiscussions")
                         .HasColumnType("boolean");
-=======
-                    b.Property<DateTime?>("ApprovedAt")
-                        .HasColumnType("timestamp with time zone");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
 
                     b.Property<int>("CourseId")
                         .HasColumnType("integer");
@@ -654,7 +643,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-<<<<<<< HEAD
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -669,7 +657,76 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("Type")
-=======
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleItems");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ModuleItemCondition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConditionType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Effect")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ModuleItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RequiredModuleItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Value")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleItemId");
+
+                    b.HasIndex("RequiredModuleItemId");
+
+                    b.ToTable("ModuleItemConditions");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("DeclinedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -701,7 +758,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("TenantId")
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -711,14 +767,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CourseId");
 
-<<<<<<< HEAD
-                    b.HasIndex("ModuleId");
-
-                    b.ToTable("ModuleItems");
-                });
-
-            modelBuilder.Entity("Domain.Entites.ModuleItemCondition", b =>
-=======
                     b.HasIndex("OrderNumber")
                         .IsUnique();
 
@@ -730,7 +778,6 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entites.OrderTimeLine", b =>
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -738,37 +785,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
-                    b.Property<int>("ConditionType")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Effect")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ModuleItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("RequiredModuleItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Value")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModuleItemId");
-
-                    b.HasIndex("RequiredModuleItemId");
-
-                    b.ToTable("ModuleItemConditions");
-=======
                     b.Property<string>("Actor")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -879,7 +895,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("PaymentMethods");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 });
 
             modelBuilder.Entity("Domain.Entites.Permission", b =>
@@ -1966,22 +1981,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Domain.Entites.Lesson", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
                         .WithMany("Lessons")
-=======
-            modelBuilder.Entity("Domain.Entites.LiveSession", b =>
-                {
-                    b.HasOne("Domain.Entites.Course", "Course")
-                        .WithMany("LiveSessions")
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-<<<<<<< HEAD
                     b.HasOne("Domain.Entites.File", "File")
                         .WithMany()
                         .HasForeignKey("FileId")
@@ -2007,7 +2014,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Module");
 
                     b.Navigation("ModuleItem");
-=======
+                });
+
+            modelBuilder.Entity("Domain.Entites.LiveSession", b =>
+                {
+                    b.HasOne("Domain.Entites.Course", "Course")
+                        .WithMany("LiveSessions")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entites.TenantMember", "Host")
                         .WithMany("LiveSessions")
                         .HasForeignKey("HostMemberId")
@@ -2032,7 +2048,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
 
                     b.Navigation("ZoomIntegration");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 });
 
             modelBuilder.Entity("Domain.Entites.Module", b =>
@@ -2046,7 +2061,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Course");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
@@ -2058,31 +2072,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasOne("Domain.Entites.Module", "Module")
                         .WithMany()
                         .HasForeignKey("ModuleId")
-=======
-            modelBuilder.Entity("Domain.Entites.Order", b =>
-                {
-                    b.HasOne("Domain.Entites.Course", "Course")
-                        .WithMany("Orders")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entites.Student", "Student")
-                        .WithMany("Orders")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithMany("Orders")
-                        .HasForeignKey("TenantId")
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");
 
-<<<<<<< HEAD
                     b.Navigation("Module");
                 });
 
@@ -2102,7 +2096,30 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("ModuleItem");
 
                     b.Navigation("RequiredModuleItem");
-=======
+                });
+
+            modelBuilder.Entity("Domain.Entites.Order", b =>
+                {
+                    b.HasOne("Domain.Entites.Course", "Course")
+                        .WithMany("Orders")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Student", "Student")
+                        .WithMany("Orders")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("Orders")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
                     b.Navigation("Student");
 
                     b.Navigation("Tenant");
@@ -2147,7 +2164,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Tenant");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 });
 
             modelBuilder.Entity("Domain.Entites.PlanFeature", b =>
@@ -2526,17 +2542,15 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("Enrollments");
 
-<<<<<<< HEAD
                     b.Navigation("Lessons");
+
+                    b.Navigation("LiveSessions");
 
                     b.Navigation("ModuleItems");
 
                     b.Navigation("Modules");
-=======
-                    b.Navigation("LiveSessions");
 
                     b.Navigation("Orders");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 });
 
             modelBuilder.Entity("Domain.Entites.Feature", b =>
@@ -2544,7 +2558,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("PlanFeatures");
                 });
 
-<<<<<<< HEAD
+            modelBuilder.Entity("Domain.Entites.LiveSession", b =>
+                {
+                    b.Navigation("Participants");
+                });
+
             modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
                 {
                     b.Navigation("Assignment");
@@ -2552,16 +2570,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Conditions");
 
                     b.Navigation("Lesson");
-=======
-            modelBuilder.Entity("Domain.Entites.LiveSession", b =>
-                {
-                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("Domain.Entites.Order", b =>
                 {
                     b.Navigation("OrderTimeLines");
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
                 });
 
             modelBuilder.Entity("Domain.Entites.Plan", b =>

@@ -27,12 +27,10 @@ namespace Infrastructure.Persistence
         internal DbSet<TenantUsage> TenantUsage { get; set; }
         internal DbSet<TenantInvite> TenantInvites { get; set; }
         internal DbSet<Module> Modules { get; set; }
-<<<<<<< HEAD
         internal DbSet<ModuleItem> ModuleItems { get; set; }
         internal DbSet<Lesson> Lessons { get; set; }
         internal DbSet<Assignment> Assignments { get; set; }
         internal DbSet<ModuleItemCondition> ModuleItemConditions { get; set; }
-=======
         internal DbSet<LiveSession> LiveSessions { get; set; }
         internal DbSet<ZoomIntegration> ZoomIntegrations { get; set; }
         internal DbSet<ZoomOAuthState> ZoomOAuthStates { get; set; }
@@ -43,7 +41,6 @@ namespace Infrastructure.Persistence
         internal DbSet<Order> Orders { get; set; }
         internal DbSet<OrderTimeLine> OrderTimeLines { get; set; }
         internal DbSet<PaymentMethod> PaymentMethods { get; set; }
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

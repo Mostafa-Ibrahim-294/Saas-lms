@@ -112,16 +112,13 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ITenantInviteRepository, TenantInviteRepository>();
             builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
-<<<<<<< HEAD
             builder.Services.AddScoped<IModuleItemRepository, ModuleItemRepository>();
-=======
             builder.Services.AddScoped<IZoomService, ZoomService>();
             builder.Services.AddScoped<IZoomIntegrationRepository, ZoomIntegrationRepository>();
             builder.Services.AddScoped<IZoomOAuthStateRepository, ZoomOAuthStateRepository>();
             builder.Services.AddScoped<ILiveSessionRepository, LiveSessionRepository>();
             builder.Services.AddScoped<ITenantWebsiteRepository, TenantWebsiteRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
->>>>>>> 1bdcf40be4e8860ca00834ffa65038f688b1a400
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {
