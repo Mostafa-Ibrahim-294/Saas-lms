@@ -1,0 +1,10 @@
+﻿using Application.Features.ModuleItems.Dtos;
+using Domain.Enums;
+
+namespace Application.Features.ModuleItems.Commands.CreateModuleItem
+{
+    public sealed record CreateModuleItemCommand(int CourseId, int ModuleId, ModuleItemType Type, string Title, CourseStatus Status, bool AllowDiscussions,
+        IEnumerable<ConditionDto> Conditions, string? Description, string? VideoId, IEnumerable<Resource>? Resources,
+        DateTime? DueDate, string? Instructions, int? TotalMarks, SubmissionType? SubmisssionType,
+        IEnumerable<Attachment>? Attachments) : IRequest<OneOf<SuccessDto, Error>>;
+}

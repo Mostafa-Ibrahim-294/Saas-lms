@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260223134115_fktopk")]
+    partial class fktopk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,7 +118,10 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.Assignment", b =>
                 {
                     b.Property<int>("ModuleItemId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ModuleItemId"));
 
                     b.Property<string>("Attachments")
                         .IsRequired()
@@ -141,6 +147,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModuleId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ModuleItemId1")
+                        .HasColumnType("integer");
+
                     b.Property<int>("SubmissionType")
                         .HasColumnType("integer");
 
@@ -151,6 +160,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ModuleId");
+
+                    b.HasIndex("ModuleItemId1");
 
                     b.ToTable("Assignments");
                 });
@@ -426,7 +437,10 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.Lesson", b =>
                 {
                     b.Property<int>("ModuleItemId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ModuleItemId"));
 
                     b.Property<int>("CourseId")
                         .HasColumnType("integer");
@@ -436,6 +450,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModuleItemId1")
                         .HasColumnType("integer");
 
                     b.Property<string>("Resources")
@@ -453,6 +470,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("FileId");
 
                     b.HasIndex("ModuleId");
+
+                    b.HasIndex("ModuleItemId1");
 
                     b.ToTable("Lessons");
                 });
@@ -1286,8 +1305,8 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.ModuleItem", "ModuleItem")
-                        .WithOne("Assignment")
-                        .HasForeignKey("Domain.Entites.Assignment", "ModuleItemId")
+                        .WithMany()
+                        .HasForeignKey("ModuleItemId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1423,8 +1442,8 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.ModuleItem", "ModuleItem")
-                        .WithOne("Lesson")
-                        .HasForeignKey("Domain.Entites.Lesson", "ModuleItemId")
+                        .WithMany()
+                        .HasForeignKey("ModuleItemId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1798,11 +1817,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
                 {
-                    b.Navigation("Assignment");
-
                     b.Navigation("Conditions");
-
-                    b.Navigation("Lesson");
                 });
 
             modelBuilder.Entity("Domain.Entites.Plan", b =>

@@ -27,6 +27,10 @@ namespace Infrastructure.Persistence
         internal DbSet<TenantUsage> TenantUsage { get; set; }
         internal DbSet<TenantInvite> TenantInvites { get; set; }
         internal DbSet<Module> Modules { get; set; }
+        internal DbSet<ModuleItem> ModuleItems { get; set; }
+        internal DbSet<Lesson> Lessons { get; set; }
+        internal DbSet<Assignment> Assignments { get; set; }
+        internal DbSet<ModuleItemCondition> ModuleItemConditions { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

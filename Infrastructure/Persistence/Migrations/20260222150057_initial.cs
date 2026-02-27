@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Domain.Entites;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -7,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class ResetAll : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -472,17 +474,17 @@ namespace Infrastructure.Persistence.Migrations
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Currency = table.Column<string>(type: "text", nullable: false),
-                    Curriculum = table.Column<string>(type: "text", nullable: false),
+                    Curriculum = table.Column<string>(type: "text", nullable: true),
                     Price = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     VideoUrl = table.Column<string>(type: "text", nullable: true),
                     ThumbnailUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Discount = table.Column<byte>(type: "smallint", nullable: false),
-                    Year = table.Column<string>(type: "text", nullable: true),
+                    Year = table.Column<string>(type: "text", nullable: false),
                     Semester = table.Column<string>(type: "text", nullable: true),
                     CourseStatus = table.Column<int>(type: "integer", nullable: false),
                     PricingType = table.Column<int>(type: "integer", nullable: false),
                     BillingCycle = table.Column<int>(type: "integer", nullable: true),
-                    Tags = table.Column<string[]>(type: "text[]", nullable: false),
+                    Tags = table.Column<string[]>(type: "text[]", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     CreatedById = table.Column<string>(type: "text", nullable: false),
                     SubjectId = table.Column<int>(type: "integer", nullable: false),
@@ -663,6 +665,30 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Modules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Order = table.Column<int>(type: "integer", nullable: false),
+                    IsFree = table.Column<bool>(type: "boolean", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Modules_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CourseProgresses",
                 columns: table => new
                 {
@@ -756,6 +782,81 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_TenantInvites_Tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModuleItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    AllowDiscussions = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModuleId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModuleItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ModuleItems_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ModuleItems_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Lessons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    VideoId = table.Column<string>(type: "text", nullable: false),
+                    FileId = table.Column<string>(type: "text", nullable: false),
+                    ModuleItemId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
+                    ModuleId = table.Column<int>(type: "integer", nullable: false),
+                    Resources = table.Column<List<Resource>>(type: "jsonb", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lessons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Lessons_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Lessons_Files_FileId",
+                        column: x => x.FileId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Lessons_ModuleItems_ModuleItemId",
+                        column: x => x.ModuleItemId,
+                        principalTable: "ModuleItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Lessons_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -857,6 +958,41 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_Grades_TenantId",
                 table: "Grades",
                 column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lessons_CourseId",
+                table: "Lessons",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lessons_FileId",
+                table: "Lessons",
+                column: "FileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lessons_ModuleId",
+                table: "Lessons",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lessons_ModuleItemId",
+                table: "Lessons",
+                column: "ModuleItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleItems_CourseId",
+                table: "ModuleItems",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleItems_ModuleId",
+                table: "ModuleItems",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Modules_CourseId",
+                table: "Modules",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlanFeatures_FeatureId",
@@ -1024,7 +1160,7 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Enrollments");
 
             migrationBuilder.DropTable(
-                name: "Files");
+                name: "Lessons");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
@@ -1042,10 +1178,13 @@ namespace Infrastructure.Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Courses");
+                name: "Students");
 
             migrationBuilder.DropTable(
-                name: "Students");
+                name: "Files");
+
+            migrationBuilder.DropTable(
+                name: "ModuleItems");
 
             migrationBuilder.DropTable(
                 name: "Permissions");
@@ -1060,13 +1199,10 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Subscriptions");
 
             migrationBuilder.DropTable(
-                name: "Subjects");
-
-            migrationBuilder.DropTable(
-                name: "Grades");
-
-            migrationBuilder.DropTable(
                 name: "TeachingLevels");
+
+            migrationBuilder.DropTable(
+                name: "Modules");
 
             migrationBuilder.DropTable(
                 name: "TenantRoles");
@@ -1078,10 +1214,19 @@ namespace Infrastructure.Persistence.Migrations
                 name: "PlanPricings");
 
             migrationBuilder.DropTable(
-                name: "Tenants");
+                name: "Courses");
 
             migrationBuilder.DropTable(
                 name: "Plans");
+
+            migrationBuilder.DropTable(
+                name: "Grades");
+
+            migrationBuilder.DropTable(
+                name: "Subjects");
+
+            migrationBuilder.DropTable(
+                name: "Tenants");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -70,7 +70,7 @@ namespace Application.Features.Auth.Commands.Login
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.None,
-                    Domain = AuthConstants.CookieDomain,
+                   // Domain = AuthConstants.CookieDomain,
                     IsEssential = true
                 });
             }

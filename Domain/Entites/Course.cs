@@ -33,6 +33,9 @@ namespace Domain.Entites
         public Grade Grade { get; set; } = null!;
         public ICollection<Enrollment> Enrollments { get; set; } = [];
         public ICollection<CourseProgress> CourseProgresses { get; set; } = [];
+        public ICollection<Module> Modules { get; set; } = [];
+        public ICollection<Lesson> Lessons { get; set; } = [];
+        public ICollection<ModuleItem> ModuleItems { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
     }

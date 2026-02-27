@@ -102,6 +102,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ITenantInviteRepository, TenantInviteRepository>();
             builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+            builder.Services.AddScoped<IModuleItemRepository, ModuleItemRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

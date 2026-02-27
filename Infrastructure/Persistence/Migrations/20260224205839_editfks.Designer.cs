@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260211124114_Modules")]
-    partial class Modules
+    [Migration("20260224205839_editfks")]
+    partial class editfks
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,6 +113,49 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entites.Assignment", b =>
+                {
+                    b.Property<int>("ModuleItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Attachments")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Instructions")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Marks")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubmissionType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ModuleItemId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("Domain.Entites.Course", b =>
@@ -383,6 +426,40 @@ namespace Infrastructure.Migrations
                     b.ToTable("Grades");
                 });
 
+            modelBuilder.Entity("Domain.Entites.Lesson", b =>
+                {
+                    b.Property<int>("ModuleItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Resources")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("VideoId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ModuleItemId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("Lessons");
+                });
+
             modelBuilder.Entity("Domain.Entites.Module", b =>
                 {
                     b.Property<int>("Id")
@@ -416,6 +493,90 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Modules");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("AllowDiscussions")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleItems");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ModuleItemCondition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConditionType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Effect")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ModuleItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RequiredModuleItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Value")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleItemId");
+
+                    b.HasIndex("RequiredModuleItemId");
+
+                    b.ToTable("ModuleItemConditions");
                 });
 
             modelBuilder.Entity("Domain.Entites.Permission", b =>
@@ -1107,6 +1268,41 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entites.Assignment", b =>
+                {
+                    b.HasOne("Domain.Entites.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ApplicationUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ModuleItem", "ModuleItem")
+                        .WithOne("Assignment")
+                        .HasForeignKey("Domain.Entites.Assignment", "ModuleItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Module");
+
+                    b.Navigation("ModuleItem");
+                });
+
             modelBuilder.Entity("Domain.Entites.Course", b =>
                 {
                     b.HasOne("Domain.Entites.ApplicationUser", "CreatedBy")
@@ -1209,15 +1405,87 @@ namespace Infrastructure.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("Domain.Entites.Lesson", b =>
+                {
+                    b.HasOne("Domain.Entites.Course", "Course")
+                        .WithMany("Lessons")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.File", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ModuleItem", "ModuleItem")
+                        .WithOne("Lesson")
+                        .HasForeignKey("Domain.Entites.Lesson", "ModuleItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("File");
+
+                    b.Navigation("Module");
+
+                    b.Navigation("ModuleItem");
+                });
+
             modelBuilder.Entity("Domain.Entites.Module", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
-                        .WithMany()
+                        .WithMany("Modules")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
+                {
+                    b.HasOne("Domain.Entites.Course", "Course")
+                        .WithMany("ModuleItems")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ModuleItemCondition", b =>
+                {
+                    b.HasOne("Domain.Entites.ModuleItem", "ModuleItem")
+                        .WithMany("Conditions")
+                        .HasForeignKey("ModuleItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ModuleItem", "RequiredModuleItem")
+                        .WithMany()
+                        .HasForeignKey("RequiredModuleItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("ModuleItem");
+
+                    b.Navigation("RequiredModuleItem");
                 });
 
             modelBuilder.Entity("Domain.Entites.PlanFeature", b =>
@@ -1518,11 +1786,26 @@ namespace Infrastructure.Migrations
                     b.Navigation("CourseProgresses");
 
                     b.Navigation("Enrollments");
+
+                    b.Navigation("Lessons");
+
+                    b.Navigation("ModuleItems");
+
+                    b.Navigation("Modules");
                 });
 
             modelBuilder.Entity("Domain.Entites.Feature", b =>
                 {
                     b.Navigation("PlanFeatures");
+                });
+
+            modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
+                {
+                    b.Navigation("Assignment");
+
+                    b.Navigation("Conditions");
+
+                    b.Navigation("Lesson");
                 });
 
             modelBuilder.Entity("Domain.Entites.Plan", b =>
