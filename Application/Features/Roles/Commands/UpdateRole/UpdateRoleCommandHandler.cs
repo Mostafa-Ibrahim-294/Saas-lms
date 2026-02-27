@@ -25,7 +25,7 @@ namespace Application.Features.Roles.Commands.UpdateRole
 
             var isOwner = await _tenantRoleRepository.IsOwnerAsync(request.RoleId, cancellationToken);
             if (isOwner)
-                return TenantMemberError.CannotChangeOwnerRole;
+                return TenantMemberErrors.CannotChangeOwnerRole;
 
             await _tenantRoleRepository.UpdateRoleAsync(request.RoleId, request.Name, request.Description, request.EnabledPermissions, cancellationToken);
             return new RoleDto { Message = RoleConstants.UpdateRoleResponse };

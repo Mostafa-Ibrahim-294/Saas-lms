@@ -44,7 +44,7 @@ namespace Application.Features.Files.Commands.UploadFile
 
             var cdnUrl = await _fileService.UploadFileAsync(request.File, path);
             if (cdnUrl == null)
-                return FileError.UploadFailed;
+                return FileErrors.UploadFailed;
 
             var file = new Domain.Entites.File
             {

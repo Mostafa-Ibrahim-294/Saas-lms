@@ -25,7 +25,7 @@ namespace Application.Features.Roles.Commands.DeleteRole
 
             var isOwner = await _tenantRoleRepository.IsOwnerAsync(request.RoleId, cancellationToken);
             if (isOwner)
-                return TenantMemberError.CannotDeleteOwnerRole;
+                return TenantMemberErrors.CannotDeleteOwnerRole;
 
             await _tenantRoleRepository.DeleteRoleAsync(request.RoleId, cancellationToken);
             return new RoleDto { Message = RoleConstants.DeleteRoleResponse };

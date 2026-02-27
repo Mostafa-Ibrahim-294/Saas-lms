@@ -28,22 +28,22 @@ namespace Application.Features.TenantMembers.Commands.AcceptTenanInvite
         {
             var isValidToken = await _tenantInviteRepository.IsValidTokenAsync(request.token, cancellationToken);
             if (!isValidToken)
-                return TenantInviteError.InviteExpired;
+                return TenantInviteErrors.InviteExpired;
 
             var userId = _currentUserId.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return TenantInviteError.InviteError;
+                return TenantInviteErrors.InviteError;
 
             var userEmail = await _userManager.GetEmailAsync(user);
             var invitedEmail = await _tenantInviteRepository.GetInvitedMemberEmailAsync(request.token, cancellationToken);
 
             if (!string.Equals(userEmail, invitedEmail))
-                return TenantInviteError.InviteError;
+                return TenantInviteErrors.InviteError;
 
             var invite = await _tenantInviteRepository.GetInviteByTokenAsync(request.token, cancellationToken);
             if (invite == null)
-                return TenantInviteError.InviteNotFound;
+                return TenantInviteErrors.InviteNotFound;
 
             var tenantMember = new TenantMember
             {

@@ -46,22 +46,22 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
             var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
             var tenant = await _tenantRepository.GetLastTenantAsync(subDomain, cancellationToken);
 
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, cancellationToken);
+            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subDomain!, cancellationToken);
             if (course == null)
                 return CourseErrors.CourseNotFound;
 
             var session = await _liveSessionRepository.GetLiveSessionAsync(request.SessionId, cancellationToken);
             if (session == null)
-                return LiveSessionError.SessionNotFound;
+                return LiveSessionErrors.SessionNotFound;
 
             if (session.Host.UserId != userId)
-                return LiveSessionError.CannotUpdateSession;
+                return LiveSessionErrors.CannotUpdateSession;
 
             if (session.Status == LiveSessionStatus.Ongoing)
-                return LiveSessionError.CannotUpdateLiveSession;
+                return LiveSessionErrors.CannotUpdateLiveSession;
 
             if (session.Status == LiveSessionStatus.Completed)
-                return LiveSessionError.CannotUpdateEndedSession;
+                return LiveSessionErrors.CannotUpdateEndedSession;
 
             var zoomIntegration = await _zoomIntegrationRepository.GetZoomIntegrationAsync(userId, tenantId, cancellationToken);
             if (zoomIntegration == null || !zoomIntegration.IsActive)

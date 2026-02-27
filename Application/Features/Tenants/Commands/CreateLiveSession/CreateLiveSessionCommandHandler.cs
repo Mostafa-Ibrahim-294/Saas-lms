@@ -51,9 +51,9 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
 
             var hasFeature = await _subscriptionRepository.TenantHasFeatureAsync(tenantId, LiveSessionConstants.LiveSessionFeatureKey, cancellationToken);
             if (!hasFeature)
-                return LiveSessionError.ZoomIntegrationNotAvailable;
+                return LiveSessionErrors.ZoomIntegrationNotAvailable;
 
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, cancellationToken);
+            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subDomain!, cancellationToken);
             if (course == null)
                 return CourseErrors.CourseNotFound;
 
