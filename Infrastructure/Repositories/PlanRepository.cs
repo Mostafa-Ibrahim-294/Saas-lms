@@ -42,10 +42,6 @@ namespace Infrastructure.Repositories
                     .Select(pf => pf.Id)
                     .ToListAsync(cancellationToken);
         }
-
-
-
-
         public Task<Guid> GetVideoStorageFeatureIdAsync(CancellationToken cancellationToken)
         {
             return _context.Features

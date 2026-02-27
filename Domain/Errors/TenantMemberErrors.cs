@@ -2,7 +2,7 @@
 
 namespace Domain.Errors
 {
-    public static class TenantMemberError
+    public static class TenantMemberErrors
     {
         public static Error MemberNotFound =>
             new Error("Member.NotFound", "العضو غير موجود", HttpStatusCode.NotFound);

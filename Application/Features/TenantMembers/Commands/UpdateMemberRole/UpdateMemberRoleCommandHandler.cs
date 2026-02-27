@@ -28,14 +28,14 @@ namespace Application.Features.TenantMembers.Commands.UpdateMemberRole
 
             var member = await _tenantMemberRepository.GetMemberByIdAsync(request.MemberId, cancellationToken);
             if (member == null)
-                return TenantMemberError.MemberNotFound;
+                return TenantMemberErrors.MemberNotFound;
 
             var isOwner = await _tenantMemberRepository.IsOwnerAsync(request.MemberId, cancellationToken);
             if (isOwner)
-                return TenantMemberError.CannotChangeOwnerRole;
+                return TenantMemberErrors.CannotChangeOwnerRole;
 
             if (member.UserId == currentUserId)
-                return TenantMemberError.CannotChangeOwnRole;
+                return TenantMemberErrors.CannotChangeOwnRole;
 
             await _tenantMemberRepository.UpdateRoleMemberAsync(request.MemberId, request.RoleId, cancellationToken);
             return new UpdateMemberRoleDto { Message = TenantMemberConstants.UpdateRoleMemberResponse };

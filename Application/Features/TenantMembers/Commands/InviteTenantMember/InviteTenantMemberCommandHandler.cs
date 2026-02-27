@@ -47,7 +47,7 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
                 var userId = await _userManager.GetUserIdAsync(user);
                 var TenantIds = await _tenantMemberRepository.GetTenantIdsAsync(userId, cancellationToken);
                 if (TenantIds.Contains(tenantId))
-                    return TenantInviteError.UserAlreadyExists;
+                    return TenantInviteErrors.UserAlreadyExists;
             }
 
             var invitedByMemberId = await _tenantMemberRepository.GetMemberIdByUserIdAsync(currentUserId, tenantId, cancellationToken);
@@ -76,7 +76,7 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
                     { "{{year}}", DateTime.UtcNow.Year.ToString() }
                 });
 
-            BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.email, EmailConstants.TenantInviteSubject, emailBody));
+            BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.email, EmailConstants.Subject, emailBody));
 
             return new InviteTenantMemberDto
             {

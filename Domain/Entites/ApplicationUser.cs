@@ -13,5 +13,7 @@ namespace Domain.Entites
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public ICollection<ZoomIntegration> ZoomIntegrations { get; set; } = [];
+        public ICollection<ZoomOAuthState> ZoomOAuthStates { get; set; } = [];
     }
 }

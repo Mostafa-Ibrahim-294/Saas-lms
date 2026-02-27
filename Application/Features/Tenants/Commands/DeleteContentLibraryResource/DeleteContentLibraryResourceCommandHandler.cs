@@ -28,7 +28,7 @@ namespace Application.Features.Tenants.Commands.DeleteContentLibraryResource
         {
             var file = await _fileRepository.GetFileByIdAsync(request.FileId, cancellationToken);
             if (file == null)
-                return FileError.NotFound;
+                return FileErrors.NotFound;
 
             var size = file.Size;
             await _fileRepository.DeleteFileAsync(file, cancellationToken);

@@ -1,5 +1,7 @@
 ﻿using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Reflection.Emit;
 
 namespace Infrastructure.Seeders
 {
@@ -43,6 +45,14 @@ namespace Infrastructure.Seeders
                         var role = new IdentityRole(roleName);
                         await _roleManager.CreateAsync(role);
                     }
+                }
+
+                // Seed BlockTypes
+                if (!await _context.BlockTypes.AnyAsync())
+                {
+                    var blockTypes = GetBlockTypes();
+                    await _context.BlockTypes.AddRangeAsync(blockTypes);
+                    await _context.SaveChangesAsync();
                 }
             }
         }
@@ -663,7 +673,7 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "INVITE_STUDENTS", Name = "دعوة الطلاب للجلسات", Description = "السماح بدعوة الطلاب إلى الجلسات المباشرة", Module = "live-sessions" },
 
                     // Payments
-                    new Permission { Id = "VIEW_ORDERS", Name = "عرض الطلبات", Description = "السماح بعرض الطلبات", Module = "payments" },
+                    new Permission { Id = "MANAGE_ORDERS", Name = "إدارة الطلبات", Description = "السماح بإدارة الطلبات", Module = "payments" },
                     new Permission { Id = "ISSUE_REFUNDS", Name = "إصدار المبالغ المستردة", Description = "السماح بإصدار واسترجاع المدفوعات", Module = "payments" },
                     new Permission { Id = "REVENUE_ANALYTICS", Name = "عرض تحليلات الإيرادات", Description = "السماح بعرض إحصائيات المبيعات", Module = "payments" },
                     new Permission { Id = "MANAGE_COUPONS", Name = "إدارة الكوبونات", Description = "السماح بإنشاء وتعديل وحذف الكوبونات", Module = "payments" },
@@ -689,5 +699,484 @@ namespace Infrastructure.Seeders
         }
 
         private List<string> GetRoles() => new List<string> { "Student", "Tenant", "Parent" };
+
+        private List<BlockType> GetBlockTypes()
+        {
+            return new List<BlockType>
+            {
+                // HERO BLOCK
+                new BlockType
+                {
+                    Id = "hero",
+                    DisplayName = "القسم الرئيسي",
+                    Description = "قسم بارز في أعلى الصفحة مع صورة خلفية وأزرار إجراء",
+                    Icon = "layout",
+                    Schema = new Dictionary<string, object>
+                    {
+                        { "title", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "العنوان الرئيسي" },
+                                { "required", true },
+                                { "placeholder", "ابدأ رحلتك التعليمية اليوم" },
+                                { "default", "ابدأ رحلتك التعليمية اليوم" },
+                                { "validation", new Dictionary<string, object> { { "max", 100 } } }
+                            }
+                        },
+                        { "subtitle", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "العنوان الفرعي" },
+                                { "placeholder", "منصة تعليمية متكاملة تساعدك على تطوير مهاراتك" },
+                                { "validation", new Dictionary<string, object> { { "max", 300 } } }
+                            }
+                        },
+                        { "label", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "شارة علوية" },
+                                { "description", "نص صغير يظهر فوق العنوان كشارة" },
+                                { "placeholder", "منصة معتمدة" },
+                                { "validation", new Dictionary<string, object> { { "max", 50 } } }
+                            }
+                        },
+                        { "backgroundImage", new Dictionary<string, object>
+                            {
+                                { "type", "image" },
+                                { "label", "صورة الخلفية" },
+                                { "description", "صورة تظهر خلف المحتوى مع تأثير تعتيم" },
+                                { "placeholder", "اختر صورة للخلفية" }
+                            }
+                        },
+                        { "cta", new Dictionary<string, object>
+                            {
+                                { "type", "object" },
+                                { "label", "الزر الرئيسي" },
+                                { "required", true },
+                                { "arrayItemSchema", new Dictionary<string, object>
+                                    {
+                                        { "label", new Dictionary<string, object>
+                                            {
+                                                { "type", "string" },
+                                                { "label", "نص الزر" },
+                                                { "required", true },
+                                                { "default", "ابدأ الآن" },
+                                                { "placeholder", "ابدأ الآن" }
+                                            }
+                                        },
+                                        { "url", new Dictionary<string, object>
+                                            {
+                                                { "type", "url" },
+                                                { "label", "رابط الزر" },
+                                                { "required", true },
+                                                { "default", "/signup" },
+                                                { "placeholder", "/signup" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        { "secondaryCta", new Dictionary<string, object>
+                            {
+                                { "type", "object" },
+                                { "label", "الزر الثانوي" },
+                                { "description", "زر إضافي اختياري (مثل: شاهد الفيديو)" },
+                                { "arrayItemSchema", new Dictionary<string, object>
+                                    {
+                                        { "label", new Dictionary<string, object>
+                                            {
+                                                { "type", "string" },
+                                                { "label", "نص الزر" },
+                                                { "default", "شاهد الفيديو" },
+                                                { "placeholder", "شاهد الفيديو" }
+                                            }
+                                        },
+                                        { "url", new Dictionary<string, object>
+                                            {
+                                                { "type", "url" },
+                                                { "label", "رابط الزر" },
+                                                { "default", "#video" },
+                                                { "placeholder", "#video" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+
+                // TEXT BLOCK
+                new BlockType
+                {
+                    Id = "text",
+                    DisplayName = "نص منسق",
+                    Description = "قسم لعرض محتوى نصي منسق مع عنوان",
+                    Icon = "type",
+                    Schema = new Dictionary<string, object>
+                    {
+                        { "title", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "العنوان" },
+                                { "placeholder", "عنوان القسم" },
+                                { "validation", new Dictionary<string, object> { { "max", 100 } } }
+                            }
+                        },
+                        { "subtitle", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "شارة علوية" },
+                                { "description", "نص صغير يظهر فوق العنوان كشارة" },
+                                { "placeholder", "تعرف علينا" },
+                                { "validation", new Dictionary<string, object> { { "max", 50 } } }
+                            }
+                        },
+                        { "content", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "المحتوى" },
+                                { "required", true },
+                                { "placeholder", "اكتب المحتوى النصي هنا..." },
+                                { "validation", new Dictionary<string, object> { { "max", 5000 } } }
+                            }
+                        },
+                        { "alignment", new Dictionary<string, object>
+                            {
+                                { "type", "select" },
+                                { "options", new List<Dictionary<string, object>>
+                                    {
+                                        new Dictionary<string, object> { { "label", "يسار" }, { "value", "start" } },
+                                        new Dictionary<string, object> { { "label", "وسط" }, { "value", "center" } },
+                                        new Dictionary<string, object> { { "label", "يمين" }, { "value", "end" } }
+                                    }
+                                },
+                                { "label", "محاذاة النص" },
+                                { "description", "اختر محاذاة النص: يمين، وسط، يسار" },
+                                { "default", "center" },
+                                { "placeholder", "وسط" }
+                            }
+                        }
+                    }
+                },
+
+                // FEATURED COURSES BLOCK
+                new BlockType
+                {
+                    Id = "featured-courses",
+                    DisplayName = "الكورسات المميزة",
+                    Description = "عرض شبكة من الكورسات مع صور وتفاصيل",
+                    Icon = "grid",
+                    Schema = new Dictionary<string, object>
+                    {
+                        { "title", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "عنوان القسم" },
+                                { "required", true },
+                                { "default", "الدورات المميزة" },
+                                { "placeholder", "الدورات المميزة" },
+                                { "validation", new Dictionary<string, object> { { "max", 100 } } }
+                            }
+                        },
+                        { "subtitle", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "الوصف" },
+                                { "placeholder", "اكتشف أفضل الدورات التدريبية" },
+                                { "validation", new Dictionary<string, object> { { "max", 200 } } }
+                            }
+                        },
+                        { "limit", new Dictionary<string, object>
+                            {
+                                { "type", "number" },
+                                { "label", "عدد الكورسات" },
+                                { "description", "عدد الكورسات المعروضة في الشبكة" },
+                                { "required", true },
+                                { "default", 5 },
+                                { "validation", new Dictionary<string, object> { { "min", 3 }, { "max", 12 } } }
+                            }
+                        }
+                    }
+                },
+
+                // TESTIMONIALS BLOCK
+                new BlockType
+                {
+                    Id = "testimonials",
+                    DisplayName = "آراء المشتركين",
+                    Description = "عرض تقييمات وآراء المشتركين مع صورهم",
+                    Icon = "message-square",
+                    Schema = new Dictionary<string, object>
+                    {
+                        { "title", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "عنوان القسم" },
+                                { "default", "ماذا يقول طلابنا" },
+                                { "placeholder", "ماذا يقول طلابنا" },
+                                { "validation", new Dictionary<string, object> { { "max", 100 } } }
+                            }
+                        },
+                        { "subtitle", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "الوصف" },
+                                { "placeholder", "آراء حقيقية من طلابنا" },
+                                { "validation", new Dictionary<string, object> { { "max", 200 } } }
+                            }
+                        },
+                        { "testimonials", new Dictionary<string, object>
+                            {
+                                { "type", "array" },
+                                { "label", "التقييمات" },
+                                { "required", true },
+                                { "arrayItemSchema", new Dictionary<string, object>
+                                    {
+                                        { "name", new Dictionary<string, object>
+                                            {
+                                                { "type", "string" },
+                                                { "label", "الاسم" },
+                                                { "required", true },
+                                                { "placeholder", "أحمد محمد" }
+                                            }
+                                        },
+                                        { "content", new Dictionary<string, object>
+                                            {
+                                                { "type", "string" },
+                                                { "label", "نص التقييم" },
+                                                { "required", true },
+                                                { "placeholder", "تجربة رائعة مع المنصة..." },
+                                                { "validation", new Dictionary<string, object> { { "max", 500 } } }
+                                            }
+                                        },
+                                        { "rating", new Dictionary<string, object>
+                                            {
+                                                { "type", "number" },
+                                                { "label", "التقييم" },
+                                                { "default", 5 },
+                                                { "validation", new Dictionary<string, object> { { "min", 1 }, { "max", 5 } } }
+                                            }
+                                        },
+                                        { "avatar", new Dictionary<string, object>
+                                            {
+                                                { "type", "image" },
+                                                { "label", "الصورة الشخصية" },
+                                                { "placeholder", "ارفع صورة الشخص" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+
+                // CTA BLOCK
+                new BlockType
+                {
+                    Id = "cta",
+                    DisplayName = "دعوة لاتخاذ إجراء",
+                    Description = "قسم ملفت لحث الزائر على اتخاذ إجراء معين",
+                    Icon = "mouse-pointer-click",
+                    Schema = new Dictionary<string, object>
+                    {
+                        { "title", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "العنوان" },
+                                { "required", true },
+                                { "default", "هل أنت مستعد لتطوير مهاراتك؟" },
+                                { "placeholder", "هل أنت مستعد لتطوير مهاراتك؟" },
+                                { "validation", new Dictionary<string, object> { { "max", 100 } } }
+                            }
+                        },
+                        { "description", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "الوصف" },
+                                { "placeholder", "انضم إلى آلاف الطلاب واستفد من دوراتنا" },
+                                { "validation", new Dictionary<string, object> { { "max", 300 } } }
+                            }
+                        },
+                        { "ctaLabel", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "نص الزر" },
+                                { "required", true },
+                                { "default", "ابدأ الآن مجاناً" },
+                                { "placeholder", "ابدأ الآن مجاناً" }
+                            }
+                        },
+                        { "ctaUrl", new Dictionary<string, object>
+                            {
+                                { "type", "url" },
+                                { "label", "رابط الزر" },
+                                { "required", true },
+                                { "default", "/signup" },
+                                { "placeholder", "/signup" }
+                            }
+                        },
+                        { "theme", new Dictionary<string, object>
+                            {
+                                { "type", "select" },
+                                { "options", new List<Dictionary<string, object>>
+                                    {
+                                        new Dictionary<string, object> { { "value", "gradient" }, { "label", "تدرج لوني" } },
+                                        new Dictionary<string, object> { { "value", "dark" }, { "label", "داكن" } },
+                                        new Dictionary<string, object> { { "value", "light" }, { "label", "فاتح" } }
+                                    }
+                                },
+                                { "label", "نمط الخلفية" },
+                                { "description", "اختر نمط الخلفية: تدرج لوني، داكن، فاتح" },
+                                { "default", "gradient" },
+                                { "placeholder", "gradient" }
+                            }
+                        }
+                    }
+                },
+
+                // FOOTER BLOCK
+                new BlockType
+                {
+                    Id = "footer",
+                    DisplayName = "ذيل الصفحة",
+                    Description = "الجزء السفلي مع معلومات التواصل والروابط",
+                    Icon = "align-bottom",
+                    Schema = new Dictionary<string, object>
+                    {
+                        { "companyName", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "اسم المنصة" },
+                                { "required", true },
+                                { "default", "منصتنا" },
+                                { "placeholder", "منصتنا التعليمية" },
+                                { "validation", new Dictionary<string, object> { { "max", 50 } } }
+                            }
+                        },
+                        { "companyDescription", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "وصف المنصة" },
+                                { "placeholder", "منصة تعليمية متكاملة..." },
+                                { "validation", new Dictionary<string, object> { { "max", 300 } } }
+                            }
+                        },
+                        { "logo", new Dictionary<string, object>
+                            {
+                                { "type", "image" },
+                                { "label", "الشعار" },
+                                { "description", "شعار المنصة في الفوتر" },
+                                { "placeholder", "ارفع شعار المنصة" }
+                            }
+                        },
+                        { "email", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "البريد الإلكتروني" },
+                                { "placeholder", "info@example.com" }
+                            }
+                        },
+                        { "phone", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "رقم الهاتف" },
+                                { "placeholder", "+966 50 000 0000" }
+                            }
+                        },
+                        { "address", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "العنوان" },
+                                { "placeholder", "الرياض، المملكة العربية السعودية" },
+                                { "validation", new Dictionary<string, object> { { "max", 200 } } }
+                            }
+                        },
+                        { "copyrightText", new Dictionary<string, object>
+                            {
+                                { "type", "string" },
+                                { "label", "نص حقوق النشر" },
+                                { "default", "© 2025 جميع الحقوق محفوظة" },
+                                { "placeholder", "© 2025 جميع الحقوق محفوظة" },
+                                { "validation", new Dictionary<string, object> { { "max", 200 } } }
+                            }
+                        },
+                        { "socialLinks", new Dictionary<string, object>
+                            {
+                                { "type", "array" },
+                                { "label", "روابط التواصل الاجتماعي" },
+                                { "arrayItemSchema", new Dictionary<string, object>
+                                    {
+                                        { "platform", new Dictionary<string, object>
+                                            {
+                                                { "type", "string" },
+                                                { "label", "المنصة" },
+                                                { "required", true },
+                                                { "placeholder", "twitter, facebook, instagram, linkedin, youtube" }
+                                            }
+                                        },
+                                        { "url", new Dictionary<string, object>
+                                            {
+                                                { "type", "url" },
+                                                { "label", "الرابط" },
+                                                { "required", true },
+                                                { "placeholder", "https://twitter.com/example" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        { "footerSections", new Dictionary<string, object>
+                            {
+                                { "type", "array" },
+                                { "label", "أقسام الروابط" },
+                                { "description", "أقسام تحتوي على روابط سريعة" },
+                                { "arrayItemSchema", new Dictionary<string, object>
+                                    {
+                                        { "title", new Dictionary<string, object>
+                                            {
+                                                { "type", "string" },
+                                                { "label", "عنوان القسم" },
+                                                { "required", true },
+                                                { "placeholder", "روابط سريعة" }
+                                            }
+                                        },
+                                        { "links", new Dictionary<string, object>
+                                            {
+                                                { "type", "array" },
+                                                { "label", "الروابط" },
+                                                { "arrayItemSchema", new Dictionary<string, object>
+                                                    {
+                                                        { "label", new Dictionary<string, object>
+                                                            {
+                                                                { "type", "string" },
+                                                                { "label", "نص الرابط" },
+                                                                { "required", true },
+                                                                { "placeholder", "حول المنصة" }
+                                                            }
+                                                        },
+                                                        { "url", new Dictionary<string, object>
+                                                            {
+                                                                { "type", "url" },
+                                                                { "label", "الرابط" },
+                                                                { "required", true },
+                                                                { "placeholder", "/about" }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
     }
 }

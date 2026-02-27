@@ -38,5 +38,7 @@ namespace Domain.Entites
         public ICollection<ModuleItem> ModuleItems { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public ICollection<LiveSession> LiveSessions { get; set; } = [];
+        public ICollection<Order> Orders { get; set; } = [];
     }
 }
