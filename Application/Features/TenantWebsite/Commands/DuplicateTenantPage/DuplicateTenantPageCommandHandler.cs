@@ -24,7 +24,7 @@ namespace Application.Features.TenantWebsite.Commands.DuplicateTenantPage
 
             var tenantPage = await _tenantWebsiteRepository.GetTenantPageAsync(tenantId, request.PageId, cancellationToken);
             if(tenantPage is null)
-                return TenantWebsiteError.TenantPageNotFound;
+                return TenantWebsiteErrors.TenantPageNotFound;
 
             var duplicatedTenantPage = new TenantPage
             {

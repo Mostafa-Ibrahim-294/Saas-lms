@@ -36,14 +36,14 @@ namespace Application.Features.TenantMembers.Commands.RemoveMember
 
             var member = await _tenantMemberRepository.GetMemberByIdAsync(request.MemberId, cancellationToken);
             if (member == null)
-                return TenantMemberError.MemberNotFound;
+                return TenantMemberErrors.MemberNotFound;
 
             var isOwner = await _tenantMemberRepository.IsOwnerAsync(request.MemberId, cancellationToken);
             if (isOwner)
-                return TenantMemberError.CannotRemoveOwner;
+                return TenantMemberErrors.CannotRemoveOwner;
 
             if (member.UserId == userId)
-                return TenantMemberError.CannotRemoveSelf;
+                return TenantMemberErrors.CannotRemoveSelf;
 
             await _tenantMemberRepository.RemoveMemberAsync(request.MemberId, cancellationToken);
 

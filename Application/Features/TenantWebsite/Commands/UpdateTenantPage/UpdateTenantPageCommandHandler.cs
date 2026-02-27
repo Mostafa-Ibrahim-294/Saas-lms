@@ -24,7 +24,7 @@ namespace Application.Features.TenantWebsite.Commands.UpdateTenantPage
 
             var isUpdated = await _tenantWebsiteRepository.UpdateTenantPageAsync(request.pageId, tenantId, request, cancellationToken);
             if (!isUpdated)
-                return TenantWebsiteError.TenantPageNotFound;
+                return TenantWebsiteErrors.TenantPageNotFound;
 
             return new TenantPageResponse { Message = TenantWebsiteConstants.Updated };
         }

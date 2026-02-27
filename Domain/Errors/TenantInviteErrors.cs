@@ -2,7 +2,7 @@
 
 namespace Domain.Errors
 {
-    public static class TenantInviteError
+    public static class TenantInviteErrors
     {
         public static Error UserAlreadyExists =>
             new Error("User.AlreadyExists", "هذا المستخدم عضو بالفعل في المنصة", HttpStatusCode.Conflict);

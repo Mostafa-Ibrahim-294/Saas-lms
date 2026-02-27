@@ -673,7 +673,7 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "INVITE_STUDENTS", Name = "دعوة الطلاب للجلسات", Description = "السماح بدعوة الطلاب إلى الجلسات المباشرة", Module = "live-sessions" },
 
                     // Payments
-                    new Permission { Id = "MANAGE_ORDERS", Name = "عرض الطلبات", Description = "السماح بعرض الطلبات", Module = "payments" },
+                    new Permission { Id = "MANAGE_ORDERS", Name = "إدارة الطلبات", Description = "السماح بإدارة الطلبات", Module = "payments" },
                     new Permission { Id = "ISSUE_REFUNDS", Name = "إصدار المبالغ المستردة", Description = "السماح بإصدار واسترجاع المدفوعات", Module = "payments" },
                     new Permission { Id = "REVENUE_ANALYTICS", Name = "عرض تحليلات الإيرادات", Description = "السماح بعرض إحصائيات المبيعات", Module = "payments" },
                     new Permission { Id = "MANAGE_COUPONS", Name = "إدارة الكوبونات", Description = "السماح بإنشاء وتعديل وحذف الكوبونات", Module = "payments" },

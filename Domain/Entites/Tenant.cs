@@ -25,5 +25,7 @@ namespace Domain.Entites
         public ICollection<ZoomIntegration> ZoomIntegrations { get; set; } = [];
         public ICollection<ZoomOAuthState> ZoomOAuthStates { get; set; } = [];
         public ICollection<TenantPage> TenantPages { get; set; } = [];
+        public ICollection<Order> Orders { get; set; } = [];
+        public ICollection<PaymentMethod> PaymentMethods { get; set; } = [];
     }
 }

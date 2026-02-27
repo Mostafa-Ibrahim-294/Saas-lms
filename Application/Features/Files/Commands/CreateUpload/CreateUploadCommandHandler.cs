@@ -51,11 +51,11 @@ namespace Application.Features.Files.Commands.CreateUpload
             var totalAfterUpload = usedMB + requestMB - OverFlowSizeMB;
 
             if (totalAfterUpload > limitMB)
-                return FileError.UploadFailed;
+                return FileErrors.UploadFailed;
 
             var credentials = await _fileService.CreateUploadCredentialsAsync(request.Title, request.Size, cancellationToken);
             if (credentials == null)
-                return FileError.UploadFailed;
+                return FileErrors.UploadFailed;
 
             var fileEntity = await CreateFileEntity(credentials.VideoId, request.Title, requestMB, credentials.EmbedUrl, tenantId, userId);
             await _fileRepository.CreateAsync(fileEntity, cancellationToken);

@@ -2,7 +2,7 @@
 
 namespace Domain.Errors
 {
-    public static class LiveSessionError
+    public static class LiveSessionErrors
     {
         public static Error SessionNotFound =>
             new("Session.NotFound", "تعذر العثور على الجلسة المطلوبة", HttpStatusCode.NotFound);

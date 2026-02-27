@@ -21,5 +21,6 @@ namespace Domain.Entites
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public ICollection<SessionParticipant> SessionParticipants { get; set; } = [];
+        public ICollection<Order> Orders { get; set; } = [];
     }
 }

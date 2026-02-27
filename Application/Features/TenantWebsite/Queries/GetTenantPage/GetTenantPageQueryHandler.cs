@@ -23,7 +23,7 @@ namespace Application.Features.TenantWebsite.Queries.GetTenantPage
 
             var result = await _tenantWebsiteRepository.GetTenantPageWithBlockTypeAsync(tenantId, request.PageId, cancellationToken);
             if (result == null) 
-                return TenantWebsiteError.TenantPageNotFound;
+                return TenantWebsiteErrors.TenantPageNotFound;
 
             return result;
         }

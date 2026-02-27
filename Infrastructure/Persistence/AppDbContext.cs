@@ -34,6 +34,9 @@ namespace Infrastructure.Persistence
         internal DbSet<TenantPage> TenantPages { get; set; }
         internal DbSet<PageBlock> PageBlocks { get; set; }
         internal DbSet<BlockType> BlockTypes { get; set; }
+        internal DbSet<Order> Orders { get; set; }
+        internal DbSet<OrderTimeLine> OrderTimeLines { get; set; }
+        internal DbSet<PaymentMethod> PaymentMethods { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

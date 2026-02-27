@@ -47,13 +47,13 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
 
             var session = await _liveSessionRepository.GetLiveSessionAsync(request.SessionId, cancellationToken);
             if (session == null)
-                return LiveSessionError.SessionNotFound;
+                return LiveSessionErrors.SessionNotFound;
 
             if (session.Host.UserId != userId)
-                return LiveSessionError.CannotUpdateSession;
+                return LiveSessionErrors.CannotUpdateSession;
 
             if (session.Status == LiveSessionStatus.Ongoing)
-                return LiveSessionError.CannotDeleteLiveSession;
+                return LiveSessionErrors.CannotDeleteLiveSession;
 
             var zoomIntegration = await _zoomIntegrationRepository.GetZoomIntegrationAsync(userId, tenantId, cancellationToken);
             if (zoomIntegration == null || !zoomIntegration.IsActive)

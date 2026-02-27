@@ -33,7 +33,7 @@ namespace Application.Features.Zoom.Queries.ConnectZoom
 
             var hasFeature = await _subscriptionRepository.TenantHasFeatureAsync(tenantId, LiveSessionConstants.LiveSessionFeatureKey, cancellationToken);
             if (!hasFeature)
-                return LiveSessionError.ZoomIntegrationNotAvailable;
+                return LiveSessionErrors.ZoomIntegrationNotAvailable;
 
             var stateToken = Guid.NewGuid().ToString();
             var oAuthState = new ZoomOAuthState

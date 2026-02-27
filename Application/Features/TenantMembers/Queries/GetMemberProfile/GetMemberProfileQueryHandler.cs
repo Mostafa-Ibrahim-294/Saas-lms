@@ -15,7 +15,7 @@ namespace Application.Features.TenantMembers.Queries.GetMemberProfile
         {
             var member = await _tenantMemberRepository.GetMemberByIdAsync(request.MemberId, cancellationToken);
             if (member == null)
-                return TenantMemberError.MemberNotFound;
+                return TenantMemberErrors.MemberNotFound;
 
             return await _tenantMemberRepository.GetMemberProfileAsync(request.MemberId, cancellationToken);
         }
