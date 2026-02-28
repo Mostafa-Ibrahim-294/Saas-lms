@@ -31,16 +31,16 @@ namespace Infrastructure.Repositories
                 .Where(t => t.Id == tenantId);
 
             if (update.General is not null)
-                query =  _context.Tenants .Include(t => t.WebsiteSetting);
+                query = query.Include(t => t.WebsiteSetting);
 
             if (update.Email is not null)
-                query = _context.Tenants.Include(t => t.EmailSetting);
+                query = query.Include(t => t.EmailSetting);
 
             if (update.Appearance is not null)
-                query =  _context.Tenants.Include(t => t.WebsiteAppearnceSetting);
+                query = query.Include(t => t.WebsiteAppearnceSetting);
 
             if (update.Notifications is not null)
-                query = _context.Tenants.Include(t => t.NotificationSetting);
+                query = query.Include(t => t.NotificationSetting);
 
 
             var tenant = await query.FirstOrDefaultAsync(cancellationToken);
@@ -56,7 +56,11 @@ namespace Infrastructure.Repositories
                 _mapper.Map(update.Email, tenant.EmailSetting);
 
             if (update.Appearance is not null)
+            { 
                 _mapper.Map(update.Appearance, tenant.WebsiteAppearnceSetting);
+                if (!string.IsNullOrEmpty(update.Appearance.Logo))
+                    tenant.Logo = update.Appearance.Logo;
+            }
 
             if (update.Notifications is not null)
                 _mapper.Map(update.Notifications, tenant.NotificationSetting);

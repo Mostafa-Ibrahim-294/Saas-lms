@@ -46,7 +46,6 @@
 
             CreateMap<AppearanceDto, WebsiteAppearanceSetting>()
                 .ForMember(dest => dest.FavIcon, opt => opt.MapFrom(src => src.Favicon))
-                .ForMember(dest => dest.Tenant.Logo, opt => opt.MapFrom(src => src.Logo))
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.TenantId, opt => opt.Ignore())
                 .ForMember(dest => dest.Tenant, opt => opt.Ignore())
