@@ -75,7 +75,7 @@ namespace Infrastructure.Repositories
             {
                 Hero = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.HeroId) ?? new(),
                 Text = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.TextId) ?? new(),
-                Featured_Courses = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.Featured_CoursesId) ?? new(),
+                Featured_courses = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.Featured_CoursesId) ?? new(),
                 Testimonials = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.TestimonialsId) ?? new(),
                 Cta = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.CtaId) ?? new(),
                 Footer = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.FooterId) ?? new(),
