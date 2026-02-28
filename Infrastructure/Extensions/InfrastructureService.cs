@@ -119,6 +119,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ILiveSessionRepository, LiveSessionRepository>();
             builder.Services.AddScoped<ITenantWebsiteRepository, TenantWebsiteRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<ITenantWebsiteSettingsRepository, TenantWebsiteSettingsRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

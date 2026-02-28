@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260227200621_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,37 +311,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("CourseProgresses");
-                });
-
-            modelBuilder.Entity("Domain.Entites.EmailSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ReplyToEmail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SenderEmail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SenderName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId")
-                        .IsUnique();
-
-                    b.ToTable("EmailSettings");
                 });
 
             modelBuilder.Entity("Domain.Entites.Enrollment", b =>
@@ -739,40 +711,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("RequiredModuleItemId");
 
                     b.ToTable("ModuleItemConditions");
-                });
-
-            modelBuilder.Entity("Domain.Entites.NotificationSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("OrderApproved")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("OrderRejected")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("OrderSubmitted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId")
-                        .IsUnique();
-
-                    b.ToTable("NotificationSettings");
                 });
 
             modelBuilder.Entity("Domain.Entites.Order", b =>
@@ -1663,69 +1601,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("TenantUsage");
                 });
 
-            modelBuilder.Entity("Domain.Entites.WebsiteAppearanceSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Direction")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FavIcon")
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
-
-                    b.Property<string>("FontFamily")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryColor")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryColor")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId")
-                        .IsUnique();
-
-                    b.ToTable("WebsiteAppearanceSettings");
-                });
-
-            modelBuilder.Entity("Domain.Entites.WebsiteSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsMaintenanceMode")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("TagLine")
-                        .HasColumnType("text");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId")
-                        .IsUnique();
-
-                    b.ToTable("WebsiteSettings");
-                });
-
             modelBuilder.Entity("Domain.Entites.ZoomIntegration", b =>
                 {
                     b.Property<int>("Id")
@@ -2061,17 +1936,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Domain.Entites.EmailSetting", b =>
-                {
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithOne("EmailSetting")
-                        .HasForeignKey("Domain.Entites.EmailSetting", "TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
             modelBuilder.Entity("Domain.Entites.Enrollment", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
@@ -2235,17 +2099,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("ModuleItem");
 
                     b.Navigation("RequiredModuleItem");
-                });
-
-            modelBuilder.Entity("Domain.Entites.NotificationSetting", b =>
-                {
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithOne("NotificationSetting")
-                        .HasForeignKey("Domain.Entites.NotificationSetting", "TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Domain.Entites.Order", b =>
@@ -2583,28 +2436,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
                 });
 
-            modelBuilder.Entity("Domain.Entites.WebsiteAppearanceSetting", b =>
-                {
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithOne("WebsiteAppearnceSetting")
-                        .HasForeignKey("Domain.Entites.WebsiteAppearanceSetting", "TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("Domain.Entites.WebsiteSetting", b =>
-                {
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithOne("WebsiteSetting")
-                        .HasForeignKey("Domain.Entites.WebsiteSetting", "TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
             modelBuilder.Entity("Domain.Entites.ZoomIntegration", b =>
                 {
                     b.HasOne("Domain.Entites.Tenant", "Tenant")
@@ -2784,15 +2615,9 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.Navigation("Courses");
 
-                    b.Navigation("EmailSetting")
-                        .IsRequired();
-
                     b.Navigation("Grades");
 
                     b.Navigation("LiveSessions");
-
-                    b.Navigation("NotificationSetting")
-                        .IsRequired();
 
                     b.Navigation("Orders");
 
@@ -2813,12 +2638,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("TenantRoles");
 
                     b.Navigation("TenantUsages");
-
-                    b.Navigation("WebsiteAppearnceSetting")
-                        .IsRequired();
-
-                    b.Navigation("WebsiteSetting")
-                        .IsRequired();
 
                     b.Navigation("ZoomIntegrations");
 

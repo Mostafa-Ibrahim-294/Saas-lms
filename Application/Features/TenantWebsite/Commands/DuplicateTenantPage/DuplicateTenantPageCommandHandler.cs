@@ -8,19 +8,25 @@ namespace Application.Features.TenantWebsite.Commands.DuplicateTenantPage
     {
         private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public DuplicateTenantPageCommandHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, ISubscriptionRepository subscriptionRepository)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;
             _tenantRepository = tenantRepository;
             _httpContextAccessor = httpContextAccessor;
+            _subscriptionRepository = subscriptionRepository;
         }
         public async Task<OneOf<TenantPageResponse, Error>> Handle(DuplicateTenantPageCommand request, CancellationToken cancellationToken)
         {
             var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
+
+            var isSubscribed = await _subscriptionRepository.HasActiveSubscriptionByTenantDomain(subDomain!, cancellationToken);
+            if (!isSubscribed)
+                return TenantErrors.NotSubscribed;
 
             var tenantPage = await _tenantWebsiteRepository.GetTenantPageAsync(tenantId, request.PageId, cancellationToken);
             if(tenantPage is null)

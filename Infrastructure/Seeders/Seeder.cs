@@ -657,6 +657,7 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "MANAGE_SEO", Name = "إدارة SEO", Description = "السماح بتعديل إعدادات تحسين الظهور", Module = "website" },
                     new Permission { Id = "MANAGE_BRANDING", Name = "إدارة الهوية البصرية", Description = "السماح بإدارة الألوان والشعارات", Module = "website" },
                     new Permission { Id = "MANAGE_DOMAINS", Name = "إدارة النطاقات", Description = "السماح بربط وتعديل نطاقات الموقع", Module = "website" },
+                    new Permission { Id = "MANAGE_WEBSITE_SETTINGS", Name = "التحكم في اعدادات الموقع", Description = "السماح بتعديل الموقع", Module = "website" },
 
                     // Documents
                     new Permission { Id = "CREATE_DOCUMENTS", Name = "إنشاء مستندات", Description = "السماح بإنشاء مستندات جديدة", Module = "documents" },
