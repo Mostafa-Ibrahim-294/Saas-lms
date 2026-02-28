@@ -21,7 +21,11 @@ namespace Application.Features.TenantWebsite.Queries.ValidateUrl
         {
             var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
-            return new ValidateUrlDto(await _tenantWebsiteRepository.IsValidateUrl(1, request.Url, cancellationToken));
+
+            string url = request.Url?.Trim() ?? "/";
+            url = url.StartsWith("/") ? url : $"/{url}";
+            return new ValidateUrlDto(await _tenantWebsiteRepository.IsValidateUrl(tenantId, url, cancellationToken));
         }
     }
 }
+
