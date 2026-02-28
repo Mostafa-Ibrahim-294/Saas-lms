@@ -87,7 +87,7 @@ namespace Infrastructure.Repositories
         }
         public async Task<bool> IsValidateUrl(int tenantId, string url, CancellationToken cancellationToken)
         {
-            return !await _context.TenantPages
+            return await _context.TenantPages
                 .AnyAsync(p => p.TenantId == tenantId && p.Url == url, cancellationToken);
         }
         public async Task<bool> UpdateTenantPageAsync(int pageId, int tenantId, UpdateTenantPageCommand update, CancellationToken cancellationToken)
