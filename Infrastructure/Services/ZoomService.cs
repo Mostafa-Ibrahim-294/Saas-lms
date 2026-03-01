@@ -66,15 +66,17 @@ namespace Infrastructure.Services
         {
             var userHttpClient = _httpClientFactory.CreateClient();
             userHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ZoomConstants.Bearer, accessToken);
-
             var userResponse = await userHttpClient.GetAsync(ZoomConstants.ZoomUserMe, cancellationToken);
+
+            var responseContent = await userResponse.Content.ReadAsStringAsync(cancellationToken);
+            _logger.LogWarning("Zoom user info response: {StatusCode} - {Content}", userResponse.StatusCode, responseContent);
+
             if (!userResponse.IsSuccessStatusCode)
                 return null;
 
             var userInfo = await userResponse.Content.ReadFromJsonAsync<ZoomUserResponse>(cancellationToken);
             if (userInfo == null)
                 return null;
-
             return userInfo;
         }
         public async Task<bool> RefreshZoomTokenAsync(ZoomIntegration integration, CancellationToken cancellationToken)
