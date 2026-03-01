@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
                 existingIntegration.ZoomUserId = zoomUser.Id;
                 existingIntegration.ZoomAccountId = zoomUser.AccountId;
                 existingIntegration.ZoomEmail = zoomUser.Email;
-                existingIntegration.ZoomDisplayName = $"{zoomUser.FirsName} {zoomUser.LastName}";
+                existingIntegration.ZoomDisplayName = $"{zoomUser.FirstName} {zoomUser.LastName}";
                 existingIntegration.ZoomAccountType = zoomUser.Type.ToString();
                 existingIntegration.IsActive = true;
                 existingIntegration.UpdatedAt = DateTime.UtcNow;
@@ -50,7 +50,7 @@ namespace Infrastructure.Repositories
                     ZoomUserId = zoomUser.Id,
                     ZoomAccountId = zoomUser.AccountId,
                     ZoomEmail = zoomUser.Email,
-                    ZoomDisplayName = $"{zoomUser.FirsName} {zoomUser.LastName}",
+                    ZoomDisplayName = $"{zoomUser.FirstName} {zoomUser.LastName}",
                     ZoomAccountType = zoomUser.Type.ToString(),
                     IsActive = true,
                     LastSyncAt = DateTime.UtcNow

@@ -3,6 +3,7 @@ using Application.Contracts.Zoom;
 using Application.Features.Tenants.Commands.CreateLiveSession;
 using Application.Features.Tenants.Commands.UpdateLiveSession;
 using Application.Features.ZoomIntegration.Dtos;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -17,14 +18,16 @@ namespace Infrastructure.Services
         private readonly HttpClient _httpClient;
         private readonly IZoomIntegrationRepository _zoomIntegrationRepository;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<ZoomService> _logger;
 
         public ZoomService(IOptions<ZoomOptions> options, HttpClient httpClient, IZoomIntegrationRepository zoomIntegrationRepository,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory, ILogger<ZoomService> logger)
         {
             _zoomOptions = options;
             _httpClient = httpClient;
             _zoomIntegrationRepository = zoomIntegrationRepository;
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
 
         public string GetAuthorizationUrl(string state, CancellationToken cancellationToken) =>
