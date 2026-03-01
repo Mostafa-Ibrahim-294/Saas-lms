@@ -35,6 +35,8 @@ namespace Application.Features.Zoom.Queries.ConnectZoom
             if (!hasFeature)
                 return LiveSessionErrors.ZoomIntegrationNotAvailable;
 
+            await _zoomOAuthStateRepository.DeleteOldStatesAsync(userId, tenantId, cancellationToken);
+
             var stateToken = $"{Guid.NewGuid()}|{subDomain}";
             var oAuthState = new ZoomOAuthState
             {

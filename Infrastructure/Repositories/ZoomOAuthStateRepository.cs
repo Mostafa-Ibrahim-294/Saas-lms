@@ -19,5 +19,14 @@
         public async Task<ZoomOAuthState?> GetOAuthStateAsync(string state, CancellationToken cancellationToken) =>
             await _context.ZoomOAuthStates
                 .FirstOrDefaultAsync(x => x.StateToken == state, cancellationToken);
+        public async Task DeleteOldStatesAsync(string userId, int tenantId, CancellationToken cancellationToken)
+        {
+            var oldStates = await _context.ZoomOAuthStates
+                .Where(x => x.UserId == userId && x.TenantId == tenantId)
+                .ToListAsync(cancellationToken);
+
+            if (oldStates.Any())
+                _context.ZoomOAuthStates.RemoveRange(oldStates);
+        }
     }
 }
