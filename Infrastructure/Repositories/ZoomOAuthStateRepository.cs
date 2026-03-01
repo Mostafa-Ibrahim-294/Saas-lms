@@ -22,14 +22,24 @@
         public async Task<ZoomOAuthState?> TryMarkAsUsedAsync(string state, CancellationToken cancellationToken)
         {
             var updated = await _context.ZoomOAuthStates
-                .Where(x => x.StateToken == state && !x.IsUsed && x.ExpiresAt > DateTime.UtcNow)
+                .Where(x => x.StateToken == state && !x.IsUsed)
                 .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsUsed, true), cancellationToken);
 
             if (updated == 0)
                 return null;
 
-            return await _context.ZoomOAuthStates
+            var oauthState = await _context.ZoomOAuthStates
                 .FirstOrDefaultAsync(x => x.StateToken == state, cancellationToken);
+
+            if (oauthState is not null && oauthState.ExpiresAt < DateTime.UtcNow)
+            {
+                await _context.ZoomOAuthStates
+                    .Where(x => x.StateToken == state)
+                    .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsUsed, false), cancellationToken);
+                return null;
+            }
+
+            return oauthState;
         }
         public async Task DeleteOldStatesAsync(string userId, int tenantId, CancellationToken cancellationToken)
         {
