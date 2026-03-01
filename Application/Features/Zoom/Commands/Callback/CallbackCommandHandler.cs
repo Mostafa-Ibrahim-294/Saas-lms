@@ -22,18 +22,18 @@ namespace Application.Features.Zoom.Commands.Callback
 
         public async Task<string> Handle(CallbackCommand request, CancellationToken cancellationToken)
         {
-            var parts = request.State.Split('|');
+            var parts = request.state.Split('|');
             var subDomain = parts.Length > 1 ? parts[1] : "app";
             var errorUrl = $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=false";
 
-            var oauthState = await _zoomOAuthStateRepository.GetOAuthStateAsync(request.State, cancellationToken);
+            var oauthState = await _zoomOAuthStateRepository.GetOAuthStateAsync(request.state, cancellationToken);
             if (oauthState is null || oauthState.IsUsed || oauthState.ExpiresAt < DateTime.UtcNow)
                 return errorUrl;
 
             oauthState.IsUsed = true;
             await _zoomOAuthStateRepository.SaveAsync(cancellationToken);
 
-            var zoomTokenResponse = await _zoomService.ExchangeCodeToTokenAsync(request.Code, request.State, cancellationToken);
+            var zoomTokenResponse = await _zoomService.ExchangeCodeToTokenAsync(request.code, request.state, cancellationToken);
             if (zoomTokenResponse is null)
                 return errorUrl;
 

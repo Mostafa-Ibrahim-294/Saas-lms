@@ -36,7 +36,7 @@ namespace Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Callback([FromQuery] CallbackCommand command, CancellationToken cancellationToken)
         {
-            var redirectUrl = await _mediator.Send(new CallbackCommand(command.Code, command.State), cancellationToken);
+            var redirectUrl = await _mediator.Send(new CallbackCommand(command.code, command.state), cancellationToken);
             return Redirect(redirectUrl);
         }
 
