@@ -35,7 +35,7 @@ namespace Application.Features.Zoom.Queries.ConnectZoom
             if (!hasFeature)
                 return LiveSessionErrors.ZoomIntegrationNotAvailable;
 
-            var stateToken = Guid.NewGuid().ToString();
+            var stateToken = $"{Guid.NewGuid()}|{subDomain}";
             var oAuthState = new ZoomOAuthState
             {
                 StateToken = stateToken,

@@ -22,27 +22,29 @@ namespace Application.Features.Zoom.Commands.Callback
 
         public async Task<string> Handle(CallbackCommand request, CancellationToken cancellationToken)
         {
-            var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
+            var parts = request.State.Split('|');
+            var subDomain = parts.Length > 1 ? parts[1] : "app";
+            var errorUrl = $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=false";
 
             var oauthState = await _zoomOAuthStateRepository.GetOAuthStateAsync(request.State, cancellationToken);
-            if(oauthState == null)
-                return $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=false";
+            if (oauthState is null || oauthState.IsUsed || oauthState.ExpiresAt < DateTime.UtcNow)
+                return errorUrl;
 
-            var userId = oauthState.UserId;
-            var tenantId = oauthState.TenantId;
             oauthState.IsUsed = true;
-            await _zoomIntegrationRepository.SaveAsync(cancellationToken);
+            await _zoomOAuthStateRepository.SaveAsync(cancellationToken);
 
             var zoomTokenResponse = await _zoomService.ExchangeCodeToTokenAsync(request.Code, request.State, cancellationToken);
-            if(zoomTokenResponse == null)
-                return $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=false";
+            if (zoomTokenResponse is null)
+                return errorUrl;
 
             var zoomUserInfo = await _zoomService.GetZoomUserInfoAsync(zoomTokenResponse.AccessToken, cancellationToken);
-            if(zoomUserInfo == null)
-                return $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=false";
+            if (zoomUserInfo is null)
+                return errorUrl;
 
-            await _zoomIntegrationRepository.SaveOrUpdateIntegrationAsync(userId, tenantId, zoomTokenResponse, zoomUserInfo, cancellationToken);
+            await _zoomIntegrationRepository.SaveOrUpdateIntegrationAsync(
+                oauthState.UserId, oauthState.TenantId, zoomTokenResponse, zoomUserInfo, cancellationToken);
             await _zoomIntegrationRepository.SaveAsync(cancellationToken);
+
             return $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=true";
         }
     }
