@@ -18,6 +18,6 @@
         }
         public async Task<ZoomOAuthState?> GetOAuthStateAsync(string state, CancellationToken cancellationToken) =>
             await _context.ZoomOAuthStates
-                .FirstOrDefaultAsync(x => x.StateToken == state && !x.IsUsed && x.ExpiresAt > DateTime.UtcNow, cancellationToken);
+                .FirstOrDefaultAsync(x => x.StateToken == state, cancellationToken);
     }
 }

@@ -22,21 +22,37 @@ namespace Application.Features.Zoom.Commands.Callback
 
         public async Task<string> Handle(CallbackCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogWarning("Raw state received from Zoom: [{State}]", request.state);
+            var state = Uri.UnescapeDataString(request.state);
+
+            _logger.LogWarning("State - Raw: [{Raw}] | Decoded: [{Decoded}]", request.state, state);
 
             var parts = request.state.Split('|');
             var subDomain = parts.Length > 1 ? parts[1] : "app";
             var errorUrl = $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=false";
 
-            _logger.LogWarning("SubDomain extracted: [{SubDomain}]", subDomain);
-
             var oauthState = await _zoomOAuthStateRepository.GetOAuthStateAsync(request.state, cancellationToken);
 
-            _logger.LogWarning("OAuthState lookup: {Result}",
-                oauthState == null ? "NOT FOUND" : $"FOUND - IsUsed={oauthState.IsUsed}, ExpiresAt={oauthState.ExpiresAt}");
-
-            if (oauthState is null || oauthState.IsUsed || oauthState.ExpiresAt < DateTime.UtcNow)
+            if (oauthState is null)
+            {
+                _logger.LogWarning("OAuthState NOT FOUND for state [{State}]", request.state);
                 return errorUrl;
+            }
+
+            _logger.LogWarning("OAuthState FOUND - IsUsed={IsUsed}, ExpiresAt={ExpiresAt}, Now={Now}",
+                oauthState.IsUsed, oauthState.ExpiresAt, DateTime.UtcNow);
+
+            if (oauthState.IsUsed)
+            {
+                _logger.LogWarning("OAuthState already used");
+                return errorUrl;
+            }
+
+            if (oauthState.ExpiresAt < DateTime.UtcNow)
+            {
+                _logger.LogWarning("OAuthState expired: ExpiresAt={ExpiresAt} < Now={Now}",
+                    oauthState.ExpiresAt, DateTime.UtcNow);
+                return errorUrl;
+            }
 
             oauthState.IsUsed = true;
             await _zoomOAuthStateRepository.SaveAsync(cancellationToken);
@@ -44,14 +60,14 @@ namespace Application.Features.Zoom.Commands.Callback
             var zoomTokenResponse = await _zoomService.ExchangeCodeToTokenAsync(request.code, request.state, cancellationToken);
             if (zoomTokenResponse is null)
             {
-                _logger.LogWarning("ExchangeCode failed - Token response is null");
+                _logger.LogWarning("ExchangeCode failed");
                 return errorUrl;
             }
 
             var zoomUserInfo = await _zoomService.GetZoomUserInfoAsync(zoomTokenResponse.access_token, cancellationToken);
             if (zoomUserInfo is null)
             {
-                _logger.LogWarning("GetZoomUserInfo failed - User info is null");
+                _logger.LogWarning("GetZoomUserInfo failed");
                 return errorUrl;
             }
 
@@ -59,7 +75,7 @@ namespace Application.Features.Zoom.Commands.Callback
                 oauthState.UserId, oauthState.TenantId, zoomTokenResponse, zoomUserInfo, cancellationToken);
             await _zoomIntegrationRepository.SaveAsync(cancellationToken);
 
-            _logger.LogWarning("Zoom integration saved successfully for user {UserId}", oauthState.UserId);
+            _logger.LogWarning("Zoom connected successfully for user {UserId}", oauthState.UserId);
 
             return $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=true";
         }
