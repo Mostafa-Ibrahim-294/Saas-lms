@@ -29,6 +29,10 @@ namespace Application.Features.TenantWebsite.Commands.CreateTenantPage
             if (!isSubscribed)
                 return TenantErrors.NotSubscribed;
 
+            var urlExists = await _tenantWebsiteRepository.UrlExistsAsync(tenantId, request.Url, cancellationToken);
+            if (urlExists)
+                return TenantWebsiteErrors.PageUrlAlreadyExists;
+
             await _tenantWebsiteRepository.CreateTenantPageAsync(request, tenantId, cancellationToken);
             await _tenantWebsiteRepository.SaveAsync(cancellationToken);
             return new TenantPageResponse { Message = TenantWebsiteConstants.Created };

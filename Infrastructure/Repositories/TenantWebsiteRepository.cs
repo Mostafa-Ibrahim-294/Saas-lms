@@ -49,6 +49,7 @@ namespace Infrastructure.Repositories
         {
             await _context.AddAsync(tenantPage, cancellationToken);
         }
+     
         public Task<List<TenantPagesDto>> GetTenantPagesAsync(int tenantId, CancellationToken cancellationToken)
         {
             return _context.TenantPages
@@ -82,11 +83,6 @@ namespace Infrastructure.Repositories
             };
         }
         public async Task<bool> UrlExistsAsync(int tenantId, string url, CancellationToken cancellationToken)
-        {
-            return await _context.TenantPages
-                .AnyAsync(p => p.TenantId == tenantId && p.Url == url, cancellationToken);
-        }
-        public async Task<bool> IsValidateUrl(int tenantId, string url, CancellationToken cancellationToken)
         {
             return await _context.TenantPages
                 .AnyAsync(p => p.TenantId == tenantId && p.Url == url, cancellationToken);

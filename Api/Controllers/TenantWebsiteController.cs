@@ -37,7 +37,11 @@ namespace Api.Controllers
         [HttpPost("pages")]
         public async Task<IActionResult> CreateTenantPage([FromBody] CreateTenantPageCommand command, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(command, cancellationToken));
+            var result = await _mediator.Send(command, cancellationToken);
+            return result.Match<IActionResult>(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
         }
 
 

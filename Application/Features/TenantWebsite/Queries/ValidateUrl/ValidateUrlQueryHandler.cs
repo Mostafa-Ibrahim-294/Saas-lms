@@ -24,8 +24,7 @@ namespace Application.Features.TenantWebsite.Queries.ValidateUrl
 
             string url = request.Url?.Trim() ?? "/";
             url = url.StartsWith("/") ? url : $"/{url}";
-            return new ValidateUrlDto(await _tenantWebsiteRepository.IsValidateUrl(tenantId, url, cancellationToken));
+            return new ValidateUrlDto(await _tenantWebsiteRepository.UrlExistsAsync(tenantId, url, cancellationToken));
         }
     }
 }
-
