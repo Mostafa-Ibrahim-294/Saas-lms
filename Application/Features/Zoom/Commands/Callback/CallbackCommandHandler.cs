@@ -48,7 +48,10 @@ namespace Application.Features.Zoom.Commands.Callback
 
             var zoomUserInfo = await _zoomService.GetZoomUserInfoAsync(zoomTokenResponse.AccessToken, cancellationToken);
             if (zoomUserInfo is null)
+            {
+                _logger.LogWarning("Zoom user info is null!");
                 return errorUrl;
+            }
 
             _logger.LogWarning("Zoom user info retrieval successful for user {UserId} and tenant {TenantId}", oauthState.UserId, oauthState.TenantId);
 
