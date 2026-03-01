@@ -46,7 +46,7 @@ namespace Application.Features.Zoom.Queries.ConnectZoom
             await _zoomOAuthStateRepository.CreateAsync(oAuthState, cancellationToken);
             await _zoomOAuthStateRepository.SaveAsync(cancellationToken);
 
-            string authorizationUrl = _zoomService.GetAuthorizationUrl(stateToken,  cancellationToken);
+            string authorizationUrl = _zoomService.GetAuthorizationUrl(stateToken, cancellationToken);
             return new ConnectZoomDto { AuthorizationUrl = authorizationUrl };
         }
     }
