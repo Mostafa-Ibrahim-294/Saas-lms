@@ -42,7 +42,7 @@ namespace Infrastructure.Services
                 new KeyValuePair<string, string>(ZoomConstants.RedirectUri, _zoomOptions.Value.RedirectUri)
             });
 
-            var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_zoomOptions.Value.ClientId}:{_zoomOptions.Value.SecretToken}"));
+            var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_zoomOptions.Value.ClientId}:{_zoomOptions.Value.ClientSecret}"));
             var tokenRequest = new HttpRequestMessage(HttpMethod.Post, ZoomConstants.TokenUrl)
             {
                 Content = requestBody

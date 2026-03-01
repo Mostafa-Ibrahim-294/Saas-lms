@@ -12,6 +12,6 @@
         public const string ZoomUserMe = "https://api.zoom.us/v2/users/me";
         public const string MeetingRequest = "https://api.zoom.us/v2/users/me/meetings";
         public const string ZoomMeetingsUrl = "https://api.zoom.us/v2/meetings/";
-        public const string FrontendRedirectUrl = ".waey.online/dashboard/live-sessionse";
+        public const string FrontendRedirectUrl = ".waey.online/dashboard/live-sessions";
     }
 }
