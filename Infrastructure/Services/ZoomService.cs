@@ -110,9 +110,9 @@ namespace Infrastructure.Services
             if (tokenData == null)
                 return false;
 
-            integration.AccessToken = tokenData.AccessToken;
-            integration.RefreshToken = tokenData.RefreshToken;
-            integration.TokenExpiresAt = DateTime.UtcNow.AddSeconds(tokenData.ExpiresIn);
+            integration.AccessToken = tokenData.access_token;
+            integration.RefreshToken = tokenData.refresh_token;
+            integration.TokenExpiresAt = DateTime.UtcNow.AddSeconds(tokenData.expires_in);
 
             await _zoomIntegrationRepository.SaveAsync(cancellationToken);
             return true;

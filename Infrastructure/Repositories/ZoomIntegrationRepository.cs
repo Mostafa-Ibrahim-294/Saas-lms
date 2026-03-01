@@ -26,9 +26,9 @@ namespace Infrastructure.Repositories
 
             if (existingIntegration != null)
             {
-                existingIntegration.AccessToken = zoomToken.AccessToken;
-                existingIntegration.RefreshToken = zoomToken.RefreshToken;
-                existingIntegration.TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.ExpiresIn);
+                existingIntegration.AccessToken = zoomToken.access_token;
+                existingIntegration.RefreshToken = zoomToken.refresh_token;
+                existingIntegration.TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.expires_in);
                 existingIntegration.ZoomUserId = zoomUser.Id;
                 existingIntegration.ZoomAccountId = zoomUser.AccountId;
                 existingIntegration.ZoomEmail = zoomUser.Email;
@@ -44,9 +44,9 @@ namespace Infrastructure.Repositories
                 {
                     UserId = userId,
                     TenantId = tenantId,
-                    AccessToken = zoomToken.AccessToken,
-                    RefreshToken = zoomToken.RefreshToken,
-                    TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.ExpiresIn),
+                    AccessToken = zoomToken.access_token,
+                    RefreshToken = zoomToken.refresh_token,
+                    TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.expires_in),
                     ZoomUserId = zoomUser.Id,
                     ZoomAccountId = zoomUser.AccountId,
                     ZoomEmail = zoomUser.Email,

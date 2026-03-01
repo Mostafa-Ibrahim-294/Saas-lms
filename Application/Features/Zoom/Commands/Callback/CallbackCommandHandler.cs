@@ -50,7 +50,7 @@ namespace Application.Features.Zoom.Commands.Callback
             _logger.LogWarning("Zoom token exchange successful for user {UserId} and tenant {TenantId}", oauthState.UserId, oauthState.TenantId);
             _logger.LogWarning("Zoom token exchange successful for user {zoomTokenResponse} ", zoomTokenResponse);
 
-            var zoomUserInfo = await _zoomService.GetZoomUserInfoAsync(zoomTokenResponse.AccessToken, cancellationToken);
+            var zoomUserInfo = await _zoomService.GetZoomUserInfoAsync(zoomTokenResponse.access_token, cancellationToken);
             if (zoomUserInfo is null)
             {
                 _logger.LogWarning("Zoom user info is null!");
