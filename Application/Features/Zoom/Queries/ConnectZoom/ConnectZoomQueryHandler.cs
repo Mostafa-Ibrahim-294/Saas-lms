@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Repositories;
 using Application.Contracts.Zoom;
 using Application.Features.Zoom.Dtos;
+using Hangfire;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Zoom.Queries.ConnectZoom
@@ -35,7 +36,7 @@ namespace Application.Features.Zoom.Queries.ConnectZoom
             if (!hasFeature)
                 return LiveSessionErrors.ZoomIntegrationNotAvailable;
 
-            await _zoomOAuthStateRepository.DeleteOldStatesAsync(userId, tenantId, cancellationToken);
+            await _zoomOAuthStateRepository.DeleteAllExpiredAndUsedStatesAsync();
 
             var stateToken = $"{Guid.NewGuid()}|{subDomain}";
             var oAuthState = new ZoomOAuthState

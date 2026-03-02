@@ -97,7 +97,7 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
             zoomIntegration.LastSyncAt = DateTime.UtcNow;
             await _zoomIntegrationRepository.SaveAsync(cancellationToken);
 
-            if (request.Notification.SendEmail)
+            if (request.Notifications.SendEmail)
             {
                 foreach (var enrollment in course.Enrollments)
                 {

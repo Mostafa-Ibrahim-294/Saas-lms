@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Repositories
+﻿using Application.Contracts.Repositories;
+
+namespace Infrastructure.Repositories
 {
     internal sealed class ZoomOAuthStateRepository : IZoomOAuthStateRepository
     {
@@ -33,12 +35,10 @@
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                // ✅ FOR UPDATE SKIP LOCKED - لو request تاني شايل الـ lock يرجع null
                 var oauthState = await GetOAuthStateAsync(state, cancellationToken);
                 if (oauthState is null)
                     return null;
 
-                // ✅ mark as used داخل نفس الـ transaction
                 oauthState.IsUsed = true;
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
@@ -51,11 +51,11 @@
                 return null;
             }
         }
-        public async Task DeleteOldStatesAsync(string userId, int tenantId, CancellationToken cancellationToken)
+        public async Task DeleteAllExpiredAndUsedStatesAsync()
         {
             await _context.ZoomOAuthStates
-                .Where(x =>x.UserId == userId && x.TenantId == tenantId && (x.IsUsed || x.ExpiresAt < DateTime.UtcNow))
-                .ExecuteDeleteAsync(cancellationToken);
+                .Where(x => x.IsUsed || x.ExpiresAt < DateTime.UtcNow)
+                .ExecuteDeleteAsync();
         }
     }
 }

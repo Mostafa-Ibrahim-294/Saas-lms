@@ -18,7 +18,7 @@ namespace Application.Features.LiveSessions.Commands.CreateSession
                 .GreaterThan(0).WithMessage("Valid Course ID is required");
 
             RuleFor(x => x.ScheduledAt)
-                .GreaterThan(DateTime.UtcNow).WithMessage("Scheduled time must be in the future");
+                .GreaterThanOrEqualTo(DateTime.UtcNow).WithMessage("Scheduled time must be in the future");
 
             RuleFor(x => x.Duration)
                 .InclusiveBetween(15, 480).WithMessage("Duration must be between 15 minutes and 8 hours");

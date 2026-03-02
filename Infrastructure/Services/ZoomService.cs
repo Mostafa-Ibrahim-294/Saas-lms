@@ -3,7 +3,6 @@ using Application.Contracts.Zoom;
 using Application.Features.Tenants.Commands.CreateLiveSession;
 using Application.Features.Tenants.Commands.UpdateLiveSession;
 using Application.Features.ZoomIntegration.Dtos;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -18,17 +17,14 @@ namespace Infrastructure.Services
         private readonly HttpClient _httpClient;
         private readonly IZoomIntegrationRepository _zoomIntegrationRepository;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<ZoomService> _logger;
 
         public ZoomService(IOptions<ZoomOptions> options, HttpClient httpClient,
-            IZoomIntegrationRepository zoomIntegrationRepository,
-            IHttpClientFactory httpClientFactory, ILogger<ZoomService> logger)
+            IZoomIntegrationRepository zoomIntegrationRepository, IHttpClientFactory httpClientFactory)
         {
             _zoomOptions = options;
             _httpClient = httpClient;
             _zoomIntegrationRepository = zoomIntegrationRepository;
             _httpClientFactory = httpClientFactory;
-            _logger = logger;
         }
 
         public string GetAuthorizationUrl(string state, CancellationToken cancellationToken) =>
@@ -37,7 +33,6 @@ namespace Infrastructure.Services
             $"client_id={Uri.EscapeDataString(_zoomOptions.Value.ClientId)}&" +
             $"redirect_uri={Uri.EscapeDataString(_zoomOptions.Value.RedirectUri)}&" +
             $"state={state}";
-
         public async Task<ZoomTokenResponse?> ExchangeCodeToTokenAsync(string code, string state, CancellationToken cancellationToken)
         {
             var requestBody = new FormUrlEncodedContent(new[]
@@ -59,33 +54,25 @@ namespace Infrastructure.Services
             var response = await _httpClient.SendAsync(tokenRequest, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-            _logger.LogWarning("ExchangeCode response: {StatusCode} - {Content}", response.StatusCode, content);
-
             if (!response.IsSuccessStatusCode)
                 return null;
 
             return JsonSerializer.Deserialize<ZoomTokenResponse>(content,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
-
         public async Task<ZoomUserResponse?> GetZoomUserInfoAsync(string accessToken, CancellationToken cancellationToken)
         {
             var userHttpClient = _httpClientFactory.CreateClient();
-            userHttpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue(ZoomConstants.Bearer, accessToken);
-
+            userHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ZoomConstants.Bearer, accessToken);
             var userResponse = await userHttpClient.GetAsync(ZoomConstants.ZoomUserMe, cancellationToken);
+
             var responseContent = await userResponse.Content.ReadAsStringAsync(cancellationToken);
-
-            _logger.LogWarning("Zoom user info response: {StatusCode} - {Content}", userResponse.StatusCode, responseContent);
-
             if (!userResponse.IsSuccessStatusCode)
                 return null;
 
             return JsonSerializer.Deserialize<ZoomUserResponse>(responseContent,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
-
         public async Task<bool> RefreshZoomTokenAsync(ZoomIntegration integration, CancellationToken cancellationToken)
         {
             var requestBody = new FormUrlEncodedContent(new[]
@@ -121,13 +108,10 @@ namespace Infrastructure.Services
             await _zoomIntegrationRepository.SaveAsync(cancellationToken);
             return true;
         }
-
-        public async Task<ZoomMeetingResponse?> CreateZoomMeetingAsync(string accessToken,
-            CreateLiveSessionCommand request, CancellationToken cancellationToken)
+        public async Task<ZoomMeetingResponse?> CreateZoomMeetingAsync(string accessToken, CreateLiveSessionCommand request, CancellationToken cancellationToken)
         {
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var meetingRequest = new
             {
@@ -157,21 +141,15 @@ namespace Infrastructure.Services
             var response = await client.PostAsJsonAsync(ZoomConstants.MeetingRequest, meetingRequest, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-            _logger.LogWarning("CreateMeeting response: {StatusCode} - {Content}", response.StatusCode, content);
-
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            return JsonSerializer.Deserialize<ZoomMeetingResponse>(content,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<ZoomMeetingResponse>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
-
-        public async Task<bool> UpdateZoomMeetingAsync(string accessToken, string meetingId,
-            UpdateLiveSessionCommand request, CancellationToken cancellationToken)
+        public async Task<bool> UpdateZoomMeetingAsync(string accessToken, string meetingId, UpdateLiveSessionCommand request, CancellationToken cancellationToken)
         {
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var updateRequest = new
             {
@@ -197,22 +175,17 @@ namespace Infrastructure.Services
                 }
             };
 
-            var response = await client.PatchAsJsonAsync(
-                $"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", updateRequest, cancellationToken);
+            var response = await client.PatchAsJsonAsync($"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", updateRequest, cancellationToken);
 
             return response.IsSuccessStatusCode;
         }
-
-        public async Task<bool> DeleteZoomMeetingAsync(string accessToken, string meetingId,
-            CancellationToken cancellationToken)
+        public async Task<bool> DeleteZoomMeetingAsync(string accessToken, string meetingId, CancellationToken cancellationToken)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);
 
-            // ✅ إصلاح: DeleteAsync بدل PatchAsJsonAsync
-            var response = await client.DeleteAsync(
-                $"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", cancellationToken);
+            var response = await client.DeleteAsync($"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", cancellationToken);
 
             return response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.NotFound;
         }
