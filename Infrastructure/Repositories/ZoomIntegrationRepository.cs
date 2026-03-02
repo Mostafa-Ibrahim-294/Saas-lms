@@ -29,11 +29,11 @@ namespace Infrastructure.Repositories
                 existingIntegration.AccessToken = zoomToken.access_token;
                 existingIntegration.RefreshToken = zoomToken.refresh_token;
                 existingIntegration.TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.expires_in);
-                existingIntegration.ZoomUserId = zoomUser.Id;
-                existingIntegration.ZoomAccountId = zoomUser.AccountId;
-                existingIntegration.ZoomEmail = zoomUser.Email;
-                existingIntegration.ZoomDisplayName = $"{zoomUser.FirstName} {zoomUser.LastName}";
-                existingIntegration.ZoomAccountType = zoomUser.Type.ToString();
+                existingIntegration.ZoomUserId = zoomUser.id;
+                existingIntegration.ZoomAccountId = zoomUser.account_id;
+                existingIntegration.ZoomEmail = zoomUser.email;
+                existingIntegration.ZoomDisplayName = $"{zoomUser.first_name} {zoomUser.last_name}";
+                existingIntegration.ZoomAccountType = zoomUser.type.ToString();
                 existingIntegration.IsActive = true;
                 existingIntegration.UpdatedAt = DateTime.UtcNow;
                 existingIntegration.LastSyncAt = DateTime.UtcNow;
@@ -47,11 +47,11 @@ namespace Infrastructure.Repositories
                     AccessToken = zoomToken.access_token,
                     RefreshToken = zoomToken.refresh_token,
                     TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.expires_in),
-                    ZoomUserId = zoomUser.Id,
-                    ZoomAccountId = zoomUser.AccountId,
-                    ZoomEmail = zoomUser.Email,
-                    ZoomDisplayName = $"{zoomUser.FirstName} {zoomUser.LastName}",
-                    ZoomAccountType = zoomUser.Type.ToString(),
+                    ZoomUserId = zoomUser.id,
+                    ZoomAccountId = zoomUser.account_id,
+                    ZoomEmail = zoomUser.email,
+                    ZoomDisplayName = $"{zoomUser.first_name} {zoomUser.last_name}",
+                    ZoomAccountType = zoomUser.type.ToString(),
                     IsActive = true,
                     LastSyncAt = DateTime.UtcNow
                 };
