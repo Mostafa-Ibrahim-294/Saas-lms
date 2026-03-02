@@ -31,9 +31,8 @@ namespace Application.Features.Zoom.Commands.Callback
             _logger.LogWarning("=== STEP 0 === State: [{State}], Code: [{Code}]",
                 state, request.code?[..Math.Min(8, request.code?.Length ?? 0)]);
 
-            // ✅ خطوة واحدة atomic: check + mark as used في نفس الـ SQL statement
-            // لو رجع false يبقى: مش موجود أو expired أو اتستخدم قبل كده
-            var oauthState = await _zoomOAuthStateRepository.TryMarkAsUsedAsync(state, cancellationToken);
+            //var oauthState = await _zoomOAuthStateRepository.TryMarkAsUsedAsync(state, cancellationToken);
+            var oauthState = await _zoomOAuthStateRepository.GetOAuthStateAsync(state, cancellationToken);
             if (oauthState is null)
             {
                 _logger.LogWarning("=== FAILED === State not found, expired, or already used");
@@ -41,7 +40,7 @@ namespace Application.Features.Zoom.Commands.Callback
             }
 
             _logger.LogWarning("=== STEP 1 === State marked. UserId={UserId}, TenantId={TenantId}",
-                oauthState.UserId, oauthState.TenantId);
+            oauthState.UserId, oauthState.TenantId);
 
             _logger.LogWarning("=== STEP 2 === Exchanging code...");
             var zoomTokenResponse = await _zoomService.ExchangeCodeToTokenAsync(request.code, state, cancellationToken);

@@ -28,9 +28,7 @@
             if (updated == 0)
                 return null;
 
-            var oauthState = await _context.ZoomOAuthStates
-                .FirstOrDefaultAsync(x => x.StateToken == state, cancellationToken);
-
+            var oauthState = await _context.ZoomOAuthStates.FirstOrDefaultAsync(x => x.StateToken == state, cancellationToken);
             if (oauthState is not null && oauthState.ExpiresAt < DateTime.UtcNow)
             {
                 await _context.ZoomOAuthStates

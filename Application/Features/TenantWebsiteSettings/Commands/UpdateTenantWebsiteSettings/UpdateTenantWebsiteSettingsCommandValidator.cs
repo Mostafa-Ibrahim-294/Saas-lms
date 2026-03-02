@@ -16,10 +16,6 @@ namespace Application.Features.TenantWebsiteSettings.Commands.UpdateTenantWebsit
                     .NotEmpty().WithMessage("Platform name is required.")
                     .MaximumLength(100).WithMessage("Platform name must not exceed 100 characters.");
 
-                RuleFor(x => x.General!.Tagline)
-                    .NotEmpty().WithMessage("Tagline is required.")
-                    .MaximumLength(500).WithMessage("Tagline must not exceed 500 characters.");
-
                 RuleFor(x => x.General!.HomepageId)
                     .GreaterThan(0).WithMessage("Homepage ID must be a valid ID.");
             });
