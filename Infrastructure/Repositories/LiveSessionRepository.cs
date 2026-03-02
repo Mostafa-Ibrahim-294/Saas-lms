@@ -16,6 +16,9 @@ namespace Infrastructure.Repositories
             _mapper = mapper;
         }
 
+        public async Task<LiveSession?> GetByZoomMeetingIdAsync(string zoomMeetingId, CancellationToken cancellationToken) =>
+             await _context.LiveSessions
+                .FirstOrDefaultAsync(ls => ls.ZoomMeetingId == zoomMeetingId, cancellationToken);
         public async Task CreateAsync(LiveSession session, CancellationToken cancellationToken)
         {
             await _context.LiveSessions.AddAsync(session, cancellationToken);
