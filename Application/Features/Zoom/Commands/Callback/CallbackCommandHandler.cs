@@ -22,7 +22,8 @@ namespace Application.Features.Zoom.Commands.Callback
 
         public async Task<string> Handle(CallbackCommand request, CancellationToken cancellationToken)
         {
-            var state = Uri.UnescapeDataString(request.state);
+            // ✅ بدون UnescapeDataString لأن الـ state مش encoded أصلاً
+            var state = request.state;
             var parts = state.Split('|');
             var subDomain = parts.Length > 1 ? parts[1] : "app";
             var successUrl = $"https://{subDomain}{ZoomConstants.FrontendRedirectUrl}?zoom_connected=true";
@@ -31,8 +32,7 @@ namespace Application.Features.Zoom.Commands.Callback
             _logger.LogWarning("=== STEP 0 === State: [{State}], Code: [{Code}]",
                 state, request.code?[..Math.Min(8, request.code?.Length ?? 0)]);
 
-            //var oauthState = await _zoomOAuthStateRepository.TryMarkAsUsedAsync(state, cancellationToken);
-            var oauthState = await _zoomOAuthStateRepository.GetOAuthStateAsync(state, cancellationToken);
+            var oauthState = await _zoomOAuthStateRepository.TryMarkAsUsedAsync(state, cancellationToken);
             if (oauthState is null)
             {
                 _logger.LogWarning("=== FAILED === State not found, expired, or already used");
@@ -40,7 +40,7 @@ namespace Application.Features.Zoom.Commands.Callback
             }
 
             _logger.LogWarning("=== STEP 1 === State marked. UserId={UserId}, TenantId={TenantId}",
-            oauthState.UserId, oauthState.TenantId);
+                oauthState.UserId, oauthState.TenantId);
 
             _logger.LogWarning("=== STEP 2 === Exchanging code...");
             var zoomTokenResponse = await _zoomService.ExchangeCodeToTokenAsync(request.code, state, cancellationToken);

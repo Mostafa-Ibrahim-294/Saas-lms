@@ -36,7 +36,7 @@ namespace Infrastructure.Services
             $"response_type=code&" +
             $"client_id={Uri.EscapeDataString(_zoomOptions.Value.ClientId)}&" +
             $"redirect_uri={Uri.EscapeDataString(_zoomOptions.Value.RedirectUri)}&" +
-            $"state={Uri.EscapeDataString(state)}";
+            $"state={state}";
 
         public async Task<ZoomTokenResponse?> ExchangeCodeToTokenAsync(string code, string state, CancellationToken cancellationToken)
         {

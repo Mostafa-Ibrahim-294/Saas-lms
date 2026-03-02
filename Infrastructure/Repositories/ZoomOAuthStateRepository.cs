@@ -16,28 +16,40 @@
         {
             return await _context.SaveChangesAsync(cancellationToken);
         }
-        public async Task<ZoomOAuthState?> GetOAuthStateAsync(string state, CancellationToken cancellationToken) =>
-            await _context.ZoomOAuthStates
-                .FirstOrDefaultAsync(x => x.StateToken == state, cancellationToken);
+        public async Task<ZoomOAuthState?> GetOAuthStateAsync(string state, CancellationToken cancellationToken)
+        {
+            return await _context.ZoomOAuthStates
+                .FromSqlRaw(@"
+                    SELECT * FROM ""ZoomOAuthStates"" 
+                    WHERE ""StateToken"" = {0} 
+                    AND NOT ""IsUsed"" 
+                    AND ""ExpiresAt"" > now()
+                    LIMIT 1
+                    FOR UPDATE SKIP LOCKED", state)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
         public async Task<ZoomOAuthState?> TryMarkAsUsedAsync(string state, CancellationToken cancellationToken)
         {
-            var updated = await _context.ZoomOAuthStates
-                .Where(x => x.StateToken == state && !x.IsUsed)
-                .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsUsed, true), cancellationToken);
-
-            if (updated == 0)
-                return null;
-
-            var oauthState = await _context.ZoomOAuthStates.FirstOrDefaultAsync(x => x.StateToken == state, cancellationToken);
-            if (oauthState is not null && oauthState.ExpiresAt < DateTime.UtcNow)
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            try
             {
-                await _context.ZoomOAuthStates
-                    .Where(x => x.StateToken == state)
-                    .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsUsed, false), cancellationToken);
+                // ✅ FOR UPDATE SKIP LOCKED - لو request تاني شايل الـ lock يرجع null
+                var oauthState = await GetOAuthStateAsync(state, cancellationToken);
+                if (oauthState is null)
+                    return null;
+
+                // ✅ mark as used داخل نفس الـ transaction
+                oauthState.IsUsed = true;
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+
+                return oauthState;
+            }
+            catch
+            {
+                await transaction.RollbackAsync(cancellationToken);
                 return null;
             }
-
-            return oauthState;
         }
         public async Task DeleteOldStatesAsync(string userId, int tenantId, CancellationToken cancellationToken)
         {
