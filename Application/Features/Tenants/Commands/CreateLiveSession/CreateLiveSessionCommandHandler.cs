@@ -90,6 +90,9 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
                 CourseId = request.CourseId,
                 HostMemberId = tenantMemberId,
                 ZoomIntegrationId = zoomIntegration.Id,
+                EnableChat = request.Settings.EnableChat,
+                ParticipantVideo = request.Settings.ParticipantVideo,
+                WaitingRoom = request.Settings.WaitingRoom
             };
             await _liveSessionRepository.CreateAsync(session, cancellationToken);
             await _liveSessionRepository.SaveAsync(cancellationToken);

@@ -41,15 +41,10 @@ namespace Infrastructure.Repositories
         }
         public async Task<List<LiveSessionDto>> GetLiveSessionsByTenantIdAsync(int tenantId, CancellationToken cancellationToken)
         {
-            var session = await _context.LiveSessions
-                .Include(ls => ls.ZoomIntegration)
-                .Include(ls => ls.Participants)
-                 .Include(ls => ls.Course)
-                    .ThenInclude(c => c.Enrollments)
+            return await _context.LiveSessions
                 .Where(ls => ls.TenantId == tenantId)
                 .ProjectTo<LiveSessionDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            return session!;
         }
         public async Task<LiveSessionDto> GetLiveSessionBySessionIdAsync(int sessionId, int tenantId, CancellationToken cancellationToken)
         {
