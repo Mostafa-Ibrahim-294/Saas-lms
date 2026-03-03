@@ -30,7 +30,6 @@ namespace Application.Features.Zoom.Commands.Webhook
             }
 
             var meetingId = payload.Payload.Object.Id.ToString();
-
             _logger.LogInformation("Zoom webhook: {Event} for meeting {MeetingId}", payload.Event, meetingId);
 
             var session = await _liveSessionRepository.GetByZoomMeetingIdAsync(meetingId, cancellationToken);
@@ -45,34 +44,31 @@ namespace Application.Features.Zoom.Commands.Webhook
                 case ZoomConstants.MeetingStarted:
                     session.Status = LiveSessionStatus.Ongoing;
                     session.ActualStartTime = DateTime.UtcNow;
-                    session.UpdatedAt = DateTime.UtcNow;
                     _logger.LogInformation("Meeting {MeetingId} started", meetingId);
                     break;
 
                 case ZoomConstants.MeetingEnded:
-                    session.Status = LiveSessionStatus.Completed;
                     session.ActualEndTime = DateTime.UtcNow;
-                    session.UpdatedAt = DateTime.UtcNow;
+                    session.Status = LiveSessionStatus.Completed;
                     if (session.ActualStartTime.HasValue)
-                        session.RecordingDuration = (int)(DateTime.UtcNow - session.ActualStartTime.Value).TotalMinutes;
+                        session.RecordingDuration = (int)(session.ActualEndTime.Value - session.ActualStartTime.Value).TotalMinutes;
                     _logger.LogInformation("Meeting {MeetingId} ended", meetingId);
                     break;
 
                 case ZoomConstants.ParticipantJoined:
                     _logger.LogInformation("Participant joined meeting {MeetingId}: {Name}",
                         meetingId, payload.Payload.Object.Participant?.UserName);
-                    break;
+                    return;
 
                 case ZoomConstants.ParticipantLeft:
                     _logger.LogInformation("Participant left meeting {MeetingId}: {Name}",
                         meetingId, payload.Payload.Object.Participant?.UserName);
-                    break;
+                    return;
 
                 default:
                     _logger.LogInformation("Unhandled Zoom event: {Event}", payload.Event);
                     return;
             }
-
             await _liveSessionRepository.SaveAsync(cancellationToken);
         }
     }

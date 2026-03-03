@@ -3,7 +3,6 @@ using Application.Contracts.Zoom;
 using Application.Features.Tenants.Commands.CreateLiveSession;
 using Application.Features.Tenants.Commands.UpdateLiveSession;
 using Application.Features.ZoomIntegration.Dtos;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -18,16 +17,14 @@ namespace Infrastructure.Services
         private readonly HttpClient _httpClient;
         private readonly IZoomIntegrationRepository _zoomIntegrationRepository;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<ZoomService> _logger;
 
         public ZoomService(IOptions<ZoomOptions> options, HttpClient httpClient,
-            IZoomIntegrationRepository zoomIntegrationRepository, IHttpClientFactory httpClientFactory,ILogger<ZoomService> logger)
+            IZoomIntegrationRepository zoomIntegrationRepository, IHttpClientFactory httpClientFactory)
         {
             _zoomOptions = options;
             _httpClient = httpClient;
             _zoomIntegrationRepository = zoomIntegrationRepository;
             _httpClientFactory = httpClientFactory;
-            _logger = logger;
         }
 
         public string GetAuthorizationUrl(string state, CancellationToken cancellationToken) =>
@@ -178,28 +175,8 @@ namespace Infrastructure.Services
                 }
             };
 
-            // ✅ log قبل الـ request
-            _logger.LogWarning("UpdateZoomMeeting → URL: {Url} | MeetingId: [{MeetingId}] | TokenLen: {Len}",
-                $"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", meetingId, accessToken?.Length);
-
-            try
-            {
-                var response = await client.PatchAsJsonAsync(
-                    $"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", updateRequest, cancellationToken);
-
-                var content = await response.Content.ReadAsStringAsync(cancellationToken);
-
-                // ✅ log الـ response
-                _logger.LogWarning("UpdateZoomMeeting → StatusCode: {Status} | Response: {Content}",
-                    response.StatusCode, content);
-                return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                // ✅ log الـ exception
-                _logger.LogError(ex, "UpdateZoomMeeting → Exception for MeetingId: {MeetingId}", meetingId);
-                return false;
-            }
+            var response = await client.PatchAsJsonAsync($"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", updateRequest, cancellationToken);
+            return response.IsSuccessStatusCode;
         }
         public async Task<bool> DeleteZoomMeetingAsync(string accessToken, string meetingId, CancellationToken cancellationToken)
         {

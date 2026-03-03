@@ -23,8 +23,7 @@ namespace Api.Controllers
         public ZoomController(IMediator mediator, IConfiguration configuration)
         {
             _mediator = mediator;
-            _secretToken = Environment.GetEnvironmentVariable("ZOOM_SECRET_TOKEN")
-                ?? configuration["ZoomOptions:SecretToken"] ?? string.Empty;
+            _secretToken = configuration["ZoomOptions:SecretToken"] ?? string.Empty;
         }
 
 
