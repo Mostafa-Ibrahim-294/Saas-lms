@@ -182,8 +182,7 @@ namespace Infrastructure.Services
         public async Task<bool> DeleteZoomMeetingAsync(string accessToken, string meetingId, CancellationToken cancellationToken)
         {
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var response = await client.DeleteAsync($"{ZoomConstants.ZoomMeetingsUrl}{meetingId}", cancellationToken);
 

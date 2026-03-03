@@ -18,8 +18,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.SaveChangesAsync(cancellationToken);
         }
-        public async Task SaveOrUpdateIntegrationAsync(string userId, int tenantId, ZoomTokenResponse zoomToken,
-            ZoomUserResponse zoomUser, CancellationToken cancellationToken)
+        public async Task SaveOrUpdateIntegrationAsync(string userId, int tenantId, ZoomTokenResponse zoomToken, ZoomUserResponse zoomUser, CancellationToken cancellationToken)
         {
             var existingIntegration = await _context.ZoomIntegrations
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.TenantId == tenantId, cancellationToken);
