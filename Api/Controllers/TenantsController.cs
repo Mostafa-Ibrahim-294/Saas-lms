@@ -113,7 +113,7 @@ namespace Api.Controllers
         public async Task<IActionResult> UpdateSession([FromRoute] int sessionId, [FromBody] UpdateLiveSessionCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new UpdateLiveSessionCommand(sessionId, command.Title, command.Description, command.CourseId,
-                command.ScheduledAt, command.Duration, command.Settings, command.Notification), cancellationToken);
+                command.ScheduledAt, command.Duration, command.Settings, command.Notifications), cancellationToken);
 
             return result.Match<IActionResult>(
                 success => Ok(success),

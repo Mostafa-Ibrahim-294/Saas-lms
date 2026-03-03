@@ -12,7 +12,6 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
     {
         private readonly ICurrentUserId _currentUserId;
         private readonly ILiveSessionRepository _liveSessionRepository;
-        private readonly IZoomIntegrationRepository _zoomIntegrationRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITenantRepository _tenantRepository;
@@ -21,15 +20,13 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
         private readonly IZoomService _zoomService;
 
         public UpdateLiveSessionCommandHandler(ICurrentUserId currentUserId, ILiveSessionRepository liveSessionRepository,
-            IZoomService zoomService, IEmailSender emailSender, IZoomIntegrationRepository zoomIntegrationRepository,
-            ICourseRepository courseRepository, IHttpContextAccessor httpContextAccessor, ITenantRepository tenantRepository,
-            ITenantMemberRepository tenantMemberRepository)
+            IZoomService zoomService, IEmailSender emailSender, ICourseRepository courseRepository,
+            IHttpContextAccessor httpContextAccessor, ITenantRepository tenantRepository, ITenantMemberRepository tenantMemberRepository)
         {
             _currentUserId = currentUserId;
             _liveSessionRepository = liveSessionRepository;
             _zoomService = zoomService;
             _emailSender = emailSender;
-            _zoomIntegrationRepository = zoomIntegrationRepository;
             _courseRepository = courseRepository;
             _httpContextAccessor = httpContextAccessor;
             _tenantRepository = tenantRepository;
@@ -63,30 +60,31 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
             if (session.Status == LiveSessionStatus.Completed)
                 return LiveSessionErrors.CannotUpdateEndedSession;
 
-            var zoomIntegration = await _zoomIntegrationRepository.GetZoomIntegrationAsync(userId, tenantId, cancellationToken);
-            if (zoomIntegration == null || !zoomIntegration.IsActive)
+            if (session.ZoomIntegration == null || !session.ZoomIntegration.IsActive)
                 return ZoomError.ZoomAccountNotConnected;
 
-            if (zoomIntegration.TokenExpiresAt <= DateTime.UtcNow)
+            if (session.ZoomIntegration.TokenExpiresAt <= DateTime.UtcNow)
             {
-                var refreshed = await _zoomService.RefreshZoomTokenAsync(zoomIntegration, cancellationToken);
+                var refreshed = await _zoomService.RefreshZoomTokenAsync(session.ZoomIntegration, cancellationToken);
                 if (!refreshed)
                     return ZoomError.ZoomTokenRefreshFailed;
             }
 
-            var updated = await _zoomService.UpdateZoomMeetingAsync(zoomIntegration.AccessToken, session.ZoomMeetingId, request, cancellationToken);
+            var updated = await _zoomService.UpdateZoomMeetingAsync(session.ZoomIntegration.AccessToken, session.ZoomMeetingId, request, cancellationToken);
             if (!updated)
                 return ZoomError.ZoomMeetingUpdateFailed;
-
 
             session.Title = request.Title;
             session.Description = request.Description;
             session.ScheduledAt = request.ScheduledAt;
             session.Duration = request.Duration;
             session.CourseId = request.CourseId;
+            session.EnableChat = request.Settings.EnableChat;
+            session.WaitingRoom = request.Settings.WaitingRoom;
+            session.ParticipantVideo = request.Settings.ParticipantVideo;
             await _liveSessionRepository.SaveAsync(cancellationToken);
 
-            if (request.Notification.SendEmail)
+            if (request.Notifications.SendEmail)
             {
                 foreach (var enrollment in course.Enrollments)
                 {
@@ -98,7 +96,7 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
                            { "{{session_title}}", session.Title },
                            { "{{student_name}}", student.User.FirstName + " " + student.User.LastName },
                            { "{{session_description}}", session.Description ?? "" },
-                           { "{{instructor_name}}", zoomIntegration.ZoomDisplayName },
+                           { "{{instructor_name}}", session.ZoomIntegration.ZoomDisplayName },
                            { "{{course_name}}", course.Title },
                            { "{{session_time}}", session.ScheduledAt.ToString("HH:mm") },
                            { "{{session_date}}", session.ScheduledAt.ToString("yyyy-MM-dd") },
@@ -111,7 +109,7 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
                     BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(student.User.Email!, EmailConstants.UpdateSubject, emailBody));
                 }
             }
-            return new UpdateLiveSessionDto { Message = "تم تحديث بيانات الجلسة بنجاح" };
+            return new UpdateLiveSessionDto { Message = LiveSessionConstants.UpdateSessionResponse };
         }
     }
 }
