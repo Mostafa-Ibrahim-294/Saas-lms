@@ -59,14 +59,11 @@ namespace Api.Controllers
         public async Task<IActionResult> Webhook(CancellationToken cancellationToken)
         {
             var body = await new StreamReader(Request.Body).ReadToEndAsync(cancellationToken);
-
             using var doc = JsonDocument.Parse(body);
             var root = doc.RootElement;
-
             if (root.TryGetProperty("event", out var eventProp) && eventProp.GetString() == ZoomConstants.UrlValidation)
             {
                 var plainToken = root.GetProperty("payload").GetProperty("plainToken").GetString()!;
-
                 return Ok(new { plainToken, encryptedToken = HashToken(plainToken, _secretToken) });
             }
 
