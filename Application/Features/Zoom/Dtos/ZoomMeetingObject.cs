@@ -5,8 +5,7 @@ namespace Application.Features.Zoom.Dtos
     public sealed class ZoomMeetingObject
     {
         [JsonPropertyName("id")]
-        public long Id { get; set; }
-
+        public string Id { get; set; } = string.Empty;
         [JsonPropertyName("uuid")]
         public string Uuid { get; set; } = string.Empty;
 
