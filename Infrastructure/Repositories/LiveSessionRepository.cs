@@ -33,7 +33,11 @@ namespace Infrastructure.Repositories
         }
         public async Task<LiveSession?> GetLiveSessionAsync(int sessionId, CancellationToken cancellationToken)
         {
-            return await _context.LiveSessions.FirstOrDefaultAsync(ls => ls.Id == sessionId, cancellationToken);
+            return await _context.LiveSessions
+                .Include(ls => ls.Host)
+                    .ThenInclude(h => h.User)
+                .Include(ls => ls.ZoomIntegration)
+                .FirstOrDefaultAsync(ls => ls.Id == sessionId, cancellationToken);
         }
         public async Task<List<LiveSessionDto>> GetLiveSessionsByTenantIdAsync(int tenantId, CancellationToken cancellationToken)
         {

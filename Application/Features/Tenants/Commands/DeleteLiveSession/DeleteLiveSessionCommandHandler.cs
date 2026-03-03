@@ -12,7 +12,6 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
     {
         private readonly ICurrentUserId _currentUserId;
         private readonly ILiveSessionRepository _liveSessionRepository;
-        private readonly IZoomIntegrationRepository _zoomIntegrationRepository;
         private readonly IZoomService _zoomService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICourseRepository _courseRepository;
@@ -21,12 +20,11 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
         private readonly ITenantMemberRepository _tenantMemberRepository;
 
         public DeleteLiveSessionCommandHandler(ICurrentUserId currentUserId, ILiveSessionRepository liveSessionRepository,
-            IZoomIntegrationRepository zoomIntegrationRepository, IZoomService zoomService, IHttpContextAccessor httpContextAccessor,
+            IZoomService zoomService, IHttpContextAccessor httpContextAccessor,
             ICourseRepository courseRepository, ITenantRepository tenantRepository, IEmailSender emailSender, ITenantMemberRepository tenantMemberRepository)
         {
             _currentUserId = currentUserId;
             _liveSessionRepository = liveSessionRepository;
-            _zoomIntegrationRepository = zoomIntegrationRepository;
             _zoomService = zoomService;
             _httpContextAccessor = httpContextAccessor;
             _courseRepository = courseRepository;
@@ -44,7 +42,6 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
             var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
             var tenant = await _tenantRepository.GetLastTenantAsync(subDomain, cancellationToken);
-
             var session = await _liveSessionRepository.GetLiveSessionAsync(request.SessionId, cancellationToken);
             if (session == null)
                 return LiveSessionErrors.SessionNotFound;
@@ -55,21 +52,19 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
             if (session.Status == LiveSessionStatus.Ongoing)
                 return LiveSessionErrors.CannotDeleteActiveLiveSession;
 
-            var hostUserId = session.Host.UserId;
-            var zoomIntegration = await _zoomIntegrationRepository.GetZoomIntegrationAsync(hostUserId, tenantId, cancellationToken);
-            if (zoomIntegration == null)
+            if (session.ZoomIntegration == null || !session.ZoomIntegration.IsActive)
                 return ZoomError.ZoomAccountNotConnected;
 
-            if (zoomIntegration.TokenExpiresAt <= DateTime.UtcNow)
+            if (session.ZoomIntegration.TokenExpiresAt <= DateTime.UtcNow)
             {
-                var refreshed = await _zoomService.RefreshZoomTokenAsync(zoomIntegration, cancellationToken);
+                var refreshed = await _zoomService.RefreshZoomTokenAsync(session.ZoomIntegration, cancellationToken);
                 if (!refreshed)
                     return ZoomError.ZoomTokenRefreshFailed;
             }
 
             var course = await _courseRepository.GetCourseByIdAsync(session.CourseId, subDomain!, cancellationToken);
             await _liveSessionRepository.DeleteAsync(request.SessionId, cancellationToken);
-            await _zoomService.DeleteZoomMeetingAsync(zoomIntegration.AccessToken, session.ZoomMeetingId, cancellationToken);
+            await _zoomService.DeleteZoomMeetingAsync(session.ZoomIntegration.AccessToken, session.ZoomMeetingId, cancellationToken);
 
             if (course != null && session.Status != LiveSessionStatus.Completed)
             {
@@ -83,7 +78,7 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
                             { "{{student_name}}", $"{student.User.FirstName} {student.User.LastName}" },
                             { "{{course_name}}", course.Title },
                             { "{{session_title}}", session.Title },
-                            { "{{instructor_name}}", zoomIntegration.ZoomDisplayName },
+                            { "{{instructor_name}}", session.ZoomIntegration.ZoomDisplayName },
                             { "{{session_date}}", session.ScheduledAt.ToString("yyyy-MM-dd") },
                             { "{{session_time}}", session.ScheduledAt.ToString("HH:mm") },
                             { "{{platform_name}}", tenant?.PlatformName ?? "Platform" }
