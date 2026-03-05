@@ -32,5 +32,6 @@
         public const string EDIT_SESSIONS = "EDIT_SESSIONS";
         public const string MANAGE_ORDERS = "MANAGE_ORDERS";
         public const string MANAGE_WEBSITE_SETTINGS = "MANAGE_WEBSITE_SETTINGS";
+        public const string MANAGE_INTEGRATIONS = "MANAGE_INTEGRATIONS";
     }
 }

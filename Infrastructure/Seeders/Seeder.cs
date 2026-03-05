@@ -1,7 +1,5 @@
 ﻿using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Reflection.Emit;
 using System.Text.Json;
 
 namespace Infrastructure.Seeders

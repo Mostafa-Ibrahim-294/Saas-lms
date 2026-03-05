@@ -7,8 +7,7 @@ namespace Domain.Entites
     public sealed class PaymentMethod : IAuditable
     {
         public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public Dictionary<string, JsonElement> Details { get; set; } = [];
         public PaymentMethodType Type { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

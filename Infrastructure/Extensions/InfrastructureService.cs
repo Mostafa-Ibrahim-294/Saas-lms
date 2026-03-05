@@ -120,6 +120,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ITenantWebsiteRepository, TenantWebsiteRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<ITenantWebsiteSettingsRepository, TenantWebsiteSettingsRepository>();
+            builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {
