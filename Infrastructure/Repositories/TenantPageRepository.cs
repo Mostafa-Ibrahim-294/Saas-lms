@@ -6,7 +6,6 @@ using Application.Features.TenantWebsite.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories
 {
@@ -14,13 +13,11 @@ namespace Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        private readonly ILogger<TenantPageRepository> logger;
 
-        public TenantPageRepository(AppDbContext context, IMapper mapper, ILogger<TenantPageRepository> logger)
+        public TenantPageRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            this.logger = logger;
         }
         public async Task CreateTenantPageAsync(CreateTenantPageCommand request, int tenantId, CancellationToken cancellationToken)
         {
@@ -154,14 +151,11 @@ namespace Infrastructure.Repositories
         }
         public async Task<TenantPageDto?> GetPublishedTenantPagesAsync(string url, string subDomain, CancellationToken cancellationToken)
         {
-            logger.LogWarning( "Fetching published tenant page for Url: {Url}, SubDomain: {SubDomain}", url, subDomain);
-
             var tenantPage = await _context.TenantPages
                 .AsNoTracking()
                 .Include(p => p.PageBlocks)
                     .ThenInclude(pb => pb.BlockType)
-                .FirstOrDefaultAsync(tp => tp.Url == url  && tp.Tenant.SubDomain == subDomain 
-                    && tp.Status == TenantPageStatus.Published, cancellationToken);
+                .FirstOrDefaultAsync(tp => tp.Url == url && tp.Tenant.SubDomain == subDomain && tp.Status == TenantPageStatus.Published, cancellationToken);
 
             if (tenantPage is null) return null;
 
