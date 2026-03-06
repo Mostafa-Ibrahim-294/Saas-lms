@@ -6,11 +6,11 @@ namespace Application.Features.TenantWebsite.Commands.UpdateTenantPage
 {
     internal sealed class UpdateTenantPageCommandHandler : IRequestHandler<UpdateTenantPageCommand, OneOf<TenantPageResponse, Error>>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UpdateTenantPageCommandHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public UpdateTenantPageCommandHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;

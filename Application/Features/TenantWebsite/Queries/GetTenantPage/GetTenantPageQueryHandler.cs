@@ -6,10 +6,10 @@ namespace Application.Features.TenantWebsite.Queries.GetTenantPage
 {
     internal sealed class GetTenantPageQueryHandler : IRequestHandler<GetTenantPageQuery, OneOf<TenantPageDto, Error>>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public GetTenantPageQueryHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public GetTenantPageQueryHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;

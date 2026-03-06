@@ -24,7 +24,6 @@ namespace Infrastructure.Repositories
         {
             await _dbContext.TenantMembers.AddAsync(tenantMember, cancellationToken);
         }
-
         public async Task<(int ownerRoleId, int assistantRoleId)> AddTenantRoles(int tenantId, CancellationToken cancellationToken)
         {
             var roles = new List<TenantRole>
@@ -37,8 +36,6 @@ namespace Infrastructure.Repositories
             await SaveAsync(cancellationToken);
             return (ownerRole.Entity.Id, assistantRole.Entity.Id);
         }
-
-
         public async Task<int> CreateTenantAsync(Tenant tenant, CancellationToken cancellationToken)
         {
             await _dbContext.Tenants.AddAsync(tenant, cancellationToken);
@@ -50,12 +47,10 @@ namespace Infrastructure.Repositories
             return await _dbContext.Tenants
                 .AnyAsync(t => t.SubDomain == subDomain, cancellationToken);
         }
-
         public async Task SaveAsync(CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-
         public async Task BeginTransactionAsync(CancellationToken cancellationToken)
         {
             if (_transaction is null)
@@ -63,7 +58,6 @@ namespace Infrastructure.Repositories
                 _transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
             }
         }
-
         public async Task CommitTransactionAsync(CancellationToken cancellationToken)
         {
             if (_transaction is null) return;
@@ -73,7 +67,6 @@ namespace Infrastructure.Repositories
             await _transaction.DisposeAsync();
             _transaction = null;
         }
-
         public async Task RollbackTransactionAsync(CancellationToken cancellationToken)
         {
             if (_transaction is null) return;
@@ -82,7 +75,6 @@ namespace Infrastructure.Repositories
             await _transaction.DisposeAsync();
             _transaction = null;
         }
-
         public async Task<LastTenantDto?> GetLastTenantAsync(string? subDomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Tenants
@@ -90,7 +82,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<LastTenantDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(t => t.SubDomain == subDomain, cancellationToken);
         }
-
         public async Task AssignAssistantPermissions(int assistantRoleId, CancellationToken cancellationToken)
         {
             var permissions = GetAssistantPermissions().Select(permission => new Permission
@@ -231,9 +222,6 @@ namespace Infrastructure.Repositories
                 TotalImages = files.Count(f => f.Type == FileType.Image),
             };
         }
-
-
-
         public Task<int> GetPlanFeatureUsageAsync(Guid PlanFeatureId, CancellationToken cancellationToken)
         {
             return _dbContext.TenantUsage
@@ -254,7 +242,6 @@ namespace Infrastructure.Repositories
                 .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
         }
-
         public async Task<bool> IsFeatureUsingEnded(string subDomain, string featureName, CancellationToken cancellationToken)
         {
             var isEnded = await _dbContext.TenantUsage
@@ -265,7 +252,6 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
             return isEnded != null && isEnded.Used >= isEnded.LimitValue;
         }
-
         public async Task IncreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, CancellationToken cancellationToken, long Size = 1)
         {
             await _dbContext.TenantUsage
@@ -281,7 +267,6 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
             return SubDomain!;
         }
-
         public async Task DecreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, CancellationToken cancellationToken, long Size = 1)
         {
             await _dbContext.TenantUsage

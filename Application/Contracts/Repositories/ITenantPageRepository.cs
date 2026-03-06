@@ -1,10 +1,11 @@
-﻿using Application.Features.TenantWebsite.Commands.CreateTenantPage;
+﻿using Application.Features.Public.Dtos;
+using Application.Features.TenantWebsite.Commands.CreateTenantPage;
 using Application.Features.TenantWebsite.Commands.UpdateTenantPage;
 using Application.Features.TenantWebsite.Dtos;
 
 namespace Application.Contracts.Repositories
 {
-    public interface ITenantWebsiteRepository
+    public interface ITenantPageRepository
     {
         Task CreateTenantPageAsync(CreateTenantPageCommand request, int tenantId, CancellationToken cancellationToken);
         Task<int> SaveAsync(CancellationToken cancellationToken);
@@ -17,5 +18,7 @@ namespace Application.Contracts.Repositories
         Task<bool> UpdateTenantPageAsync(int pageId, int tenantId, UpdateTenantPageCommand update, CancellationToken cancellationToken);
         Task<TenantPageDto?> GetTenantPageWithBlockTypeAsync(int tenantId, int pageId ,CancellationToken cancellationToken);
         Task<List<TenantCourseDto>> GetTenantWebsiteCoursesAsync(int tenantId, List<int> courseIds,CancellationToken cancellationToken);
+        Task<List<TenantNavigationLinkDto>> GetTenantNavigationLinksAsync(int tenantId, CancellationToken cancellationToken);
+        Task<TenantPageDto?> GetPublishedTenantPagesAsync(string url, string subDomain, CancellationToken cancellationToken);
     }
 }

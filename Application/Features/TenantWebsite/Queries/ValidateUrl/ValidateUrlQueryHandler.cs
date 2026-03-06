@@ -6,11 +6,11 @@ namespace Application.Features.TenantWebsite.Queries.ValidateUrl
 {
     internal sealed class ValidateUrlQueryHandler : IRequestHandler<ValidateUrlQuery, ValidateUrlDto>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ValidateUrlQueryHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public ValidateUrlQueryHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;

@@ -7,10 +7,10 @@ namespace Application.Features.TenantWebsite.Queries.GetTenantCourses
 {
     internal sealed class GetTenantCoursesQueryHandler : IRequestHandler<GetTenantCoursesQuery, List<TenantCourseDto>>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public GetTenantCoursesQueryHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public GetTenantCoursesQueryHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;

@@ -5,8 +5,8 @@ namespace Application.Features.TenantWebsite.Queries.GetTenantPageBlocks
 {
     internal sealed class GetTenantPageBlocksQueryHandler : IRequestHandler<GetTenantPageBlocksQuery, TenantPageBlocksDto>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
-        public GetTenantPageBlocksQueryHandler(ITenantWebsiteRepository tenantWebsiteRepository)
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
+        public GetTenantPageBlocksQueryHandler(ITenantPageRepository tenantWebsiteRepository)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;
         }

@@ -6,13 +6,13 @@ namespace Application.Features.TenantWebsite.Commands.CreateTenantPage
 {
     internal sealed class CreateTenantPageCommandHandler : IRequestHandler<CreateTenantPageCommand, OneOf<TenantPageResponse, Error>>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISubscriptionRepository _subscriptionRepository;
 
 
-        public CreateTenantPageCommandHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public CreateTenantPageCommandHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor, ISubscriptionRepository subscriptionRepository)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;

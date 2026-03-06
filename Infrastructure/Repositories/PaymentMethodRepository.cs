@@ -1,5 +1,6 @@
 ﻿using Application.Features.TenantPaymentMethods.Dtos;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Enums;
 using System.Text.Json;
 
@@ -24,7 +25,15 @@ namespace Infrastructure.Repositories
         {
             return await _context.PaymentMethods
                 .AsNoTracking()
-                .Select(pm => _mapper.Map<PaymentMethodDto>(pm))
+                .ProjectTo<PaymentMethodDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
+        public Task<List<PaymentMethodDto>> GetPaymentMethodsByTenantIdAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            return _context.PaymentMethods
+                .AsNoTracking()
+                .Where(pm => pm.TenantId == tenantId)
+                .ProjectTo<PaymentMethodDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
         public Task<bool> IsPaymentMethodTypeExistAsync(int tenantId, PaymentMethodType type, CancellationToken cancellationToken)

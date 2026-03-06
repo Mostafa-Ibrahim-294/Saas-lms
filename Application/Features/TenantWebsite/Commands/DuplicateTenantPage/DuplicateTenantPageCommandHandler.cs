@@ -6,12 +6,12 @@ namespace Application.Features.TenantWebsite.Commands.DuplicateTenantPage
 {
     internal sealed class DuplicateTenantPageCommandHandler : IRequestHandler<DuplicateTenantPageCommand, OneOf<TenantPageResponse, Error>>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DuplicateTenantPageCommandHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public DuplicateTenantPageCommandHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor, ISubscriptionRepository subscriptionRepository)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;

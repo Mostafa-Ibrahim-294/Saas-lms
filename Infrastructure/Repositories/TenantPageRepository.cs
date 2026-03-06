@@ -1,18 +1,20 @@
 ﻿using Application.Constants;
+using Application.Features.Public.Dtos;
 using Application.Features.TenantWebsite.Commands.CreateTenantPage;
 using Application.Features.TenantWebsite.Commands.UpdateTenantPage;
 using Application.Features.TenantWebsite.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Domain.Enums;
 
 namespace Infrastructure.Repositories
 {
-    internal sealed class TenantWebsiteRepository : ITenantWebsiteRepository
+    internal sealed class TenantPageRepository : ITenantPageRepository
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public TenantWebsiteRepository(AppDbContext context, IMapper mapper)
+        public TenantPageRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -49,7 +51,6 @@ namespace Infrastructure.Repositories
         {
             await _context.AddAsync(tenantPage, cancellationToken);
         }
-     
         public Task<List<TenantPagesDto>> GetTenantPagesAsync(int tenantId, CancellationToken cancellationToken)
         {
             return _context.TenantPages
@@ -139,6 +140,29 @@ namespace Infrastructure.Repositories
             return courses
                 .ProjectTo<TenantCourseDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+        public Task<List<TenantNavigationLinkDto>> GetTenantNavigationLinksAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            return _context.TenantPages
+                .AsNoTracking()
+                .Where(tp => tp.TenantId == tenantId && tp.Status == TenantPageStatus.Published)
+                .ProjectTo<TenantNavigationLinkDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
+        public async Task<TenantPageDto?> GetPublishedTenantPagesAsync(string url, string subDomain, CancellationToken cancellationToken)
+        {
+            var tenantPage = await _context.TenantPages
+                .AsNoTracking()
+                .Include(p => p.PageBlocks)
+                    .ThenInclude(pb => pb.BlockType)
+                .FirstOrDefaultAsync(tp => tp.Url == url && tp.Tenant.SubDomain == subDomain && tp.Status == TenantPageStatus.Published);
+            
+            if (tenantPage == null) return null;
+            return new TenantPageDto
+            {
+                Page = _mapper.Map<TenantPagesDto>(tenantPage),
+                Blocks = tenantPage.PageBlocks.Select(pb => _mapper.Map<TenantBlockTypeDto>(pb)).ToList()
+            };
         }
     }
 }
