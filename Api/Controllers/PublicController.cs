@@ -34,9 +34,9 @@ namespace Api.Controllers
 
 
         [HttpGet("pages")]
-        public async Task<IActionResult> GetTenantPages([FromQuery] GetTenantPagesQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetTenantPages([FromQuery] string url, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(query with { SubDomain = GetSubDomain() }, cancellationToken);
+            var result = await _mediator.Send(new GetTenantPagesQuery(url, GetSubDomain()), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
