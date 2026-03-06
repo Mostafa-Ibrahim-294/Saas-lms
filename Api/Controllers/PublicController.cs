@@ -12,7 +12,14 @@ namespace Api.Controllers
     public class PublicController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private string GetSubDomain() => Request.Host.Host.Split('.')[0];
+        private string GetSubDomain()
+        {
+            var origin = Request.Headers["Origin"].ToString();
+            if (!string.IsNullOrEmpty(origin) && Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+                return uri.Host.Split('.')[0];
+
+            return Request.Host.Host.Split('.')[0];
+        }
 
         public PublicController(IMediator mediator)
         {
