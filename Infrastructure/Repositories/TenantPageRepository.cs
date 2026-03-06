@@ -91,6 +91,7 @@ namespace Infrastructure.Repositories
         public async Task<bool> UpdateTenantPageAsync(int pageId, int tenantId, UpdateTenantPageCommand update, CancellationToken cancellationToken)
         {
             var existingPage = await _context.TenantPages
+                 .Include(p => p.PageBlocks)
                 .FirstOrDefaultAsync(p => p.Id == pageId && p.TenantId == tenantId, cancellationToken);
             if (existingPage == null)
                 return false;
@@ -100,7 +101,9 @@ namespace Infrastructure.Repositories
             existingPage.Status = update.Status;
             existingPage.MetaTitle = update.MetaTitle;
             existingPage.MetaDescription = update.MetaDescription;
+
             _context.PageBlocks.RemoveRange(existingPage.PageBlocks);
+
             existingPage.PageBlocks = update.PageBlocks.Select(pb => new PageBlock
             {
                 BlockTypeId = pb.BlockType,
