@@ -2,7 +2,7 @@
 {
     public enum TenantPageStatus
     {
-        Published,
-        Draft
+        published,
+        draft
     }
 }

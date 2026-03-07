@@ -148,7 +148,7 @@ namespace Infrastructure.Repositories
         {
             return _context.TenantPages
                 .AsNoTracking()
-                .Where(tp => tp.TenantId == tenantId && tp.Status == TenantPageStatus.Published)
+                .Where(tp => tp.TenantId == tenantId && tp.Status == TenantPageStatus.published)
                 .ProjectTo<TenantNavigationLinkDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
@@ -158,7 +158,7 @@ namespace Infrastructure.Repositories
                 .AsNoTracking()
                 .Include(p => p.PageBlocks)
                     .ThenInclude(pb => pb.BlockType)
-                .FirstOrDefaultAsync(tp => tp.Url == url && tp.Tenant.SubDomain == subDomain && tp.Status == TenantPageStatus.Published, cancellationToken);
+                .FirstOrDefaultAsync(tp => tp.Url == url && tp.Tenant.SubDomain == subDomain && tp.Status == TenantPageStatus.published, cancellationToken);
 
             if (tenantPage is null) return null;
 
