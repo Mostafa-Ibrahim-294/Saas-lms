@@ -15,6 +15,7 @@ namespace Application.Extensions
             builder.Services.AddValidatorsFromAssembly(typeof(ApplicationService).Assembly)
                 .AddFluentValidationAutoValidation();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSession();
             builder.Services.AddScoped<ICurrentUserId, CurrentUserId>();
         }
     }

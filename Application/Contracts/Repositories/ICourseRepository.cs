@@ -1,4 +1,5 @@
 ﻿using Application.Features.Courses.Dtos;
+using Application.Features.Public.Dtos;
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,6 @@ namespace Application.Contracts.Repositories
         Task<Course?> GetCourseByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken);
         Task RemoveCourseAsync(Course course, CancellationToken cancellationToken);
         Task<int> SaveAsync(CancellationToken cancellationToken);
+        Task<WebsiteCourseDetailsDto?> GetWebsiteCourseDetailsAsync(int courseId, string subDomain, string? studentId, CancellationToken cancellationToken);
     }
 }

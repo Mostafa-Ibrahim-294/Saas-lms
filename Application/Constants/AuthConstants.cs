@@ -9,5 +9,6 @@
         public const string SubDomain = "subdomain";
         public const string VerificationCode = "ExtraInfo";
         public const string CookieDomain = ".waey.online";
+        public const string StudentId = "studentId";
     }
 }

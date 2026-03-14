@@ -1,4 +1,5 @@
-﻿using Application.Features.Public.Queries.GetTenantNavigationLinks;
+﻿using Application.Features.Public.Queries.GetCourseDetails;
+using Application.Features.Public.Queries.GetTenantNavigationLinks;
 using Application.Features.Public.Queries.GetTenantPages;
 using Application.Features.Public.Queries.GetTenantPaymentMethods;
 using Application.Features.Public.Queries.GetTenantSettings;
@@ -55,6 +56,17 @@ namespace Api.Controllers
         public async Task<IActionResult> GetTenantSettings(CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetTenantSettingsQuery(GetSubDomain()), cancellationToken));
+        }
+
+
+        [HttpGet("courses/{courseId}")]
+        public async Task<IActionResult> GetCourseDetails([FromRoute] int courseId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCourseDetailsQuery(courseId, GetSubDomain()), cancellationToken);
+            return result.Match<IActionResult>(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
         }
     }
 }
