@@ -106,6 +106,7 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
             }
             catch
             {
+
                 await _tenantRepository.RollbackTransactionAsync(cancellationToken);
                 throw;
             }

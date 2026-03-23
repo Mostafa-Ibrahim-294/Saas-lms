@@ -2,16 +2,15 @@
 using Application.Features.Courses.Commands.CreateCourse;
 using Application.Features.Courses.Commands.DeleteCourse;
 using Application.Features.Courses.Commands.UpdateCourse;
-using Application.Features.Courses.Dtos;
 using Application.Features.Courses.Queries.GetAll;
 using Application.Features.Courses.Queries.GetCourse;
+using Application.Features.Courses.Queries.GetCourseStatistics;
 using Application.Features.Courses.Queries.GetLookup;
+using Application.Features.Courses.Queries.GetModules;
 using Application.Features.Courses.Queries.GetStatistics;
-using Domain.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OneOf;
 
 namespace Api.Controllers
 {
@@ -51,6 +50,24 @@ namespace Api.Controllers
         {
             var result = await _mediator.Send(new GetLookupQuery(), cancellationToken);
             return Ok(result);
+        }
+        [HttpGet("{courseId}/modules")]
+        public async Task<IActionResult> GetModulesByCourseId([FromRoute] GetModulesQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(query, cancellationToken);
+            return result.Match(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+        [HttpGet("{courseId}/statistics")]
+        public async Task<IActionResult> GetCourseStatisticsByCourseId([FromRoute] GetCourseStatisticsQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(query, cancellationToken);
+            return result.Match(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
         }
         [HttpPost]
         public async Task<IActionResult> CreateCourse(CreateCourseCommand createCourseCommand, CancellationToken cancellationToken)

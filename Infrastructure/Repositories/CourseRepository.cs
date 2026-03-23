@@ -48,8 +48,13 @@ namespace Infrastructure.Repositories
             var courseProgressQuery = _dbContext.CourseProgresses.AsNoTracking().Where(p => p.Course.Tenant.SubDomain == subDomain)
                 .GroupBy(e => e.CourseId)
                 .Select(g => new { CourseId = g.Key, CompletionRate = g.Where(p => p.TotalLessons > 0).Average(p => (double)p.CompletedLessons / p.TotalLessons).ToString()});
+            var lessonsQuery = _dbContext.Lessons.AsNoTracking().Where(l => l.Course.Tenant.SubDomain == subDomain)
+                .GroupBy(l => l.CourseId)
+                .Select(g => new { CourseId = g.Key, LessonsCount = g.Count().ToString() })
+                .DefaultIfEmpty();
             var queryWithCounts = query.LeftJoin(studentCountQuery, c => c.Id, sc => sc.CourseId, (c, sc) => new { Course = c, StudentCount = sc != null ? sc.StudentCount : null! })
-                .LeftJoin(courseProgressQuery, c => c.Course.Id, cp => cp.CourseId, (c, cp) => new { c.Course, c.StudentCount, CompletionRate = cp != null ? cp.CompletionRate: null! });
+                .LeftJoin(courseProgressQuery, c => c.Course.Id, cp => cp.CourseId, (c, cp) => new { c.Course, c.StudentCount, CompletionRate = cp != null ? cp.CompletionRate: null! })
+                .LeftJoin(lessonsQuery, c => c.Course.Id, lc => lc.CourseId, (c, lc) => new { c.Course, c.StudentCount, c.CompletionRate, LessonsCount = lc != null ? lc.LessonsCount : null! });
             if (!string.IsNullOrEmpty(sortBy))
             {
                 if(sortBy == SortBy.Date)
@@ -105,8 +110,11 @@ namespace Infrastructure.Repositories
                     Subject = a.Course.Subject.Label,
                     Status = a.Course.CourseStatus,
                     CreatedAt = a.Course.CreatedAt,
+                    ThumbnailUrl = a.Course.ThumbnailUrl,
+                    Price = a.Course.Price,
                     StudentsCount = a.StudentCount != null ? int.Parse(a.StudentCount) : 0,
                     CompletionRate = a.CompletionRate != null ? double.Parse(a.CompletionRate) : 0.0,
+                    LessonsCount = a.LessonsCount != null ? int.Parse(a.LessonsCount) : 0
                 })
                 .ToListAsync(cancellationToken);
             var hasMore = courses.Count > PaginationLimits.CoursesPageSize;
@@ -140,6 +148,13 @@ namespace Infrastructure.Repositories
             return await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.Tenant.SubDomain == subdomain, cancellationToken);
         }
 
+        public async Task<CourseModuleDto?> GetCourseModuleAsync(int courseId, string subdomain, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Courses.Where(c => c.Id == courseId && c.Tenant.SubDomain == subdomain)
+                .ProjectTo<CourseModuleDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)
         {
             var response = await _dbContext.Tenants
@@ -161,6 +176,13 @@ namespace Infrastructure.Repositories
                 response.AverageCompletionRate = averages.Count > 0 ? averages.Average() : 0.0;
             }
             return response!;
+        }
+
+        public async Task<CourseStatisticsDto?> GetCourseStatisticsByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Courses.Where(c => c.Id == courseId && c.Tenant.SubDomain == subdomain)
+                .ProjectTo<CourseStatisticsDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task RemoveCourseAsync(Course course, CancellationToken cancellationToken)

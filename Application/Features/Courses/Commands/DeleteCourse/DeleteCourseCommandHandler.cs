@@ -44,6 +44,7 @@ namespace Application.Features.Courses.Commands.DeleteCourse
             await _courseRepository.RemoveCourseAsync(course, cancellationToken);
             await _tenantRepository.DecreasePlanFeatureUsageByKeyAsync(subDomain!, FeatureConstants.COURSE_LIMIT, cancellationToken);
             await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{subDomain}" }, cancellationToken);
+            await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{request.CourseId}" }, cancellationToken);
             return new SuccessDto
             {
                 Id = course.Id.ToString(),

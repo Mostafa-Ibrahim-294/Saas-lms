@@ -35,6 +35,8 @@ namespace Domain.Entites
         public ICollection<CourseProgress> CourseProgresses { get; set; } = [];
         public ICollection<Module> Modules { get; set; } = [];
         public ICollection<Lesson> Lessons { get; set; } = [];
+        public ICollection<Assignment> Assignments { get; set; } = [];
+        public ICollection<Quiz> Quizzes { get; set; } = [];
         public ICollection<ModuleItem> ModuleItems { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }

@@ -15,19 +15,19 @@ namespace Application.Features.ModuleItems.Commands.DeleteModuleItem
         private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IModuleItemRepository _moduleItemRepository;
-        private readonly IMapper _mapper;
+        private readonly HybridCache _hybridCache;
         public DeleteModuleItemCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
             ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
-            IMapper mapper, IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository)
+            IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository, HybridCache hybridCache)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
             _subscriptionRepository = subscriptionRepository;
             _httpContextAccessor = httpContextAccessor;
             _courseRepository = courseRepository;
-            _mapper = mapper;
             _moduleRepository = moduleRepository;
             _moduleItemRepository = moduleItemRepository;
+            _hybridCache = hybridCache;
         }
         public async Task<OneOf<SuccessDto, Error>> Handle(DeleteModuleItemCommand request, CancellationToken cancellationToken)
         {
@@ -59,6 +59,7 @@ namespace Application.Features.ModuleItems.Commands.DeleteModuleItem
                 return ModuleItemErrors.ModuleItemNotFound;
             }
             await _moduleItemRepository.RemoveAsync(moduleItem, cancellationToken);
+            await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{request.CourseId}" }, cancellationToken);
             return new SuccessDto
             {
                 Id = moduleItem.Id.ToString(),

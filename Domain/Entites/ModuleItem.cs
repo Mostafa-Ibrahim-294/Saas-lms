@@ -22,6 +22,7 @@ namespace Domain.Entites
         public Course Course { get; set; } = null!;
         public Assignment? Assignment { get; set; }
         public Lesson? Lesson { get; set; }
+        public Quiz? Quiz { get; set; }
         public ICollection<ModuleItemCondition> Conditions { get; set; } = [];
     }
 }

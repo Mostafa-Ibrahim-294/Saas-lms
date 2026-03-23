@@ -17,6 +17,8 @@ namespace Domain.Entites
         public Tenant? Tenant { get; set; }
         public string UploadedById { get; set; } = string.Empty;
         public ApplicationUser UploadedBy { get; set; } = null!;
+        public int? AssignmentSubmissionId { get; set; }
+        public AssignmentSubmission? AssignmentSubmission { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
     }

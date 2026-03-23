@@ -15,9 +15,10 @@ namespace Application.Features.Modules.Commands.CreateModule
         private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private readonly HybridCache _hybridCache;
         public CreateModuleCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
             ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
-            IMapper mapper, IModuleRepository moduleRepository)
+            IMapper mapper, IModuleRepository moduleRepository, HybridCache hybridCache)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
@@ -26,6 +27,7 @@ namespace Application.Features.Modules.Commands.CreateModule
             _courseRepository = courseRepository;
             _mapper = mapper;
             _moduleRepository = moduleRepository;
+            _hybridCache = hybridCache;
         }
 
 
@@ -59,6 +61,7 @@ namespace Application.Features.Modules.Commands.CreateModule
             {
                 await _moduleRepository.IncreaseOrder(moduleId, course.Id, request.Order, cancellationToken);
             }
+            await _hybridCache.RemoveAsync($"{CacheKeysConstants.CourseStatisticsKey}-{request.CourseId}", cancellationToken);
             return new SuccessDto 
             { 
                 Id = moduleId.ToString(),

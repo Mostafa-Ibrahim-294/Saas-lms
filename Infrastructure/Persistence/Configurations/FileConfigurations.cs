@@ -29,6 +29,10 @@ namespace Infrastructure.Persistence.Configurations
                    .WithMany()
                    .HasForeignKey(f => f.UploadedById)
                    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(f => f.AssignmentSubmission)
+                   .WithMany(s => s.Files)
+                   .HasForeignKey(f => f.AssignmentSubmissionId)
+                   .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

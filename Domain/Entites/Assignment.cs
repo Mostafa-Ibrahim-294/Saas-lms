@@ -20,6 +20,7 @@ namespace Domain.Entites
         public Course Course { get; set; } = null!;
         public int ModuleId { get; set; }
         public Module Module { get; set; } = null!;
+        public ICollection<AssignmentSubmission> Submissions { get; set; } = [];
 
 
     }

@@ -1,0 +1,13 @@
+﻿using Application.Features.Lessons.Dtos;
+
+namespace Application.Contracts.Repositories
+{
+    public interface ILessonRepository
+    {
+        Task<List<StudentViewsDto>> GetAllStudentsViewsAsync(int courseId, int itemId, CancellationToken cancellationToken);
+        Task<List<ViewsOverTime>> GetViewsOverTimeAsync(int itemId, CancellationToken cancellationToken);
+        Task<LessonOverviewDto?> GetLessonOverviewAsync(int courseId, int itemId, CancellationToken cancellationToken);
+        Task<DateTime> GetPeakActivityTimeAsync(int itemId, CancellationToken cancellationToken);
+        Task<bool> IsFound(int id, CancellationToken cancellationToken);
+    }
+}

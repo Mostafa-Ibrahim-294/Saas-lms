@@ -17,7 +17,7 @@ namespace Application.Features.Courses.Dtos
         public CourseStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public int LessonsCount { get; set; }
+        public int? LessonsCount { get; set; }
         public int? StudentsCount { get; set; }
         public double? CompletionRate { get; set; }
     }

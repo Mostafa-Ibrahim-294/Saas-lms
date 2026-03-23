@@ -28,6 +28,7 @@ namespace Infrastructure.Persistence
         internal DbSet<TenantInvite> TenantInvites { get; set; }
         internal DbSet<Module> Modules { get; set; }
         internal DbSet<ModuleItem> ModuleItems { get; set; }
+        internal DbSet<Quiz> Quizzes { get; set; }
         internal DbSet<Lesson> Lessons { get; set; }
         internal DbSet<Assignment> Assignments { get; set; }
         internal DbSet<ModuleItemCondition> ModuleItemConditions { get; set; }
@@ -41,7 +42,11 @@ namespace Infrastructure.Persistence
         internal DbSet<Order> Orders { get; set; }
         internal DbSet<OrderTimeLine> OrderTimeLines { get; set; }
         internal DbSet<PaymentMethod> PaymentMethods { get; set; }
-
+        internal DbSet<Question> Questions { get; set; }
+        internal DbSet<QuestionCategory> Categories { get; set; }
+        internal DbSet<QuizQuestion> QuizQuestions { get; set; }
+        internal DbSet<LessonView> LessonViews { get; set; }
+        internal DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

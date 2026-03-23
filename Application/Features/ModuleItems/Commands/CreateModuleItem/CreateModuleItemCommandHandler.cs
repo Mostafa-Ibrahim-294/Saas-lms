@@ -18,9 +18,10 @@ namespace Application.Features.ModuleItems.Commands.CreateModuleItem
         private readonly IModuleItemRepository _moduleItemRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IMapper _mapper;
+        private readonly HybridCache _hybridCache;
         public CreateModuleItemCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
             ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
-            IMapper mapper, IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository, ITenantRepository tenantRepository)
+            IMapper mapper, IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository, ITenantRepository tenantRepository, HybridCache hybridCache)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
@@ -31,6 +32,7 @@ namespace Application.Features.ModuleItems.Commands.CreateModuleItem
             _moduleRepository = moduleRepository;
             _moduleItemRepository = moduleItemRepository;
             _tenantRepository = tenantRepository;
+            _hybridCache = hybridCache;
         }
         public async Task<OneOf<SuccessDto, Error>> Handle(CreateModuleItemCommand request, CancellationToken cancellationToken)
         {
@@ -61,31 +63,45 @@ namespace Application.Features.ModuleItems.Commands.CreateModuleItem
             try
             {
                 var moduleItemId = await _moduleItemRepository.CreateModuleItem(moduleItem, cancellationToken);
-            if (request.Type == ModuleItemType.Lesson)
-            {
-                var lesson = _mapper.Map<Lesson>(request, opt =>
+                if (request.Type == ModuleItemType.Lesson)
                 {
-                    opt.AfterMap((src, dest) =>
+                    var lesson = _mapper.Map<Lesson>(request, opt =>
                     {
-                        dest.ModuleItemId = moduleItemId;
-                    });
+                        opt.AfterMap((src, dest) =>
+                        {
+                            dest.ModuleItemId = moduleItemId;
+                        });
+                    }
+                    );
+                    await _moduleItemRepository.CreateLesson(lesson, cancellationToken);
                 }
-                );
-                await _moduleItemRepository.CreateLesson(lesson, cancellationToken);
-            }
-            else
-            {
-                var assignment = _mapper.Map<Assignment>(request, opt =>
+                else if (request.Type == ModuleItemType.Assignment)
                 {
-                    opt.AfterMap((src, dest) =>
+                    var assignment = _mapper.Map<Assignment>(request, opt =>
                     {
-                        dest.ModuleItemId = moduleItemId;
-                        dest.CreatedById = userId;
-                    });
+                        opt.AfterMap((src, dest) =>
+                        {
+                            dest.ModuleItemId = moduleItemId;
+                            dest.CreatedById = userId;
+                        });
+                    }
+                    );
+                    await _moduleItemRepository.CreateAssignment(assignment, cancellationToken);
                 }
-                );
-                await _moduleItemRepository.CreateAssignment(assignment, cancellationToken);
-            }
+                else
+                {
+                    var quiz = _mapper.Map<Quiz>(request, opt =>
+                    {
+                        opt.AfterMap((src, dest) =>
+                        {
+                            dest.ModuleItemId = moduleItemId;
+                            dest.CreatedById = userId;
+                        });
+                    }
+                    );
+                    await _moduleItemRepository.CreateQuiz(quiz, cancellationToken);
+                }
+                await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{request.CourseId}" }, cancellationToken);
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
                 return new SuccessDto
                 {

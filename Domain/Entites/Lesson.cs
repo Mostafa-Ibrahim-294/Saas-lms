@@ -15,6 +15,7 @@ namespace Domain.Entites
         public int ModuleId { get; set; }
         public Module Module { get; set; } = null!;
         public List<Resource> Resources { get; set; } = [];
+        public ICollection<LessonView> LessonViews { get; set; } = [];
     }
     public sealed class Resource
     {

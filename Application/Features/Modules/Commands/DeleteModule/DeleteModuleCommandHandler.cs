@@ -11,9 +11,10 @@ namespace Application.Features.Modules.Commands.DeleteModule
         private readonly IModuleRepository _moduleRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HybridCache _hybridCache;
         public DeleteModuleCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
             ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
-            IModuleRepository moduleRepository)
+            IModuleRepository moduleRepository, HybridCache hybridCache)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
@@ -21,6 +22,7 @@ namespace Application.Features.Modules.Commands.DeleteModule
             _httpContextAccessor = httpContextAccessor;
             _courseRepository = courseRepository;
             _moduleRepository = moduleRepository;
+            _hybridCache = hybridCache;
         }
         public async Task<OneOf<SuccessDto, Error>> Handle(DeleteModuleCommand request, CancellationToken cancellationToken)
         {
@@ -49,7 +51,7 @@ namespace Application.Features.Modules.Commands.DeleteModule
             var oldOrder = module.Order;
             await _moduleRepository.RemoveModule(module, cancellationToken);
             await _moduleRepository.DecreaseOrder(module.Id, course.Id, oldOrder, cancellationToken);
-
+            await _hybridCache.RemoveAsync($"{CacheKeysConstants.CourseStatisticsKey}-{request.CourseId}", cancellationToken);
             return new SuccessDto
             {
                 Id = module.Id.ToString(),

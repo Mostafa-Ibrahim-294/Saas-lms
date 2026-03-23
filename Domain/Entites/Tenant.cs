@@ -27,5 +27,6 @@ namespace Domain.Entites
         public ICollection<TenantPage> TenantPages { get; set; } = [];
         public ICollection<Order> Orders { get; set; } = [];
         public ICollection<PaymentMethod> PaymentMethods { get; set; } = [];
+        public ICollection<Question> Questions { get; set; } = [];
     }
 }
