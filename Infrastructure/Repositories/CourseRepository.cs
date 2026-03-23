@@ -145,17 +145,13 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.Tenant.SubDomain == subdomain, cancellationToken);
         }
-<<<<<<< HEAD
-
-        public async Task<CourseModuleDto?> GetCourseModuleAsync(int courseId, string subdomain, CancellationToken cancellationToken)
+        public async Task<Application.Features.Courses.Dtos.CourseModuleDto?> GetCourseModuleAsync(int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Courses.Where(c => c.Id == courseId && c.Tenant.SubDomain == subdomain)
-                .ProjectTo<CourseModuleDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<Application.Features.Courses.Dtos.CourseModuleDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-=======
->>>>>>> 44fca41807ffe7ac1f28802dddf9f2862a54bf55
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)
         {
             var response = await _dbContext.Tenants
@@ -178,8 +174,6 @@ namespace Infrastructure.Repositories
             }
             return response!;
         }
-<<<<<<< HEAD
-
         public async Task<CourseStatisticsDto?> GetCourseStatisticsByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Courses.Where(c => c.Id == courseId && c.Tenant.SubDomain == subdomain)
@@ -187,8 +181,6 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-=======
->>>>>>> 44fca41807ffe7ac1f28802dddf9f2862a54bf55
         public async Task RemoveCourseAsync(Course course, CancellationToken cancellationToken)
         {
             _dbContext.Courses.Remove(course);

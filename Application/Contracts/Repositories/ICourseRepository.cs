@@ -15,7 +15,7 @@ namespace Application.Contracts.Repositories
         Task<IEnumerable<LookupDto>> GetAllCoursesTitlesAsync(string subDomain, CancellationToken cancellationToken);
         Task<int> CreateCourse(Course course, CancellationToken cancellationToken);
         Task<Course?> GetCourseByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken);
-        Task<CourseModuleDto?> GetCourseModuleAsync(int courseId, string subdomain, CancellationToken cancellationToken);
+        Task<Features.Courses.Dtos.CourseModuleDto?> GetCourseModuleAsync(int courseId, string subdomain, CancellationToken cancellationToken);
         Task<CourseStatisticsDto?> GetCourseStatisticsByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken);
         Task RemoveCourseAsync(Course course, CancellationToken cancellationToken);
         Task<int> SaveAsync(CancellationToken cancellationToken);
