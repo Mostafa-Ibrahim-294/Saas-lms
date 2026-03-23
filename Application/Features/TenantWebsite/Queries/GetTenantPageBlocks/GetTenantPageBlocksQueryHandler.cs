@@ -1,14 +1,12 @@
 ﻿using Application.Contracts.Repositories;
 using Application.Features.TenantWebsite.Dtos;
-using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.TenantWebsite.Queries.GetTenantPageBlocks
 {
     internal sealed class GetTenantPageBlocksQueryHandler : IRequestHandler<GetTenantPageBlocksQuery, TenantPageBlocksDto>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
-        public GetTenantPageBlocksQueryHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
-            IHttpContextAccessor httpContextAccessor)
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
+        public GetTenantPageBlocksQueryHandler(ITenantPageRepository tenantWebsiteRepository)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;
         }

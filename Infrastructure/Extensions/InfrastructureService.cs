@@ -117,8 +117,10 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IZoomIntegrationRepository, ZoomIntegrationRepository>();
             builder.Services.AddScoped<IZoomOAuthStateRepository, ZoomOAuthStateRepository>();
             builder.Services.AddScoped<ILiveSessionRepository, LiveSessionRepository>();
-            builder.Services.AddScoped<ITenantWebsiteRepository, TenantWebsiteRepository>();
+            builder.Services.AddScoped<ITenantPageRepository, TenantPageRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<ITenantWebsiteSettingsRepository, TenantWebsiteSettingsRepository>();
+            builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

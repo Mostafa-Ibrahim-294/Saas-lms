@@ -6,10 +6,10 @@ namespace Application.Features.TenantWebsite.Commands.DeleteTenantPage
 {
     internal sealed class DeleteTenantPageCommandHandler : IRequestHandler<DeleteTenantPageCommand, OneOf<TenantPageResponse, Error>>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public DeleteTenantPageCommandHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public DeleteTenantPageCommandHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;

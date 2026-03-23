@@ -18,22 +18,21 @@ namespace Infrastructure.Repositories
         {
             return await _context.SaveChangesAsync(cancellationToken);
         }
-        public async Task SaveOrUpdateIntegrationAsync(string userId, int tenantId, ZoomTokenResponse zoomToken,
-            ZoomUserResponse zoomUser, CancellationToken cancellationToken)
+        public async Task SaveOrUpdateIntegrationAsync(string userId, int tenantId, ZoomTokenResponse zoomToken, ZoomUserResponse zoomUser, CancellationToken cancellationToken)
         {
             var existingIntegration = await _context.ZoomIntegrations
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.TenantId == tenantId, cancellationToken);
 
             if (existingIntegration != null)
             {
-                existingIntegration.AccessToken = zoomToken.AccessToken;
-                existingIntegration.RefreshToken = zoomToken.RefreshToken;
-                existingIntegration.TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.ExpiresIn);
-                existingIntegration.ZoomUserId = zoomUser.Id;
-                existingIntegration.ZoomAccountId = zoomUser.AccountId;
-                existingIntegration.ZoomEmail = zoomUser.Email;
-                existingIntegration.ZoomDisplayName = $"{zoomUser.FirsName} {zoomUser.LastName}";
-                existingIntegration.ZoomAccountType = zoomUser.Type.ToString();
+                existingIntegration.AccessToken = zoomToken.access_token;
+                existingIntegration.RefreshToken = zoomToken.refresh_token;
+                existingIntegration.TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.expires_in);
+                existingIntegration.ZoomUserId = zoomUser.id;
+                existingIntegration.ZoomAccountId = zoomUser.account_id;
+                existingIntegration.ZoomEmail = zoomUser.email;
+                existingIntegration.ZoomDisplayName = $"{zoomUser.first_name} {zoomUser.last_name}";
+                existingIntegration.ZoomAccountType = zoomUser.type.ToString();
                 existingIntegration.IsActive = true;
                 existingIntegration.UpdatedAt = DateTime.UtcNow;
                 existingIntegration.LastSyncAt = DateTime.UtcNow;
@@ -44,14 +43,14 @@ namespace Infrastructure.Repositories
                 {
                     UserId = userId,
                     TenantId = tenantId,
-                    AccessToken = zoomToken.AccessToken,
-                    RefreshToken = zoomToken.RefreshToken,
-                    TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.ExpiresIn),
-                    ZoomUserId = zoomUser.Id,
-                    ZoomAccountId = zoomUser.AccountId,
-                    ZoomEmail = zoomUser.Email,
-                    ZoomDisplayName = $"{zoomUser.FirsName} {zoomUser.LastName}",
-                    ZoomAccountType = zoomUser.Type.ToString(),
+                    AccessToken = zoomToken.access_token,
+                    RefreshToken = zoomToken.refresh_token,
+                    TokenExpiresAt = DateTime.UtcNow.AddSeconds(zoomToken.expires_in),
+                    ZoomUserId = zoomUser.id,
+                    ZoomAccountId = zoomUser.account_id,
+                    ZoomEmail = zoomUser.email,
+                    ZoomDisplayName = $"{zoomUser.first_name} {zoomUser.last_name}",
+                    ZoomAccountType = zoomUser.type.ToString(),
                     IsActive = true,
                     LastSyncAt = DateTime.UtcNow
                 };

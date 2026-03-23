@@ -77,12 +77,12 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
                 Title = request.Title,
                 Description = request.Description,
                 Duration = request.Duration,
-                ZoomMeetingId = zoomMeeting.Id.ToString(),
-                ZoomHostId = zoomMeeting.HostId,
-                ZoomJoinUrl = zoomMeeting.JoinUrl,
-                ZoomStartUrl = zoomMeeting.StartUrl,
-                ZoomHostEmail = zoomMeeting.HostEmail,
-                ZoomPassword = zoomMeeting.Password,
+                ZoomMeetingId = zoomMeeting.id.ToString(),
+                ZoomHostId = zoomMeeting.host_id,
+                ZoomJoinUrl = zoomMeeting.join_url,
+                ZoomStartUrl = zoomMeeting.start_url,
+                ZoomHostEmail = zoomMeeting.host_email,
+                ZoomPassword = zoomMeeting.password,
                 Status = LiveSessionStatus.Upcoming,
                 ScheduledAt = request.ScheduledAt,
                 ActualStartTime = request.ScheduledAt,
@@ -90,6 +90,9 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
                 CourseId = request.CourseId,
                 HostMemberId = tenantMemberId,
                 ZoomIntegrationId = zoomIntegration.Id,
+                EnableChat = request.Settings.EnableChat,
+                ParticipantVideo = request.Settings.ParticipantVideo,
+                WaitingRoom = request.Settings.WaitingRoom
             };
             await _liveSessionRepository.CreateAsync(session, cancellationToken);
             await _liveSessionRepository.SaveAsync(cancellationToken);
@@ -97,7 +100,7 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
             zoomIntegration.LastSyncAt = DateTime.UtcNow;
             await _zoomIntegrationRepository.SaveAsync(cancellationToken);
 
-            if (request.Notification.SendEmail)
+            if (request.Notifications.SendEmail)
             {
                 foreach (var enrollment in course.Enrollments)
                 {

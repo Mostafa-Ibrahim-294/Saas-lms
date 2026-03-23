@@ -5,7 +5,6 @@
         Instapay,
         VodafoneCash,
         OrangeCash,
-        EtisalatCash,
         Fawry,
         BankTransfer
     }

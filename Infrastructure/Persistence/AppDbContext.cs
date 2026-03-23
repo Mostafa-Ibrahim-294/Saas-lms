@@ -41,6 +41,10 @@ namespace Infrastructure.Persistence
         internal DbSet<Order> Orders { get; set; }
         internal DbSet<OrderTimeLine> OrderTimeLines { get; set; }
         internal DbSet<PaymentMethod> PaymentMethods { get; set; }
+        internal DbSet<WebsiteSetting> WebsiteSettings { get; set; }
+        internal DbSet<WebsiteAppearanceSetting> WebsiteAppearanceSettings { get; set; }
+        internal DbSet<EmailSetting> EmailSettings { get; set; }
+        internal DbSet<NotificationSetting> NotificationSettings { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

@@ -7,7 +7,7 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<ZoomOAuthState> builder)
         {
             builder.Property(x => x.StateToken)
-                .HasMaxLength(100)
+                .HasMaxLength(300)
                 .IsRequired();
 
             builder.HasIndex(x => x.StateToken).IsUnique();

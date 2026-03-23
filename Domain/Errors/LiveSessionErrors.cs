@@ -16,8 +16,11 @@ namespace Domain.Errors
         public static Error CannotUpdateEndedSession =>
             new("Session.CannotUpdateEnded", "لا يمكن تعديل جلسة انتهت بالفعل", HttpStatusCode.BadRequest);
 
-        public static Error CannotDeleteLiveSession =>
-            new("Session.CannotUpdateLive", "لا يمكن حذف جلسة نشطة حالياً", HttpStatusCode.BadRequest);
+        public static Error CannotDeleteActiveLiveSession =>
+            new("Session.CannotDeleteActive", "لا يمكن حذف جلسة نشطة حالياً", HttpStatusCode.BadRequest);
+
+        public static Error CannotDeleteOthersLiveSession =>
+            new("Session.CannotDeleteNotOwner", "لا يمكنك حذف جلسة لم تقم بإنشائها.", HttpStatusCode.BadRequest);
 
         public static Error ZoomIntegrationNotAvailable =>
             new("Zoom.NotAvailable", "ميزة Zoom غير متاحة في باقتك الحالية", HttpStatusCode.Forbidden);

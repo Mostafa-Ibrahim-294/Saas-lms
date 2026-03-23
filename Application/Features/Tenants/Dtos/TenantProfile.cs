@@ -56,7 +56,13 @@ namespace Application.Features.Tenants.Dtos
                .ForMember(dest => dest.Attendance, opt => opt.MapFrom(src => src.Participants.Count))
                .ForMember(dest => dest.Recorded, opt => opt.MapFrom(src => src.RecordingUrl != null))
                .ForMember(dest => dest.JoinUrl, opt => opt.MapFrom(src => src.ZoomJoinUrl))
-               .ForMember(dest => dest.TotalStudents, opt => opt.MapFrom(src => src.Course.Enrollments.Count));
+               .ForMember(dest => dest.TotalStudents, opt => opt.MapFrom(src => src.Course.Enrollments.Count))
+               .ForMember(dest => dest.Settings, opt => opt.MapFrom(src => new LiveSessionSettingsDto
+               {
+                   EnableChat = src.EnableChat,
+                   ParticipantVideo = src.ParticipantVideo,
+                   WaitingRoom = src.WaitingRoom
+               }));
         }
     }
 }

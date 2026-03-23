@@ -35,10 +35,6 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(x => x.RecordingUrl)
                 .HasMaxLength(500);
 
-            builder.Property(x => x.Status)
-                .HasConversion<string>()
-                .HasMaxLength(20);
-
             builder.HasIndex(x => x.ZoomMeetingId).IsUnique();
 
             builder.HasOne(x => x.Course)

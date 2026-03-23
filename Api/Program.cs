@@ -1,4 +1,5 @@
 using Api.Extensions;
+using Application.Contracts.Repositories;
 using Application.Extensions;
 using Hangfire;
 using Infrastructure.Extensions;
@@ -38,6 +39,10 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+var recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+recurringJobManager.AddOrUpdate<IZoomOAuthStateRepository>("cleanup-zoom-oauth-states", 
+    repo => repo.DeleteAllExpiredAndUsedStatesAsync(), Cron.Hourly);
+
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
@@ -50,13 +55,12 @@ if (app.Environment.IsDevelopment())
     app.UseHangfireDashboard();
 }
 app.UseSerilogRequestLogging();
-
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllers();
 
 app.Run();
