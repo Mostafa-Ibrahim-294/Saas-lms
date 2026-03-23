@@ -15,5 +15,6 @@
         public string JoinUrl {  get; set; } = string.Empty;
         public int TotalStudents { get; set; }
         public NotificationDto Notifications { get; set; } = new NotificationDto();
+        public LiveSessionSettingsDto Settings { get; set; } = new LiveSessionSettingsDto();
     }
 }

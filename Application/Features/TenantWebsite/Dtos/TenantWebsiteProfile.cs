@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Application.Features.Public.Dtos;
+using Domain.Enums;
 using System.Text.Json;
 
 namespace Application.Features.TenantWebsite.Dtos
@@ -27,6 +28,8 @@ namespace Application.Features.TenantWebsite.Dtos
                 .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.Grade.Label))
                 .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.Enrollments.Count))
                 .ForMember(dest => dest.Instructor, opt => opt.MapFrom(src => src.Tenant.TenantMembers.FirstOrDefault()));
+            
+            CreateMap<TenantPage, TenantNavigationLinkDto>();
         }
     }
 }

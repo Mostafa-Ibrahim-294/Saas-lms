@@ -24,7 +24,7 @@ namespace Infrastructure.Persistence.Configurations
                    .IsRequired();
 
             builder.Property(x => x.Schema)
-                   .HasColumnType("jsonb")
+                   .HasColumnType("json")
                    .IsRequired();
         }
     }

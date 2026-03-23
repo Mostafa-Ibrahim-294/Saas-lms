@@ -27,6 +27,13 @@ namespace Domain.Entites
         public ICollection<TenantPage> TenantPages { get; set; } = [];
         public ICollection<Order> Orders { get; set; } = [];
         public ICollection<PaymentMethod> PaymentMethods { get; set; } = [];
+<<<<<<< HEAD
         public ICollection<Question> Questions { get; set; } = [];
+=======
+        public WebsiteSetting WebsiteSetting { get; set; } = null!;
+        public WebsiteAppearanceSetting WebsiteAppearnceSetting { get; set; } = null!;
+        public EmailSetting EmailSetting { get; set; } = null!;
+        public NotificationSetting NotificationSetting { get; set; } = null!;
+>>>>>>> 44fca41807ffe7ac1f28802dddf9f2862a54bf55
     }
 }

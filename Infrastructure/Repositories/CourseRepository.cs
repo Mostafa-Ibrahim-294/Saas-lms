@@ -1,4 +1,5 @@
 ﻿using Application.Features.Courses.Dtos;
+using Application.Features.Public.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
@@ -21,7 +22,6 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync(cancellationToken);
             return course.Id;
         }
-
         public async Task<AllCoursesDto> GetAllCoursesAsync(string subDomain, string? q, int? gradeId, int? subjectId, string? sortBy, string? sortOrder, CourseStatus? status, int? cursor, string? lastSortValue, CancellationToken cancellationToken)
         {
             var query = _dbContext.Courses.Where(c => c.Tenant.SubDomain == subDomain).AsNoTracking();
@@ -134,7 +134,6 @@ namespace Infrastructure.Repositories
                 LastSortValue = lastSort
             };
         }
-
         public async Task<IEnumerable<LookupDto>> GetAllCoursesTitlesAsync(string subDomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Courses
@@ -142,11 +141,11 @@ namespace Infrastructure.Repositories
                 .ProjectTo<LookupDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
-
         public async Task<Course?> GetCourseByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.Tenant.SubDomain == subdomain, cancellationToken);
         }
+<<<<<<< HEAD
 
         public async Task<CourseModuleDto?> GetCourseModuleAsync(int courseId, string subdomain, CancellationToken cancellationToken)
         {
@@ -155,6 +154,8 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
+=======
+>>>>>>> 44fca41807ffe7ac1f28802dddf9f2862a54bf55
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)
         {
             var response = await _dbContext.Tenants
@@ -177,6 +178,7 @@ namespace Infrastructure.Repositories
             }
             return response!;
         }
+<<<<<<< HEAD
 
         public async Task<CourseStatisticsDto?> GetCourseStatisticsByIdAsync(int courseId, string subdomain, CancellationToken cancellationToken)
         {
@@ -185,15 +187,35 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
+=======
+>>>>>>> 44fca41807ffe7ac1f28802dddf9f2862a54bf55
         public async Task RemoveCourseAsync(Course course, CancellationToken cancellationToken)
         {
             _dbContext.Courses.Remove(course);
             await SaveAsync(cancellationToken);
         }
-
         public async Task<int> SaveAsync(CancellationToken cancellationToken)
         {
             return await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<WebsiteCourseDetailsDto?> GetWebsiteCourseDetailsAsync(int courseId, string subDomain, string? studentId, CancellationToken cancellationToken)
+        {
+            var course = await _dbContext.Courses
+                .Where(c => c.Id == courseId && c.Tenant.SubDomain == subDomain && c.CourseStatus == CourseStatus.Published)
+                .ProjectTo<WebsiteCourseDetailsDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (course is null)
+                return null;
+
+            if (!string.IsNullOrEmpty(studentId))
+            {
+                course.IsEnrolled = await _dbContext.Enrollments
+                    .AnyAsync(e => e.CourseId == courseId && e.Student.UserId == studentId, cancellationToken);
+                course.HasPendingOrder = await _dbContext.Orders
+                    .AnyAsync(o => o.CourseId == courseId && o.Student.UserId == studentId && o.Status == OrderStatus.Pending, cancellationToken);
+            }
+            return course;
         }
     }
 }

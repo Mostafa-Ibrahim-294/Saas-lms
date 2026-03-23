@@ -1,17 +1,20 @@
-﻿using Application.Features.TenantWebsite.Commands.CreateTenantPage;
+﻿using Application.Constants;
+using Application.Features.Public.Dtos;
+using Application.Features.TenantWebsite.Commands.CreateTenantPage;
 using Application.Features.TenantWebsite.Commands.UpdateTenantPage;
 using Application.Features.TenantWebsite.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Domain.Enums;
 
 namespace Infrastructure.Repositories
 {
-    internal sealed class TenantWebsiteRepository : ITenantWebsiteRepository
+    internal sealed class TenantPageRepository : ITenantPageRepository
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public TenantWebsiteRepository(AppDbContext context, IMapper mapper)
+        public TenantPageRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -65,19 +68,19 @@ namespace Infrastructure.Repositories
         }
         public async Task<TenantPageBlocksDto?> GetBlocksTypeAsync(CancellationToken cancellationToken)
         {
-            var blockType = await _context.BlockTypes
+            var blockTypes = await _context.BlockTypes
                 .AsNoTracking()
                 .ProjectTo<BlockTypeDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellationToken);
+                .ToListAsync(cancellationToken);
 
             return new TenantPageBlocksDto
             {
-                Hero = blockType!,
-                Text = blockType!,
-                Featured_Courses = blockType!,
-                Testimonials = blockType!,
-                Cta = blockType!,
-                Footer = blockType!
+                Hero = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.HeroId) ?? new(),
+                Text = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.TextId) ?? new(),
+                Featured_courses = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.Featured_CoursesId) ?? new(),
+                Testimonials = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.TestimonialsId) ?? new(),
+                Cta = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.CtaId) ?? new(),
+                Footer = blockTypes.FirstOrDefault(b => b.Id == TenantWebsiteConstants.FooterId) ?? new(),
             };
         }
         public async Task<bool> UrlExistsAsync(int tenantId, string url, CancellationToken cancellationToken)
@@ -85,14 +88,10 @@ namespace Infrastructure.Repositories
             return await _context.TenantPages
                 .AnyAsync(p => p.TenantId == tenantId && p.Url == url, cancellationToken);
         }
-        public async Task<bool> IsValidateUrl(int tenantId, string url, CancellationToken cancellationToken)
-        {
-            return !await _context.TenantPages
-                .AnyAsync(p => p.TenantId == tenantId && p.Url == url, cancellationToken);
-        }
         public async Task<bool> UpdateTenantPageAsync(int pageId, int tenantId, UpdateTenantPageCommand update, CancellationToken cancellationToken)
         {
             var existingPage = await _context.TenantPages
+                 .Include(p => p.PageBlocks)
                 .FirstOrDefaultAsync(p => p.Id == pageId && p.TenantId == tenantId, cancellationToken);
             if (existingPage == null)
                 return false;
@@ -102,7 +101,9 @@ namespace Infrastructure.Repositories
             existingPage.Status = update.Status;
             existingPage.MetaTitle = update.MetaTitle;
             existingPage.MetaDescription = update.MetaDescription;
+
             _context.PageBlocks.RemoveRange(existingPage.PageBlocks);
+
             existingPage.PageBlocks = update.PageBlocks.Select(pb => new PageBlock
             {
                 BlockTypeId = pb.BlockType,
@@ -142,6 +143,30 @@ namespace Infrastructure.Repositories
             return courses
                 .ProjectTo<TenantCourseDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+        public Task<List<TenantNavigationLinkDto>> GetTenantNavigationLinksAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            return _context.TenantPages
+                .AsNoTracking()
+                .Where(tp => tp.TenantId == tenantId && tp.Status == TenantPageStatus.published)
+                .ProjectTo<TenantNavigationLinkDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
+        public async Task<TenantPageDto?> GetPublishedTenantPagesAsync(string url, string subDomain, CancellationToken cancellationToken)
+        {
+            var tenantPage = await _context.TenantPages
+                .AsNoTracking()
+                .Include(p => p.PageBlocks)
+                    .ThenInclude(pb => pb.BlockType)
+                .FirstOrDefaultAsync(tp => tp.Url == url && tp.Tenant.SubDomain == subDomain && tp.Status == TenantPageStatus.published, cancellationToken);
+
+            if (tenantPage is null) return null;
+
+            return new TenantPageDto
+            {
+                Page = _mapper.Map<TenantPagesDto>(tenantPage),
+                Blocks = _mapper.Map<List<TenantBlockTypeDto>>(tenantPage.PageBlocks)
+            };
         }
     }
 }

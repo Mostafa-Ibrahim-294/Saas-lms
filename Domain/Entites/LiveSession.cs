@@ -17,13 +17,15 @@ namespace Domain.Entites
         public string? ZoomPassword { get; set; }
         public int? RecordingDuration { get; set; }
         public string? RecordingUrl { get; set; }
+        public bool EnableChat { get; set; }
+        public bool ParticipantVideo { get; set; }
+        public bool WaitingRoom { get; set; }
         public LiveSessionStatus Status { get; set; } = LiveSessionStatus.Upcoming;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public DateTime ScheduledAt { get; set; }
         public DateTime? ActualStartTime { get; set; }
         public DateTime? ActualEndTime { get; set; }
-
         public int CourseId { get; set; }
         public Course Course { get; set; } = null!;
         public int TenantId { get; set; }

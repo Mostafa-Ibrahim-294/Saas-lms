@@ -8,10 +8,6 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<PaymentMethod> builder)
         {
-            builder.Property(x => x.Title)
-                .HasMaxLength(100)
-                .IsRequired();
-
             builder.Property(x => x.Details)
                 .HasColumnType("jsonb")
                 .HasConversion(

@@ -42,11 +42,19 @@ namespace Infrastructure.Persistence
         internal DbSet<Order> Orders { get; set; }
         internal DbSet<OrderTimeLine> OrderTimeLines { get; set; }
         internal DbSet<PaymentMethod> PaymentMethods { get; set; }
+<<<<<<< HEAD
         internal DbSet<Question> Questions { get; set; }
         internal DbSet<QuestionCategory> Categories { get; set; }
         internal DbSet<QuizQuestion> QuizQuestions { get; set; }
         internal DbSet<LessonView> LessonViews { get; set; }
         internal DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
+=======
+        internal DbSet<WebsiteSetting> WebsiteSettings { get; set; }
+        internal DbSet<WebsiteAppearanceSetting> WebsiteAppearanceSettings { get; set; }
+        internal DbSet<EmailSetting> EmailSettings { get; set; }
+        internal DbSet<NotificationSetting> NotificationSettings { get; set; }
+
+>>>>>>> 44fca41807ffe7ac1f28802dddf9f2862a54bf55
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

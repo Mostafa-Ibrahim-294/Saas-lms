@@ -7,9 +7,6 @@ namespace Application.Features.LiveSessions.Commands.UpdateSession
     {
         public UpdateLiveSessionCommandValidator()
         {
-            RuleFor(x => x.SessionId)
-                .GreaterThan(0).WithMessage("Valid Session ID is required");
-
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required")
                 .MaximumLength(200).WithMessage("Title cannot exceed 200 characters");

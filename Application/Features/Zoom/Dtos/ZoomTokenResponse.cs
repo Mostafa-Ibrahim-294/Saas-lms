@@ -1,11 +1,17 @@
-﻿namespace Application.Features.ZoomIntegration.Dtos
+﻿using System.Text.Json.Serialization;
+
+namespace Application.Features.ZoomIntegration.Dtos
 {
     public sealed class ZoomTokenResponse
     {
-        public string AccessToken { get; set; } = string.Empty;
-        public string RefreshToken { get; set; } = string.Empty;
-        public string TokenType { get; set; } = string.Empty;
-        public int ExpiresIn { get; set; }
-        public string Scope { get; set; } = string.Empty;
+        public string access_token { get; set; } = string.Empty;
+
+        public string refresh_token { get; set; } = string.Empty;
+
+        public string token_type { get; set; } = string.Empty;
+
+        public int expires_in { get; set; }
+
+        public string scope { get; set; } = string.Empty;
     }
 }

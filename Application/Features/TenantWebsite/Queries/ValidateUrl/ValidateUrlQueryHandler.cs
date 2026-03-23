@@ -6,11 +6,11 @@ namespace Application.Features.TenantWebsite.Queries.ValidateUrl
 {
     internal sealed class ValidateUrlQueryHandler : IRequestHandler<ValidateUrlQuery, ValidateUrlDto>
     {
-        private readonly ITenantWebsiteRepository _tenantWebsiteRepository;
+        private readonly ITenantPageRepository _tenantWebsiteRepository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ValidateUrlQueryHandler(ITenantWebsiteRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
+        public ValidateUrlQueryHandler(ITenantPageRepository tenantWebsiteRepository, ITenantRepository tenantRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _tenantWebsiteRepository = tenantWebsiteRepository;
@@ -21,7 +21,10 @@ namespace Application.Features.TenantWebsite.Queries.ValidateUrl
         {
             var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
-            return new ValidateUrlDto(await _tenantWebsiteRepository.IsValidateUrl(1, request.Url, cancellationToken));
+
+            string url = request.Url?.Trim() ?? "/";
+            url = url.StartsWith("/") ? url : $"/{url}";
+            return new ValidateUrlDto(await _tenantWebsiteRepository.UrlExistsAsync(tenantId, url, cancellationToken));
         }
     }
 }

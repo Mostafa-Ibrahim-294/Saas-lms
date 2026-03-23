@@ -16,6 +16,9 @@ namespace Infrastructure.Repositories
             _mapper = mapper;
         }
 
+        public async Task<LiveSession?> GetByZoomMeetingIdAsync(string zoomMeetingId, CancellationToken cancellationToken) =>
+             await _context.LiveSessions
+                .FirstOrDefaultAsync(ls => ls.ZoomMeetingId == zoomMeetingId, cancellationToken);
         public async Task CreateAsync(LiveSession session, CancellationToken cancellationToken)
         {
             await _context.LiveSessions.AddAsync(session, cancellationToken);
@@ -30,19 +33,18 @@ namespace Infrastructure.Repositories
         }
         public async Task<LiveSession?> GetLiveSessionAsync(int sessionId, CancellationToken cancellationToken)
         {
-            return await _context.LiveSessions.FirstOrDefaultAsync(ls => ls.Id == sessionId, cancellationToken);
+            return await _context.LiveSessions
+                .Include(ls => ls.Host)
+                    .ThenInclude(h => h.User)
+                .Include(ls => ls.ZoomIntegration)
+                .FirstOrDefaultAsync(ls => ls.Id == sessionId, cancellationToken);
         }
         public async Task<List<LiveSessionDto>> GetLiveSessionsByTenantIdAsync(int tenantId, CancellationToken cancellationToken)
         {
-            var session = await _context.LiveSessions
-                .Include(ls => ls.ZoomIntegration)
-                .Include(ls => ls.Participants)
-                 .Include(ls => ls.Course)
-                    .ThenInclude(c => c.Enrollments)
+            return await _context.LiveSessions
                 .Where(ls => ls.TenantId == tenantId)
                 .ProjectTo<LiveSessionDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            return session!;
         }
         public async Task<LiveSessionDto> GetLiveSessionBySessionIdAsync(int sessionId, int tenantId, CancellationToken cancellationToken)
         {
