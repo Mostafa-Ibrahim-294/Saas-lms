@@ -318,6 +318,59 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("Domain.Entites.CourseInvite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("AcceptedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("InvitedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("InvitedBy");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("CourseInvites");
+                });
+
             modelBuilder.Entity("Domain.Entites.CourseProgress", b =>
                 {
                     b.Property<int>("Id")
@@ -400,9 +453,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<int>("EnrollmentType")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
@@ -1508,8 +1558,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("GradeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Grade")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("ParentEmail")
                         .IsRequired()
@@ -1538,13 +1589,56 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GradeId");
-
                     b.HasIndex("TeachingLevelId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Domain.Entites.StudentGrade", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("GradedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GraderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalMarks")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GraderId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("StudentGrades");
                 });
 
             modelBuilder.Entity("Domain.Entites.Subject", b =>
@@ -2321,6 +2415,33 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("Domain.Entites.CourseInvite", b =>
+                {
+                    b.HasOne("Domain.Entites.Course", "Course")
+                        .WithMany("CourseInvites")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.TenantMember", "TenantMember")
+                        .WithMany("CourseInvites")
+                        .HasForeignKey("InvitedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("CourseInvites")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("TenantMember");
+                });
+
             modelBuilder.Entity("Domain.Entites.CourseProgress", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
@@ -2786,12 +2907,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Student", b =>
                 {
-                    b.HasOne("Domain.Entites.Grade", "Grade")
-                        .WithMany()
-                        .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entites.TeachingLevel", "TeachingLevel")
                         .WithMany()
                         .HasForeignKey("TeachingLevelId")
@@ -2804,11 +2919,44 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Grade");
-
                     b.Navigation("TeachingLevel");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entites.StudentGrade", b =>
+                {
+                    b.HasOne("Domain.Entites.TenantMember", "TenantMember")
+                        .WithMany("StudentGrades")
+                        .HasForeignKey("GraderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Student", "Student")
+                        .WithMany("StudentGrades")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("StudentGrades")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.ModuleItem", "ModuleItem")
+                        .WithMany("StudentGrades")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ModuleItem");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("TenantMember");
                 });
 
             modelBuilder.Entity("Domain.Entites.Subject", b =>
@@ -3111,6 +3259,8 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.Navigation("Assignments");
 
+                    b.Navigation("CourseInvites");
+
                     b.Navigation("CourseProgresses");
 
                     b.Navigation("Enrollments");
@@ -3152,6 +3302,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Lesson");
 
                     b.Navigation("Quiz");
+
+                    b.Navigation("StudentGrades");
                 });
 
             modelBuilder.Entity("Domain.Entites.Order", b =>
@@ -3202,6 +3354,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("SessionParticipants");
+
+                    b.Navigation("StudentGrades");
                 });
 
             modelBuilder.Entity("Domain.Entites.Subscription", b =>
@@ -3211,6 +3365,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Tenant", b =>
                 {
+                    b.Navigation("CourseInvites");
+
                     b.Navigation("Courses");
 
                     b.Navigation("EmailSetting")
@@ -3228,6 +3384,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("PaymentMethods");
 
                     b.Navigation("Questions");
+
+                    b.Navigation("StudentGrades");
 
                     b.Navigation("Subjects");
 
@@ -3258,7 +3416,11 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.TenantMember", b =>
                 {
+                    b.Navigation("CourseInvites");
+
                     b.Navigation("LiveSessions");
+
+                    b.Navigation("StudentGrades");
 
                     b.Navigation("TenantInvites");
                 });

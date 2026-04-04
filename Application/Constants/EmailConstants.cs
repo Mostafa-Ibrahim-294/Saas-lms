@@ -17,5 +17,9 @@
         public const string Subject = "لقد تمت دعوتك للانضمام";
         public const string UpdateSubject = "تم تعديل موعد أو تفاصيل الجلسة";
         public const string DeleteSubject = "تم حذف موعد أو تفاصيل الجلسة";
+
+        public const string CourseInviteTemplate = "CourseInviteTemplate";
+        public const string CourseInviteUrl = "https://www.students.waey.online/course-invite";
+
     }
 }

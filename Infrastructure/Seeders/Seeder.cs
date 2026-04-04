@@ -694,8 +694,11 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "CREATE_QUIZZES", Name = "إنشاء الاختبارات", Description = "السماح بإنشاء اختبارات جديدة", Module = "courses" },
                     new Permission { Id = "VIEW_QUIZZES", Name = "عرض الاختبارات", Description = "السماح بمشاهدة قائمة الاختبارات", Module = "courses" },
                     new Permission { Id = "VIEW_QUESTION_BANK", Name = "عرض بنك الأسئلة", Description = "السماح بالوصول إلى بنك الأسئلة", Module = "courses" },
-                    new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"}
-                };
+                    new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"},
+                    
+                    // Student
+                    new Permission{ Id = "MANAGE_STUDENTS", Name = "إدارة الطلاب", Description = "السماح بإضافة وتعديل وحذف الطلاب",Module = "students"},            
+            };
         }
 
         private List<string> GetRoles() => new List<string> { "Student", "Tenant", "Parent" };

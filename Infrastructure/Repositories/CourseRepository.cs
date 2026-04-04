@@ -151,7 +151,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<Application.Features.Courses.Dtos.CourseModuleDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)
         {
             var response = await _dbContext.Tenants
@@ -180,7 +179,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<CourseStatisticsDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task RemoveCourseAsync(Course course, CancellationToken cancellationToken)
         {
             _dbContext.Courses.Remove(course);

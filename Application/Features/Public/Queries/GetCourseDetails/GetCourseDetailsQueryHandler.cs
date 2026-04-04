@@ -17,7 +17,6 @@ namespace Application.Features.Public.Queries.GetCourseDetails
         public async Task<OneOf<WebsiteCourseDetailsDto, Error>> Handle(GetCourseDetailsQuery request, CancellationToken cancellationToken)
         {
             var studentId = _httpContextAccessor.HttpContext?.Session.GetString(AuthConstants.StudentId);
-
             var websiteCourseDetails = await _courseRepository.GetWebsiteCourseDetailsAsync(request.CourseId, request.SubDomain, studentId, cancellationToken);
             if (websiteCourseDetails is null)
                 return CourseErrors.CourseNotFound;

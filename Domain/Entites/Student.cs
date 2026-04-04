@@ -11,8 +11,7 @@ namespace Domain.Entites
         public string ParentName { get; set; } = string.Empty;
         public string ParentEmail { get; set; } = string.Empty;
         public string ParentPhone { get; set; } = string.Empty;
-        public int GradeId { get; set; }
-        public Grade Grade { get; set; } = null!;
+        public string Grade { get; set; } = string.Empty;
         public int TeachingLevelId { get; set; }
         public TeachingLevel TeachingLevel { get; set; } = null!;
         public string UserId { get; set; } = string.Empty;
@@ -24,5 +23,6 @@ namespace Domain.Entites
         public DateTime? UpdatedAt { get; set; }
         public ICollection<SessionParticipant> SessionParticipants { get; set; } = [];
         public ICollection<Order> Orders { get; set; } = [];
+        public ICollection<StudentGrade> StudentGrades { get; set; } = [];
     }
 }

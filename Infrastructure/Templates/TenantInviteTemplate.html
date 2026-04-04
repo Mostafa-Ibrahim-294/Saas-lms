@@ -49,6 +49,8 @@
         .content-cell {
             padding: 45px;
             text-align: right;
+            direction: rtl;
+            unicode-bidi: embed;
         }
 
         h1 {
@@ -88,6 +90,14 @@
             margin: 30px auto;
             padding: 0;
             text-align: center;
+        }
+
+        .platform-name span,
+        .role-name span,
+        .action-link {
+            direction: ltr;
+            text-align: left;
+            display: inline-block;
         }
 
         .platform-name {
@@ -182,11 +192,11 @@
                                             <h1>مرحباً! 👋</h1>
                                             <p>
                                                 لقد تمت دعوتك للانضمام إلى منصة
-                                                <span class="platform-name">{{platform_name}}</span>
+                                                <span class="platform-name"><span>{{platform_name}}</span></span>
                                             </p>
                                             <p>
                                                 الدور المخصص لك:
-                                                <span class="role-name">{{role_name}}</span>
+                                                <span class="role-name"><span>{{role_name}}</span></span>
                                             </p>
                                             <p>
                                                 اضغط على الزر أدناه لقبول الدعوة والانضمام للفريق.
@@ -195,7 +205,7 @@
                                             <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                                 <tr>
                                                     <td align="center">
-                                                        <a href="{{action_url}}" class="button" target="_blank">
+                                                        <a href="{{action_url}}" class="button" target="_blank" dir="ltr">
                                                             قبول الدعوة
                                                         </a>
                                                     </td>
@@ -212,7 +222,9 @@
                                                         <p>
                                                             إذا كنت تواجه مشكلة في الزر أعلاه، انسخ الرابط التالي والصقه في متصفحك:
                                                         </p>
-                                                        <p style="word-break: break-all;">{{action_url}}</p>
+                                                        <p class="action-link" style="word-break: break-all;">
+                                                            {{action_url}}
+                                                        </p>
                                                     </td>
                                                 </tr>
                                             </table>

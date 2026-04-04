@@ -51,6 +51,8 @@ namespace Infrastructure.Persistence
         internal DbSet<WebsiteAppearanceSetting> WebsiteAppearanceSettings { get; set; }
         internal DbSet<EmailSetting> EmailSettings { get; set; }
         internal DbSet<NotificationSetting> NotificationSettings { get; set; }
+        internal DbSet<StudentGrade> StudentGrades { get; set; }
+        internal DbSet<CourseInvite> CourseInvites { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

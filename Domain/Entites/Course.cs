@@ -42,5 +42,6 @@ namespace Domain.Entites
         public DateTime? UpdatedAt { get; set; }
         public ICollection<LiveSession> LiveSessions { get; set; } = [];
         public ICollection<Order> Orders { get; set; } = [];
+        public ICollection<CourseInvite> CourseInvites { get; set; } = [];
     }
 }

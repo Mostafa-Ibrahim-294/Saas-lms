@@ -44,6 +44,19 @@ namespace Infrastructure.Extensions
 
                 options.Configuration = redisUrl;
             });
+
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+            });
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(90);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             builder.Services.AddHybridCache();
             builder.Services.AddOptions<JwtOptions>()
                 .BindConfiguration(nameof(JwtOptions))
@@ -124,6 +137,9 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
             builder.Services.AddScoped<ITenantWebsiteSettingsRepository, TenantWebsiteSettingsRepository>();
             builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<ICourseInviteRepository, CourseInviteRepository>();
+            builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {
