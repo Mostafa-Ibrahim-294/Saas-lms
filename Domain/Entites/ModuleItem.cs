@@ -25,5 +25,6 @@ namespace Domain.Entites
         public Quiz? Quiz { get; set; }
         public ICollection<ModuleItemCondition> Conditions { get; set; } = [];
         public ICollection<StudentGrade> StudentGrades { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
     }
 }

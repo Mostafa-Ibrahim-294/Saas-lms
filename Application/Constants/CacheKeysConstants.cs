@@ -9,6 +9,6 @@
         public const string CourseStatisticsKey = "Course_Statistics";
         public const string AllCoursesKey = "All_Courses";
         public const string CourseModuleKey = "Course_Module";
-
+        public const string DiscussionStatistics = "Discussion_Statistics";
     }
 }

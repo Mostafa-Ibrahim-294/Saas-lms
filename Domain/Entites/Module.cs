@@ -12,5 +12,6 @@ namespace Domain.Entites
         public bool IsFree { get; set; }
         public int CourseId { get; set; }
         public Course Course { get; set; } = null!;
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
     }
 }

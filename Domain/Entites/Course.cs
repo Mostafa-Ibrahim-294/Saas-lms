@@ -43,5 +43,6 @@ namespace Domain.Entites
         public ICollection<LiveSession> LiveSessions { get; set; } = [];
         public ICollection<Order> Orders { get; set; } = [];
         public ICollection<CourseInvite> CourseInvites { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
     }
 }

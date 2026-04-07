@@ -15,5 +15,8 @@ namespace Domain.Entites
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         public ICollection<ZoomIntegration> ZoomIntegrations { get; set; } = [];
         public ICollection<ZoomOAuthState> ZoomOAuthStates { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<DicussionThreadReply> DicussionReplies { get; set; } = [];
+        public ICollection<DicussionThreadRead> DicussionReads { get; set; } = [];
     }
 }

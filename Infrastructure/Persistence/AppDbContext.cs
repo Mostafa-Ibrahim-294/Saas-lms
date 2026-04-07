@@ -53,6 +53,9 @@ namespace Infrastructure.Persistence
         internal DbSet<NotificationSetting> NotificationSettings { get; set; }
         internal DbSet<StudentGrade> StudentGrades { get; set; }
         internal DbSet<CourseInvite> CourseInvites { get; set; }
+        internal DbSet<DicussionThread> DicussionThreads { get; set; }
+        internal DbSet<DicussionThreadReply> DicussionThreadReplies { get; set; }
+        internal DbSet<DicussionThreadRead> DicussionThreadReads { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

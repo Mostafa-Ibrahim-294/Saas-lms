@@ -5,6 +5,7 @@ using System.Text.Json;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260406063824_AddDicussionThreadsTable")]
+    partial class AddDicussionThreadsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -473,7 +476,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("DicussionId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("LastReadAt")
+                    b.Property<DateTime?>("LastReadAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TenantId")
@@ -518,9 +521,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("DicussionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -529,8 +529,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("DicussionId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("DicussionThreadReplies");
                 });
@@ -2674,15 +2672,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithMany("DicussionReplies")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("DicussionThread");
-
-                    b.Navigation("Tenant");
 
                     b.Navigation("User");
                 });
@@ -3618,8 +3608,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("DicussionReads");
-
-                    b.Navigation("DicussionReplies");
 
                     b.Navigation("DicussionThreads");
 

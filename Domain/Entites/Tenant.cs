@@ -34,5 +34,8 @@ namespace Domain.Entites
         public NotificationSetting NotificationSetting { get; set; } = null!;
         public ICollection<StudentGrade> StudentGrades { get; set; } = [];
         public ICollection<CourseInvite> CourseInvites { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<DicussionThreadRead> DicussionReads { get; set; } = [];
+        public ICollection<DicussionThreadReply> DicussionReplies { get; set; } = [];
     }
 }
