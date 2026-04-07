@@ -37,5 +37,6 @@ namespace Domain.Entites
         public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
         public ICollection<DicussionThreadRead> DicussionReads { get; set; } = [];
         public ICollection<DicussionThreadReply> DicussionReplies { get; set; } = [];
+        public ICollection<Announcement> Announcements { get; set; } = [];
     }
 }

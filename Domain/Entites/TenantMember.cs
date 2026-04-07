@@ -21,5 +21,6 @@
         public ICollection<LiveSession> LiveSessions { get; set; } = [];
         public ICollection<StudentGrade> StudentGrades { get; set; } = [];
         public ICollection<CourseInvite> CourseInvites { get; set; } = [];
+        public ICollection<Announcement> Announcements { get; set; } = [];
     }
 }
