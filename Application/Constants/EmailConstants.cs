@@ -21,5 +21,7 @@
         public const string CourseInviteTemplate = "CourseInviteTemplate";
         public const string CourseInviteUrl = "https://www.students.waey.online/course-invite";
 
+        public const string AnnouncementTemplate = "AnnouncementTemplate";
+        public const string AnnouncementSubject = "لديك إعلان جديد";
     }
 }

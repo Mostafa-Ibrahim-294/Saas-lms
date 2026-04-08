@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories
 
         public async Task<AllDiscussionsDto> GetAllDiscussionsAsync(string subDomain, string currentUser, string? Q, int? CourseId, ModuleItemType? Type, int? Cursor, int? Limit, CancellationToken cancellationToken)
         {
-            var pageSize = Limit ?? 1;
+            var pageSize = Limit ?? 8;
 
             var query = _context.DicussionThreads
                 .AsNoTracking()

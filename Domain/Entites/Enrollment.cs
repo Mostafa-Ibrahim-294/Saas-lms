@@ -14,5 +14,7 @@ namespace Domain.Entites
         public Course Course { get; set; } = null!;
         public EnrollmentType EnrollmentType { get; set; }
         public DateTime EnrolledAt { get; set; } = DateTime.UtcNow;
+        public int TenantId { get; set; }
+        public Tenant Tenant { get; set; } = null!;
     }
 }

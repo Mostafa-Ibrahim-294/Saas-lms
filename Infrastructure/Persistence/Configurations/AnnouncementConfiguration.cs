@@ -6,6 +6,14 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Announcement> builder)
         {
+            builder.Property(a => a.Title)
+                   .IsRequired()
+                   .HasMaxLength(500);
+
+            builder.Property(a => a.Content)
+                   .IsRequired()
+                   .HasMaxLength(2000);
+
             builder.Property(a => a.TargetCourseIds)
                    .HasColumnType("integer[]");
 

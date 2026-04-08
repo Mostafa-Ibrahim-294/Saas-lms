@@ -5,6 +5,7 @@ using System.Text.Json;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407165805_UpdateAnnouncementTable")]
+    partial class UpdateAnnouncementTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -634,16 +637,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
                     b.HasIndex("StudentId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("Enrollments");
                 });
@@ -2784,17 +2782,9 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entites.Tenant", "Tenant")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Course");
 
                     b.Navigation("Student");
-
-                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Domain.Entites.File", b =>
@@ -3707,8 +3697,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("EmailSetting")
                         .IsRequired();
-
-                    b.Navigation("Enrollments");
 
                     b.Navigation("Grades");
 

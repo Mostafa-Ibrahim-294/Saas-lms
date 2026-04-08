@@ -21,5 +21,21 @@
             return await _context.Enrollments
                  .AnyAsync(e => e.StudentId == studentId && e.CourseId == courseId, cancellationToken);
         }
+        public async Task<List<string>> GetEmailsByCourseIdsAsync(int[] courseIds, CancellationToken cancellationToken)
+        {
+            return await _context.Enrollments
+                .Where(e => courseIds.Contains(e.CourseId))
+                .Select(e => e.Student.User.Email!)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+        }
+        public async Task<List<string>> GetAllStudentEmailsAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            return await _context.Enrollments
+                .Where(e => e.Course.TenantId == tenantId)
+                .Select(e => e.Student.User.Email!)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+        }
     }
 }

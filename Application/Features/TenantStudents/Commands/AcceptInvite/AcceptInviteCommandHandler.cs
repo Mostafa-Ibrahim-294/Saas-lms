@@ -37,12 +37,14 @@ namespace Application.Features.TenantStudents.Commands.AcceptInvite
 
             var courseId = await _courseInviteRepository.GetCourseIdByTokenAsync(request.Token, cancellationToken);
             var studentId = _httpContextAccessor.HttpContext?.Session.GetInt32(AuthConstants.StudentId);
+            var tenantId = await _courseInviteRepository.GetTenantIdAsync(request.Token, cancellationToken);
 
             var newEnrollment = new Enrollment
             {
                 CourseId = courseId,
                 StudentId = studentId!.Value,
-                EnrollmentType = EnrollmentType.Invited
+                EnrollmentType = EnrollmentType.Invited,
+                TenantId = tenantId
             };
             await _enrollmentRepository.CreateEnrollmentAsync(newEnrollment, cancellationToken);
             await _enrollmentRepository.SaveAsync(cancellationToken);
