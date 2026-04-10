@@ -35,7 +35,7 @@ namespace Application.Features.Schedules.Validators
             RuleFor(s => s.CourseId)
                 .GreaterThan(0);
 
-            When(s => s.RepeatedEvent, () =>
+            When(s => s.RepeatEvent, () =>
             {
                 RuleFor(s => s.RepeatFrequency)
                     .NotNull()
@@ -47,7 +47,7 @@ namespace Application.Features.Schedules.Validators
                     .WithMessage("RepeatPeriodEnd must be after End.");
             });
 
-            When(x => !x.RepeatedEvent, () =>
+            When(x => !x.RepeatEvent, () =>
             {
                 RuleFor(s => s.RepeatFrequency).Null();
                 RuleFor(s => s.RepeatPeriodEnd).Null();

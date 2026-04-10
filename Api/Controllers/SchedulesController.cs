@@ -2,6 +2,7 @@
 using Application.Features.Schedules.Commands.CreateSchedule;
 using Application.Features.Schedules.Commands.DeleteSchedule;
 using Application.Features.Schedules.Commands.UpdateSchedule;
+using Application.Features.Schedules.Queries.GetSchedules;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,13 @@ namespace Api.Controllers
         {
             _mediator = mediator;
         }
+
+        [HttpGet()]
+        public async Task<IActionResult> GetSchedules([FromQuery] GetSchedulesQuery query, CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(query, cancellationToken));
+        }
+
 
         [HttpPost()]
         public async Task<IActionResult> CreateSchedule([FromBody] CreateScheduleCommand command, CancellationToken cancellationToken)

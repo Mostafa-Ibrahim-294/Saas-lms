@@ -10,6 +10,10 @@ namespace Application.Features.Schedules.Dtos
             CreateMap<CreateScheduleCommand, Schedule>();
 
             CreateMap<UpdateScheduleCommand, Schedule>();
+
+            CreateMap<Schedule, ScheduleDto>()
+                .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.StartAt))
+                .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.EndAt));
         }
     }
 }

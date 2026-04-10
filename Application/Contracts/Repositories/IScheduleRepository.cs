@@ -1,4 +1,5 @@
-﻿using Application.Features.Schedules.Commands.UpdateSchedule;
+﻿using Application.Features.Schedules.Dtos;
+using Domain.Enums;
 
 namespace Application.Contracts.Repositories
 {
@@ -10,5 +11,6 @@ namespace Application.Contracts.Repositories
         Task<Schedule?> GetScheduleByIdAsync(int scheduleId, string subDomain, CancellationToken cancellationToken);
         Task UpdateScheduleAsync(Schedule schedule, CancellationToken cancellationToken);
         Task<bool> DeleteScheduleAsync(int scheduleId, string subDomain, CancellationToken cancellationToken);
+        Task<List<ScheduleDto>> GetSchedulesAsync(string subDomain, string? Q, ScheduleType? Type, int? CourseId, DateOnly From, DateOnly To, CancellationToken cancellationToken);
     }
 }
