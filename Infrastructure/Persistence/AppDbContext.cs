@@ -57,6 +57,7 @@ namespace Infrastructure.Persistence
         internal DbSet<DicussionThreadReply> DicussionThreadReplies { get; set; }
         internal DbSet<DicussionThreadRead> DicussionThreadReads { get; set; }
         internal DbSet<Announcement> Announcements { get; set; }
+        internal DbSet<Schedule> Schedules { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

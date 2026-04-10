@@ -39,5 +39,6 @@ namespace Domain.Entites
         public ICollection<DicussionThreadReply> DicussionReplies { get; set; } = [];
         public ICollection<Announcement> Announcements { get; set; } = [];
         public ICollection<Enrollment> Enrollments { get; set; } = [];
+        public ICollection<Schedule> Schedules { get; set; } = [];
     }
 }

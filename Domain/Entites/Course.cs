@@ -1,8 +1,5 @@
 ﻿using Domain.Abstractions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entites
 {
@@ -44,5 +41,6 @@ namespace Domain.Entites
         public ICollection<Order> Orders { get; set; } = [];
         public ICollection<CourseInvite> CourseInvites { get; set; } = [];
         public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<Schedule> Schedules { get; set; } = [];
     }
 }

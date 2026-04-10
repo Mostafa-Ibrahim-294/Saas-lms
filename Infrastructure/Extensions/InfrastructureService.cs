@@ -45,11 +45,6 @@ namespace Infrastructure.Extensions
                 options.Configuration = redisUrl;
             });
 
-            builder.Services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
-            });
-
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromDays(90);
@@ -142,6 +137,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
             builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
             builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+            builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {
