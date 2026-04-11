@@ -7,7 +7,8 @@ namespace Application.Features.Schedules.Dtos
     {
         public ScheduleProfile()
         {
-            CreateMap<CreateScheduleCommand, Schedule>();
+            CreateMap<CreateScheduleCommand, Schedule>()
+                .ForMember(dest => dest.RepeatEvent, opt => opt.MapFrom(src => src.RepeatedEvent));
 
             CreateMap<UpdateScheduleCommand, Schedule>();
 
