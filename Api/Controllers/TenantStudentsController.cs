@@ -25,7 +25,7 @@ namespace Api.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetStudents([FromQuery] GetStudentsByCourseIdQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetStudents([FromQuery] GetStudentsQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
             return result.Match<IActionResult>(

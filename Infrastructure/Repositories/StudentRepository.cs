@@ -31,16 +31,20 @@ namespace Infrastructure.Repositories
                 .Select(s => s.Id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-        public async Task<List<StudentDto>> GetStudentsByCourseIdAsync(int courseId, CancellationToken cancellationToken)
+        public async Task<List<StudentDto>> GetStudentsAsync(string subDomain, CancellationToken cancellationToken, int? courseId = null)
         {
-            var students = await _context.Students
+            var studentsQuery = _context.Students
                 .AsNoTracking()
-                .Where(s => s.Enrollments.Any(e => e.CourseId == courseId))
-                .Include(s => s.User)
-                .Include(s => s.StudentGrades)
-                .Include(s => s.Enrollments)
+                .Where(s => s.Enrollments.Any(e => e.Course.Tenant.SubDomain == subDomain))
+                .AsQueryable();
+
+            if (courseId.HasValue)
+                studentsQuery = studentsQuery.Where(s => s.Enrollments.Any(e => e.CourseId == courseId.Value));
+
+            var students = await studentsQuery
                 .ProjectTo<StudentDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+
             return students;
         }
         public async Task<StudentStatisticsDto> GetStudentStatisticsAsync(string subDomain, CancellationToken cancellationToken)
@@ -79,7 +83,7 @@ namespace Infrastructure.Repositories
         }
         public async Task<string> GetStudentUserIdAsync(int studentId, CancellationToken cancellationToken)
         {
-            var userId =  await _context.Students
+            var userId = await _context.Students
                 .AsNoTracking()
                 .Where(s => s.Id == studentId)
                 .Select(s => s.UserId)
