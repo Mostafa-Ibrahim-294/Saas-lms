@@ -49,7 +49,7 @@ namespace Application.Features.TenantStudents.Commands.AcceptInvite
             await _enrollmentRepository.CreateEnrollmentAsync(newEnrollment, cancellationToken);
             await _enrollmentRepository.SaveAsync(cancellationToken);
             await _courseInviteRepository.AcceptInviteAsync(request.Token, cancellationToken);
-            return new StudentResponse { Message = CourseInviteConstants.AcceptInvite };
+            return new StudentResponse { Message = MessagesConstants.CourseInviteAccepted };
         }
     }
 }

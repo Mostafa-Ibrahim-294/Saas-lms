@@ -40,7 +40,7 @@ namespace Application.Features.TenantStudents.Commands.DeclineInvite
             await _courseInviteRepository.DeclineInviteAsync(request.Token, cancellationToken);
             await _tenantRepository.DecreasePlanFeatureUsageByKeyAsync(subDomain!, FeatureConstants.STUDENT_LIMIT, cancellationToken);
 
-            return new StudentResponse { Message = CourseInviteConstants.DeclineInvite };
+            return new StudentResponse { Message = MessagesConstants.CourseInviteDeclined };
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Application.Features.Schedules.Commands.DeleteSchedule
             var isDeleted = await _scheduleRepository.DeleteScheduleAsync(request.ScheduleId, subDomain!, cancellationToken);
             if (!isDeleted)
                 return ScheduleErrors.ScheduleNotFound;
-            return new ScheduleResponse { Message = MessagesConstants.ScheduleDeletedSuccessfully };
+            return new ScheduleResponse { Message = MessagesConstants.ScheduleDeleted };
         }
     }
 }

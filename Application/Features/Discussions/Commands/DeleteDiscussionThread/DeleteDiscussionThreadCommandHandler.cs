@@ -21,7 +21,7 @@ namespace Application.Features.Discussions.Commands.DeleteDiscussionThread
             if (!isDeleted)
                 return DiscussionErrors.DiscussionThreadNotFound;
 
-            return new DiscussionResponse { Message = DiscussionConstants.DeletedDiscussionThreadMessage };
+            return new DiscussionResponse { Message = MessagesConstants.DiscussionThreadDeleted };
         }
     }
 }

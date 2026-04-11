@@ -68,7 +68,7 @@ namespace Application.Features.Announcements.Commands.CreateAnnouncement
 
             foreach (var email in studentEmails)
                 BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(email, EmailConstants.AnnouncementSubject, emailBody));
-            return new AnnouncementResponse { Messsage = AnnouncementConstants.AnnouncementCreatedMessage };
+            return new AnnouncementResponse { Messsage = MessagesConstants.AnnouncementCreated };
         }
     }
 }

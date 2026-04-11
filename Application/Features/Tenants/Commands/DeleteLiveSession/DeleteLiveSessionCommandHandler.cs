@@ -89,7 +89,7 @@ namespace Application.Features.Tenants.Commands.DeleteLiveSession
                         emailBody));
                 }
             }
-            return new DeleteLiveSessionDto { Message = LiveSessionConstants.DeleteSessionResponse };
+            return new DeleteLiveSessionDto { Message = MessagesConstants.LiveSessionDeleted };
         }
     }
 }

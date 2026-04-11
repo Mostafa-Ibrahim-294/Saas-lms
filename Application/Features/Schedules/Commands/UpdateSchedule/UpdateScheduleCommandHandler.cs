@@ -50,7 +50,7 @@ namespace Application.Features.Schedules.Commands.UpdateSchedule
 
             await _scheduleRepository.UpdateScheduleAsync(existingSchedule, cancellationToken);
             await _scheduleRepository.SaveAsync(cancellationToken);
-            return new ScheduleResponse { Message = MessagesConstants.ScheduleUpdatedSuccessfully };
+            return new ScheduleResponse { Message = MessagesConstants.ScheduleUpdated };
         }
     }
 }

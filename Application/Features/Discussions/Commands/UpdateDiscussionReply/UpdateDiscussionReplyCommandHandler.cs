@@ -20,7 +20,7 @@ namespace Application.Features.Discussions.Commands.UpdateDiscussionReply
             var discussionReplyIsUpdated = await _discussionRepository.UpdateDiscussionReplyAsync(request.ThreadId, request.ReplyId, request.Body, subDomain!, cancellationToken);
             if (!discussionReplyIsUpdated)
                 return DiscussionErrors.DiscussionReplyNotFound;
-            return new DiscussionResponse { Message = DiscussionConstants.UpdatedDiscussionReplyMessage };
+            return new DiscussionResponse { Message = MessagesConstants.DiscussionReplyUpdated };
         }
     }
 }

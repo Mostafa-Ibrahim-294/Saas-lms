@@ -44,7 +44,7 @@ namespace Application.Features.TenantStudents.Commands.DeleteStudent
                 return StudentErrors.StudentNotFound;
 
             await _tenantRepository.DecreasePlanFeatureUsageByKeyAsync(subDomain!, FeatureConstants.STUDENT_LIMIT, cancellationToken);
-            return new StudentResponse { Message = StudentConstants.StudentDeleted };
+            return new StudentResponse { Message = MessagesConstants.StudentDeleted };
         }
     }
 }

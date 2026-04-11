@@ -20,7 +20,7 @@ namespace Application.Features.Announcements.Commands.DeleteAnnouncement
             var result = await _announcementRepository.DeleteAnnouncementAsync(request.AnnouncementId, subDomain!, cancellationToken);
             if (!result)
                 return AnnouncementErrors.AnnouncementNotFound;
-            return new AnnouncementResponse { Messsage = AnnouncementConstants.AnnouncementDeletedMessage };
+            return new AnnouncementResponse { Messsage = MessagesConstants.AnnouncementDeleted };
         }
     }
 }

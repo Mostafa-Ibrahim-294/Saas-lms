@@ -50,8 +50,8 @@ namespace Application.Features.TenantOrders.Commands.BulkOrderAction
                 return OrderErrors.BulkActionFailed;
 
             return request.Action == OrderStatus.Approved
-                ? new TenantOrderResponse { Message = OrderConstants.OrdersApproved }
-                : new TenantOrderResponse { Message = OrderConstants.OrdersDeclined };
+                ? new TenantOrderResponse { Message = MessagesConstants.OrdersApproved }
+                : new TenantOrderResponse { Message = MessagesConstants.OrdersDeclined };
         }
     }
 }

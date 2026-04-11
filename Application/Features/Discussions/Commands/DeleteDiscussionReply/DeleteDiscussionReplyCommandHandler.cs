@@ -20,7 +20,7 @@ namespace Application.Features.Discussions.Commands.DeleteDiscussionReply
             var replyIsDeleted = await _discussionRepository.DeleteDiscussionThreadReplyAsync(request.ThreadId, request.ReplyId, subDomain!, cancellationToken);
             if(!replyIsDeleted)
                 return DiscussionErrors.DiscussionReplyNotFound;
-            return new DiscussionResponse { Message = DiscussionConstants.DeletedDiscussionReplyMessage };
+            return new DiscussionResponse { Message = MessagesConstants.DiscussionReplyDeleted };
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Application.Features.TenantWebsite.Commands.DuplicateTenantPage
             await _tenantWebsiteRepository.SaveAsync(cancellationToken);
             duplicatedTenantPage.Url = $"{tenantPage.Url}-{duplicatedTenantPage.Id}";
             await _tenantWebsiteRepository.SaveAsync(cancellationToken);
-            return new TenantPageResponse { Message = TenantWebsiteConstants.Duplicated };
+            return new TenantPageResponse { Message = MessagesConstants.TenantWebsiteDuplicated };
         }
     }
 }

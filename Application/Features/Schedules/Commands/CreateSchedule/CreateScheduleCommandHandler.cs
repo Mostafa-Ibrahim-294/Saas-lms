@@ -57,7 +57,7 @@ namespace Application.Features.Schedules.Commands.CreateSchedule
 
             await _scheduleRepository.CreateScheduleAsync(schedule, cancellationToken);
             await _scheduleRepository.SaveAsync(cancellationToken);
-            return new ScheduleResponse { Message = MessagesConstants.ScheduleCreatedSuccessfully };
+            return new ScheduleResponse { Message = MessagesConstants.ScheduleCreated };
         }
     }
 }

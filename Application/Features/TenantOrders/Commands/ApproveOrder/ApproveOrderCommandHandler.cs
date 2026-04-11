@@ -45,7 +45,7 @@ namespace Application.Features.TenantOrders.Commands.ApproveOrder
             if (!result)
                 return OrderErrors.OrderApproveFailed;
 
-            return new TenantOrderResponse { Message = OrderConstants.OrderApproved };
+            return new TenantOrderResponse { Message = MessagesConstants.OrderApproved };
         }
     }
 }

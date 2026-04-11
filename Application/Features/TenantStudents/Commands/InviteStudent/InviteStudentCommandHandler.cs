@@ -91,7 +91,7 @@ namespace Application.Features.TenantStudents.Commands.InviteStudent
                 });
 
             BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.StudentEmail, EmailConstants.Subject, emailBody));
-            return new StudentResponse { Message = $"{CourseInviteConstants.InviteResponse} {request.StudentEmail}" };
+            return new StudentResponse { Message = $"{MessagesConstants.CourseInviteSent} {request.StudentEmail}" };
         }
     }
 }

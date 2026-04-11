@@ -45,7 +45,7 @@ namespace Application.Features.TenantMembers.Commands.UpdateCurrentMember
             var cacheKey = $"{CacheKeysConstants.CurrentTenantMemberKey}_{userId}";
             await _hybridCache.RemoveAsync(cacheKey, cancellationToken);
 
-            return new UpdateCurrentMemberDto { Message = TenantMemberConstants.UpdateCurrentMemberResponse};
+            return new UpdateCurrentMemberDto { Message = MessagesConstants.TenantMemberUpdateCurrentMember };
         }
     }
 }

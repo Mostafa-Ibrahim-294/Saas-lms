@@ -35,7 +35,7 @@ namespace Application.Features.TenantWebsite.Commands.CreateTenantPage
 
             await _tenantWebsiteRepository.CreateTenantPageAsync(request, tenantId, cancellationToken);
             await _tenantWebsiteRepository.SaveAsync(cancellationToken);
-            return new TenantPageResponse { Message = TenantWebsiteConstants.Created };
+            return new TenantPageResponse { Message = MessagesConstants.TenantWebsiteCreated };
         }
     }
 }
