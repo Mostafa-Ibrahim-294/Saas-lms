@@ -32,10 +32,8 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
-        public async Task<AllAnnouncements> GetAnnouncementsAsync(string subDomain, int? Limit, string? Q, int? Cursor, CancellationToken cancellationToken)
+        public async Task<AllAnnouncements> GetAnnouncementsAsync(string subDomain, int Limit, string? Q, int Cursor, CancellationToken cancellationToken)
         {
-            var pageSize = Limit ?? 8;
-
             var query = _context.Announcements
                 .AsNoTracking()
                 .Where(a => a.Tenant.SubDomain == subDomain);
@@ -44,14 +42,14 @@ namespace Infrastructure.Repositories
                 query = query.Where(a => a.Title.Contains(Q) || a.Content.Contains(Q));
 
             var announcements = await query
-                .Where(a => a.Id < (Cursor ?? int.MaxValue))
+                .Where(a => a.Id < (Cursor == 0 ? int.MaxValue : Cursor))
                 .OrderByDescending(dt => dt.Id)
-                .Take(pageSize + 1)
+                .Take(Limit + 1)
                 .ToListAsync(cancellationToken);
 
             var data = _mapper.Map<List<AnnouncementDto>>(announcements);
 
-            var hasMore = data.Count > pageSize;
+            var hasMore = data.Count > Limit;
             if (hasMore)
                 data.RemoveAt(data.Count - 1);
 
