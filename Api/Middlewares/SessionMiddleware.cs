@@ -1,5 +1,8 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Microsoft.Extensions.Caching.Hybrid;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace Api.Middlewares
 {
@@ -7,6 +10,7 @@ namespace Api.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly HybridCache _cache;
+
         public SessionMiddleware(RequestDelegate next, HybridCache cache)
         {
             _next = next;
@@ -14,22 +18,22 @@ namespace Api.Middlewares
         }
         public async Task InvokeAsync(HttpContext context)
         {
-            var sessionId = context.Request.Cookies[AuthConstants.SessionKey];
+            var sessionId = context.Request.Cookies[AuthConstants.SessionId];
 
             if (!string.IsNullOrEmpty(sessionId))
             {
-                var sessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
+                var cachedSessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
 
-                var session = await _cache.GetOrCreateAsync<string?>(
-                    sessionKey,
+                var sessionData = await _cache.GetOrCreateAsync<string?>(
+                    cachedSessionKey,
                     _ => ValueTask.FromResult<string?>(null)
                 );
 
-                if (!string.IsNullOrEmpty(session))
+                if (!string.IsNullOrEmpty(sessionData))
                 {
                     await _cache.SetAsync(
-                        sessionKey,
-                        session,
+                        cachedSessionKey,
+                        sessionData,
                         new HybridCacheEntryOptions
                         {
                             Expiration = TimeSpan.FromDays(7)
@@ -37,7 +41,7 @@ namespace Api.Middlewares
                     );
 
                     context.Response.Cookies.Append(
-                        AuthConstants.SessionKey,
+                        AuthConstants.SessionId,
                         sessionId,
                         new CookieOptions
                         {
@@ -48,6 +52,18 @@ namespace Api.Middlewares
                             Domain = AuthConstants.CookieDomain
                         }
                     );
+
+                    var userSession = JsonSerializer.Deserialize<UserSession>(sessionData);
+                    if (userSession is not null)
+                    {
+                        var claims = new[]
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, userSession.UserId),
+                            new Claim(ClaimTypes.Role, userSession.Role)
+                        };
+                        var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, "SessionScheme"));
+                        context.User = principal;
+                    }
                 }
             }
             await _next(context);

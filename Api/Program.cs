@@ -59,8 +59,8 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseHealthChecks("/health");
-app.UseMiddleware<SessionMiddleware>();
 app.UseAuthentication();
+app.UseMiddleware<SessionMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 

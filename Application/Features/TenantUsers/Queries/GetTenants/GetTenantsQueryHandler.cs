@@ -6,10 +6,10 @@ namespace Application.Features.TenantUsers.Queries.GetTenants
     internal sealed class GetTenantsQueryHandler : IRequestHandler<GetTenantsQuery, IEnumerable<UserTenantsDto>>
     {
         private readonly ICurrentUserId _currentUserId;
-        private readonly IUserRepository _userRepository;
+        private readonly ITenantUserRepository _userRepository;
         private readonly HybridCache _hybridCache;
 
-        public GetTenantsQueryHandler(ICurrentUserId currentUserId, IUserRepository userRepository, HybridCache hybridCache)
+        public GetTenantsQueryHandler(ICurrentUserId currentUserId, ITenantUserRepository userRepository, HybridCache hybridCache)
         {
             _currentUserId = currentUserId;
             _userRepository = userRepository;

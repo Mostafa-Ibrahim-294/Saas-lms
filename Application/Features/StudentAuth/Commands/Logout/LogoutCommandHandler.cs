@@ -14,12 +14,10 @@ namespace Application.Features.StudentAuth.Commands.Logout
         }
         public async Task<OneOf<bool, Error>> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionKey];
-            if (sessionId is null)
-                return UserErrors.InvalidVerificationToken;
+            var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionId];
 
             await _hybridCache.RemoveAsync($"{CacheKeysConstants.SessionKey}_{sessionId}", cancellationToken);
-            _httpContextAccessor.HttpContext?.Response.Cookies.Delete(AuthConstants.SessionKey);
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete(AuthConstants.SessionId);
             return true;
         }
     }

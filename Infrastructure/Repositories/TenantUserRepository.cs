@@ -4,12 +4,12 @@ using AutoMapper.QueryableExtensions;
 
 namespace Infrastructure.Repositories
 {
-    internal sealed class UserRepository : IUserRepository
+    internal sealed class TenantUserRepository : ITenantUserRepository
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public UserRepository(AppDbContext context, IMapper mapper)
+        public TenantUserRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

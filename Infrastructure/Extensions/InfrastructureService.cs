@@ -110,7 +110,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ISeeder, Seeder>();
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             builder.Services.AddScoped<ITenantRepository, TenantRepository>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ITenantUserRepository, TenantUserRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddHttpClient<IFileService, FileService>();
@@ -138,6 +138,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
             builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
             builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+            builder.Services.AddScoped<IStudentUserRepository, StudentUserRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

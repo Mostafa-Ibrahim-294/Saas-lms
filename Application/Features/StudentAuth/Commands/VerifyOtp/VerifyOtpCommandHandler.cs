@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json;
 
 namespace Application.Features.StudentAuth.Commands.VerifyOtp
 {
@@ -45,16 +44,16 @@ namespace Application.Features.StudentAuth.Commands.VerifyOtp
                 return UserErrors.EmailNotFound;
 
             var sessionId = Guid.NewGuid().ToString();
-            var session = new
+            var session = new UserSession
             {
-                userId = user.Id,
-                role = RoleConstants.Student,
-                createdAt = DateTime.UtcNow
+                UserId = user.Id,
+                Role = RoleConstants.Student,
+                CreatedAt = DateTime.UtcNow
             };
 
             await _hybridCache.SetAsync(
                 $"{CacheKeysConstants.SessionKey}_{sessionId}",
-                JsonSerializer.Serialize(session),
+                session,
                 new HybridCacheEntryOptions
                 {
                     Expiration = TimeSpan.FromDays(7)
@@ -67,7 +66,7 @@ namespace Application.Features.StudentAuth.Commands.VerifyOtp
             await _hybridCache.RemoveAsync(verificationCode, cancellationToken);
 
             _httpContextAccessor?.HttpContext?.Response.Cookies.Append(
-                AuthConstants.SessionKey,
+                AuthConstants.SessionId,
                 sessionId,
                 new CookieOptions
                 {
