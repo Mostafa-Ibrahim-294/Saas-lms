@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Contracts.Repositories;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.StudentAuth.Commands.VerifyOtp
 {
@@ -7,12 +8,15 @@ namespace Application.Features.StudentAuth.Commands.VerifyOtp
         private readonly HybridCache _hybridCache;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IStudentRepository _studentRepository;
 
-        public VerifyOtpCommandHandler(HybridCache hybridCache, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
+        public VerifyOtpCommandHandler(HybridCache hybridCache, UserManager<ApplicationUser> userManager,
+            IHttpContextAccessor httpContextAccessor, IStudentRepository studentRepository)
         {
             _hybridCache = hybridCache;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
+            _studentRepository = studentRepository;
         }
         public async Task<OneOf<bool, Error>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
         {
@@ -43,10 +47,12 @@ namespace Application.Features.StudentAuth.Commands.VerifyOtp
             if (user is null)
                 return UserErrors.EmailNotFound;
 
+            var studentId = await _studentRepository.GetStudentIdAsync(user.Id, cancellationToken);
             var sessionId = Guid.NewGuid().ToString();
             var session = new UserSession
             {
                 UserId = user.Id,
+                StudentId = studentId,
                 Role = RoleConstants.Student,
                 CreatedAt = DateTime.UtcNow
             };

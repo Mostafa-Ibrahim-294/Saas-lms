@@ -8,6 +8,9 @@ namespace Application.Features.StudentAuth.Dtos
         {
             CreateMap<SignUpCommand, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
+
+            CreateMap<SignUpCommand, Student>()
+                .ForMember(dest => dest.ParentEmail, opt => opt.MapFrom(src => src.ParentEmail));
         }
     }
 }

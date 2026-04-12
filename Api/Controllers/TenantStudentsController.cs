@@ -1,9 +1,6 @@
 ﻿using Application.Constants;
-using Application.Features.TenantStudents.Commands.DeclineInvite;
-using Application.Features.TenantStudents.Commands.AcceptInvite;
 using Application.Features.TenantStudents.Commands.DeleteStudent;
 using Application.Features.TenantStudents.Commands.InviteStudent;
-using Application.Features.TenantStudents.Commands.ValidateStudentInvite;
 using Application.Features.TenantStudents.Queries.GetStudentsByCourseId;
 using Application.Features.TenantStudents.Queries.GetStudentStatistics;
 using MediatR;
@@ -53,41 +50,8 @@ namespace Api.Controllers
         }
 
 
-        [HttpPost("invites/validate")]
-        public async Task<IActionResult> ValidateInvite([FromQuery] ValidateStudentInviteCommand command, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(command, cancellationToken);
-            return result.Match<IActionResult>(
-                response => Ok(response),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
-            );
-        }
-
-
         [HttpPost("invite")]
         public async Task<IActionResult> InviteStudent([FromBody] InviteStudentCommand command, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(command, cancellationToken);
-            return result.Match<IActionResult>(
-                response => Ok(response),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
-            );
-        }
-
-
-        [HttpPost("invites/accept")]
-        public async Task<IActionResult> AcceptInvite([FromQuery] AcceptInviteCommand command, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(command, cancellationToken);
-            return result.Match<IActionResult>(
-                response => Ok(response),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
-            );
-        }
-
-
-        [HttpPost("invites/decline")]
-        public async Task<IActionResult> DeclineInvite([FromQuery] DeclineInviteCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(

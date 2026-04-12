@@ -1,4 +1,4 @@
-﻿using Application.Features.TenantStudents.Dtos;
+﻿using Application.Features.Students.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;

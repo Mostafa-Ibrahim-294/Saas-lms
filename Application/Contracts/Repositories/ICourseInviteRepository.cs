@@ -1,4 +1,4 @@
-﻿using Application.Features.TenantStudents.Dtos;
+﻿using Application.Features.Students.Dtos;
 
 namespace Application.Contracts.Repositories
 {

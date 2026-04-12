@@ -1,7 +1,7 @@
 ﻿using Application.Contracts.Repositories;
-using Application.Features.TenantStudents.Dtos;
+using Application.Features.Students.Dtos;
 
-namespace Application.Features.TenantStudents.Commands.ValidateStudentInvite
+namespace Application.Features.Students.Commands.ValidateStudentInvite
 {
     internal sealed class ValidateStudentInviteCommandHandler : IRequestHandler<ValidateStudentInviteCommand, OneOf<ValidateStudentInviteDto, Error>>
     {
