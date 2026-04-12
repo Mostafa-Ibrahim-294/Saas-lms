@@ -1,4 +1,4 @@
-﻿using Application.Features.Users.Dtos;
+﻿using Application.Features.TenantUsers.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 

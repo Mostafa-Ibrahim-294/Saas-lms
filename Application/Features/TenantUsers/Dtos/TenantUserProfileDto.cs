@@ -1,6 +1,6 @@
-﻿namespace Application.Features.Users.Dtos
+﻿namespace Application.Features.TenantUsers.Dtos
 {
-    public sealed class UserProfileDto
+    public sealed class TenantUserProfileDto
     {
         public string Email { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;

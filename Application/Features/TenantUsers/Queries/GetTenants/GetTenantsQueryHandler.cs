@@ -1,9 +1,7 @@
-﻿using Application.Common;
-using Application.Constants;
-using Application.Contracts.Repositories;
-using Application.Features.Users.Dtos;
+﻿using Application.Contracts.Repositories;
+using Application.Features.TenantUsers.Dtos;
 
-namespace Application.Features.Users.Queries.GetTenants
+namespace Application.Features.TenantUsers.Queries.GetTenants
 {
     internal sealed class GetTenantsQueryHandler : IRequestHandler<GetTenantsQuery, IEnumerable<UserTenantsDto>>
     {

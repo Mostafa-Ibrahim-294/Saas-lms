@@ -1,23 +1,23 @@
 ﻿using Application.Constants;
-using Application.Features.Users.Queries.GetProfile;
-using Application.Features.Users.Queries.GetTenants;
+using Application.Features.TenantUsers.Queries.GetProfile;
+using Application.Features.TenantUsers.Queries.GetTenants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tenant/users/me")]
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthConstants.ApiScheme)]
-    public class UsersController : ControllerBase
+    public class TenantUsersController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public UsersController(IMediator mediator)
+        public TenantUsersController(IMediator mediator)
         {
             _mediator = mediator;
         }
-        [HttpGet("me")]
+        [HttpGet()]
         public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetProfileQuery(), cancellationToken);
@@ -25,7 +25,7 @@ namespace Api.Controllers
         }
 
 
-        [HttpGet("me/tenants")]
+        [HttpGet("tenants")]
         public async Task<IActionResult> GetTenants(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetTenantsQuery(), cancellationToken);

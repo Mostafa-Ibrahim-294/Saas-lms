@@ -1,12 +1,10 @@
-﻿using Application.Common;
-using Application.Constants;
-using Application.Contracts.Repositories;
-using Application.Features.Users.Dtos;
+﻿using Application.Contracts.Repositories;
+using Application.Features.TenantUsers.Dtos;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Features.Users.Queries.GetProfile
+namespace Application.Features.TenantUsers.Queries.GetProfile
 {
-    internal sealed class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, UserProfileDto>
+    internal sealed class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, TenantUserProfileDto>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUserId _currentUserId;
@@ -23,11 +21,11 @@ namespace Application.Features.Users.Queries.GetProfile
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<UserProfileDto> Handle(GetProfileQuery request, CancellationToken cancellationToken)
+        public async Task<TenantUserProfileDto> Handle(GetProfileQuery request, CancellationToken cancellationToken)
         {
             var userId = _currentUserId.GetUserId();
             var user = await _userManager.FindByIdAsync(userId!);
-            var userProfileDto = _mapper.Map<UserProfileDto>(user);
+            var userProfileDto = _mapper.Map<TenantUserProfileDto>(user);
             var roles = await _userManager.GetRolesAsync(user!);
             userProfileDto.Role = roles.FirstOrDefault() ?? string.Empty;
             if (user!.HasOnboarded)

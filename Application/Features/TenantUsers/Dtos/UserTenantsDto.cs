@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Users.Dtos
+﻿namespace Application.Features.TenantUsers.Dtos
 {
     public sealed class UserTenantsDto
     {

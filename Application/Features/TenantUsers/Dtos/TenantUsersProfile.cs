@@ -1,10 +1,10 @@
-﻿namespace Application.Features.Users.Dtos
+﻿namespace Application.Features.TenantUsers.Dtos
 {
-    public class UserProfile : Profile
+    public class TenantUsersProfile : Profile
     {
-        public UserProfile()
+        public TenantUsersProfile()
         {
-            CreateMap<ApplicationUser, UserProfileDto>();
+            CreateMap<ApplicationUser, TenantUserProfileDto>();
 
             CreateMap<TenantMember, UserTenantsDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Tenant.Id))
