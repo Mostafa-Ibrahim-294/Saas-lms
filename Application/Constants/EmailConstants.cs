@@ -23,5 +23,8 @@
 
         public const string AnnouncementTemplate = "AnnouncementTemplate";
         public const string AnnouncementSubject = "لديك إعلان جديد";
+
+        public const string LoginOtpTemplate = "LoginOtpTemplate";
+        public const string ResendOtpTemplate = "ResendOtpTemplate";
     }
 }

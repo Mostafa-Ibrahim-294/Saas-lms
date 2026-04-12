@@ -10,5 +10,6 @@
         public const string AllCoursesKey = "All_Courses";
         public const string CourseModuleKey = "Course_Module";
         public const string DiscussionStatistics = "Discussion_Statistics";
+        public const string SessionKey = "Session";
     }
 }

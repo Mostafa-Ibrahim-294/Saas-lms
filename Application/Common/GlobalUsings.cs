@@ -1,4 +1,4 @@
-﻿global using Application.Features.Auth.Dtos;
+﻿global using Application.Features.TenantAuth.Dtos;
 global using AutoMapper;
 global using Domain.Entites;
 global using Domain.Errors;
@@ -9,4 +9,3 @@ global using Microsoft.Extensions.Caching.Hybrid;
 global using OneOf;
 global using Application.Common;
 global using Application.Constants;
-
