@@ -52,20 +52,20 @@ namespace Application.Features.TenantStudents.Commands.InviteStudent
             if (course is null)
                 return CourseErrors.CourseNotFound;
 
-            var studentUserId = await _userManager.FindByEmailAsync(request.StudentEmail);
-            if (studentUserId is not null)
+            var studentUser = await _userManager.FindByEmailAsync(request.StudentEmail);
+            if (studentUser is not null)
             {
-                var studentId = await _studentRepository.GetStudentIdAsync(studentUserId.Id, cancellationToken);
+                var studentId = await _studentRepository.GetStudentIdAsync(studentUser.Id, cancellationToken);
                 var isEnrolled = await _enrollmentRepository.StudentIsAlreadyEnrolledAsync(studentId, request.CourseId, cancellationToken);
                 if(isEnrolled)
                     return StudentErrors.AlreadyEnrolled;
             }
 
-            var existingInvite = await _courseInviteRepository.GetPendingInviteAsync(request.StudentEmail, request.CourseId, cancellationToken);
+            var existingInvite = await _courseInviteRepository.GetPendingInviteAsync(request.StudentEmail, request.CourseId, subDomain!, cancellationToken);
             if (existingInvite is not null)
                 return CourseInviteErrors.AlreadyInvited;
 
-            var inviterName = await _userManager.FindByIdAsync(currentUserId);
+            var teacher = await _userManager.FindByIdAsync(currentUserId);
             var invitedByMemberId = await _tenantMemberRepository.GetMemberIdByUserIdAsync(currentUserId, tenantId, cancellationToken);
             var tenant = await _tenantRepository.GetLastTenantAsync(subDomain, cancellationToken);
             var courseInvite = new CourseInvite
@@ -87,7 +87,7 @@ namespace Application.Features.TenantStudents.Commands.InviteStudent
                     { "{{course_name}}", course.Title },
                     { "{{action_url}}", $"{EmailConstants.CourseInviteUrl}?token={courseInvite.Token}" },
                     { "{{expiry_hours}}", "24" },
-                    { "{{inviter_name}}", $"{inviterName!.FirstName} {inviterName.LastName}" }
+                    { "{{inviter_name}}", $"{teacher!.FirstName} {teacher.LastName}" }
                 });
 
             BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.StudentEmail, EmailConstants.Subject, emailBody));

@@ -19,7 +19,7 @@ namespace Application.Features.TenantStudents.Commands.DeclineInvite
         }
         public async Task<OneOf<StudentResponse, Error>> Handle(DeclineInviteCommand request, CancellationToken cancellationToken)
         {
-            var tenantId = await _courseInviteRepository.GetTenantIdAsync(request.Token, cancellationToken);
+            var tenantId = await _courseInviteRepository.GetTenantIdByInviteTokenAsync(request.Token, cancellationToken);
             var subDomain = await _tenantRepository.GetSubDomainAsync(tenantId, cancellationToken);
 
             var isValidToken = await _courseInviteRepository.IsValidTokenAsync(request.Token, cancellationToken);

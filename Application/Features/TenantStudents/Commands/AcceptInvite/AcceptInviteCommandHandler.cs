@@ -37,7 +37,7 @@ namespace Application.Features.TenantStudents.Commands.AcceptInvite
 
             var courseId = await _courseInviteRepository.GetCourseIdByTokenAsync(request.Token, cancellationToken);
             var studentId = _httpContextAccessor.HttpContext?.Session.GetInt32(AuthConstants.StudentId);
-            var tenantId = await _courseInviteRepository.GetTenantIdAsync(request.Token, cancellationToken);
+            var tenantId = await _courseInviteRepository.GetTenantIdByInviteTokenAsync(request.Token, cancellationToken);
 
             var newEnrollment = new Enrollment
             {

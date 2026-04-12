@@ -19,7 +19,7 @@
         public const string DeleteSubject = "تم حذف موعد أو تفاصيل الجلسة";
 
         public const string CourseInviteTemplate = "CourseInviteTemplate";
-        public const string CourseInviteUrl = "https://www.students.waey.online/course-invite";
+        public const string CourseInviteUrl = "https://students.waey.online/course-invite";
 
         public const string AnnouncementTemplate = "AnnouncementTemplate";
         public const string AnnouncementSubject = "لديك إعلان جديد";
