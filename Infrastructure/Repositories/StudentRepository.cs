@@ -1,4 +1,5 @@
-﻿using Application.Features.TenantStudents.Dtos;
+﻿using Application.Features.Students.Dtos;
+using Application.Features.TenantStudents.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
@@ -104,6 +105,14 @@ namespace Infrastructure.Repositories
 
             return student;
 
+        }
+        public async Task<List<AvailableSubjectDto>> GetAvailableSubjectsAsync(CancellationToken cancellationToken)
+        {
+            return await _context.AvailableSubjects
+                .AsNoTracking()
+                .Where(s => s.Active)
+                .ProjectTo<AvailableSubjectDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
     }
 }

@@ -53,6 +53,14 @@ namespace Infrastructure.Seeders
                     await _context.BlockTypes.AddRangeAsync(blockTypes);
                     await _context.SaveChangesAsync();
                 }
+
+                // Seed AvailableSubjects
+                if (!await _context.AvailableSubjects.AnyAsync())
+                {
+                    var subjects = GetAvailableSubjects();
+                    await _context.AvailableSubjects.AddRangeAsync(subjects);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 
@@ -697,7 +705,7 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"},
                     
                     // Student
-                    new Permission{ Id = "MANAGE_STUDENTS", Name = "إدارة الطلاب", Description = "السماح بإضافة وتعديل وحذف الطلاب",Module = "students"},            
+                    new Permission{ Id = "MANAGE_STUDENTS", Name = "إدارة الطلاب", Description = "السماح بإضافة وتعديل وحذف الطلاب",Module = "students"},
             };
         }
 
@@ -814,6 +822,146 @@ namespace Infrastructure.Seeders
                     }
                     """)
                 }
+            };
+        }
+
+        private List<AvailableSubject> GetAvailableSubjects()
+        {
+            return new List<AvailableSubject>
+            {
+                // ===================== Primary =====================
+                new AvailableSubject { Grade = "الصف الأول الإبتدائي", Key = "p1-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الإبتدائي", Key = "p1-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الإبتدائي", Key = "p1-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الأول الإبتدائي", Key = "p1-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الإبتدائي", Key = "p1-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الإبتدائي", Key = "p1-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Primary 2 =====================
+                new AvailableSubject { Grade = "الصف الثاني الإبتدائي", Key = "p2-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الإبتدائي", Key = "p2-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الإبتدائي", Key = "p2-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الثاني الإبتدائي", Key = "p2-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الإبتدائي", Key = "p2-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الإبتدائي", Key = "p2-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Primary 3 =====================
+                new AvailableSubject { Grade = "الصف الثالث الإبتدائي", Key = "p3-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الإبتدائي", Key = "p3-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الإبتدائي", Key = "p3-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الثالث الإبتدائي", Key = "p3-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الإبتدائي", Key = "p3-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الإبتدائي", Key = "p3-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Primary 4 =====================
+                new AvailableSubject { Grade = "الصف الرابع الإبتدائي", Key = "p4-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الرابع الإبتدائي", Key = "p4-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الرابع الإبتدائي", Key = "p4-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الرابع الإبتدائي", Key = "p4-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الرابع الإبتدائي", Key = "p4-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الرابع الإبتدائي", Key = "p4-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Primary 5 =====================
+                new AvailableSubject { Grade = "الصف الخامس الإبتدائي", Key = "p5-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الخامس الإبتدائي", Key = "p5-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الخامس الإبتدائي", Key = "p5-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الخامس الإبتدائي", Key = "p5-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الخامس الإبتدائي", Key = "p5-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الخامس الإبتدائي", Key = "p5-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Primary 6 =====================
+                new AvailableSubject { Grade = "الصف السادس الإبتدائي", Key = "p6-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف السادس الإبتدائي", Key = "p6-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف السادس الإبتدائي", Key = "p6-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف السادس الإبتدائي", Key = "p6-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف السادس الإبتدائي", Key = "p6-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف السادس الإبتدائي", Key = "p6-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Prep 1 =====================
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem1-sub4", DisplayName = "علوم", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem1-sub5", DisplayName = "الدراسات الاجتماعية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem2-sub4", DisplayName = "علوم", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الاعدادي", Key = "j1-sem2-sub5", DisplayName = "الدراسات الاجتماعية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Prep 2 =====================
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem1-sub4", DisplayName = "علوم", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem1-sub5", DisplayName = "الدراسات الاجتماعية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem2-sub4", DisplayName = "علوم", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الاعدادي", Key = "j2-sem2-sub5", DisplayName = "الدراسات الاجتماعية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Prep 3 =====================
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem1-sub4", DisplayName = "علوم", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem1-sub5", DisplayName = "الدراسات الاجتماعية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem2-sub4", DisplayName = "علوم", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الاعدادي", Key = "j3-sem2-sub5", DisplayName = "الدراسات الاجتماعية", Semester = "الفصل الدراسي الثاني" },
+
+                // ===================== Secondary =====================
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem1-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem1-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem1-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem1-sub4", DisplayName = "العلوم المتكاملة", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem2-sub1", DisplayName = "رياضيات", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem2-sub2", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem2-sub3", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الأول الثانوي", Key = "s1-sem2-sub4", DisplayName = "العلوم المتكاملة", Semester = "الفصل الدراسي الثاني" },
+
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem1-sub1", DisplayName = "رياضيات بحته", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem1-sub2", DisplayName = "رياضيات تطبيقية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem1-sub3", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem1-sub4", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem1-sub5", DisplayName = "فيزياء", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem1-sub6", DisplayName = "كيمياء", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem2-sub1", DisplayName = "رياضيات بحته", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem2-sub2", DisplayName = "رياضيات تطبيقية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem2-sub3", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem2-sub4", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem2-sub5", DisplayName = "فيزياء", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثاني الثانوي", Key = "s2-sem2-sub6", DisplayName = "كيمياء", Semester = "الفصل الدراسي الثاني" },
+
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem1-sub1", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem1-sub2", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem1-sub3", DisplayName = "فيزياء", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem1-sub4", DisplayName = "كيمياء", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem1-sub5", DisplayName = "أحياء", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem1-sub6", DisplayName = "رياضيات بحته", Semester = "الفصل الدراسي الأول" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem1-sub7", DisplayName = "رياضيات تطبيقية", Semester = "الفصل الدراسي الأول" },
+
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub1", DisplayName = "لغة عربية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub2", DisplayName = "لغة إنجليزية", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub3", DisplayName = "فيزياء", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub4", DisplayName = "كيمياء", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub5", DisplayName = "أحياء", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub6", DisplayName = "رياضيات بحته", Semester = "الفصل الدراسي الثاني" },
+                new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub7", DisplayName = "رياضيات تطبيقية", Semester = "الفصل الدراسي الثاني" },
             };
         }
     }

@@ -1,4 +1,5 @@
-﻿using Application.Features.TenantStudents.Dtos;
+﻿using Application.Features.Students.Dtos;
+using Application.Features.TenantStudents.Dtos;
 
 namespace Application.Contracts.Repositories
 {
@@ -12,5 +13,6 @@ namespace Application.Contracts.Repositories
         Task<bool> DeleteStudentAsync(int studentId, int courseId, CancellationToken cancellationToken);
         Task<string> GetStudentUserIdAsync(int studentId, CancellationToken cancellationToken);
         Task<StudentDto?> GetTenantStudentAsync(int studentId, string subDomain, CancellationToken cancellationToken);
+        Task<List<AvailableSubjectDto>> GetAvailableSubjectsAsync(CancellationToken cancellationToken);
     }
 }
