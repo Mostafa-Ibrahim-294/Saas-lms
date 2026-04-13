@@ -4,19 +4,20 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.TenantStudents.Queries.GetStudentsByCourseId
 {
-    public sealed class GetStudentsQueryHandler : IRequestHandler<GetStudentsQuery, OneOf<List<StudentDto>, Error>>
+    public sealed class GetStudentsQueryHandler : IRequestHandler<GetStudentsQuery, OneOf<List<StudentsDto>, Error>>
     {
         private readonly IStudentRepository _studentRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GetStudentsQueryHandler(IStudentRepository studentRepository, ICourseRepository courseRepository, IHttpContextAccessor httpContextAccessor)
+        public GetStudentsQueryHandler(IStudentRepository studentRepository, ICourseRepository courseRepository, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _studentRepository = studentRepository;
             _courseRepository = courseRepository;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<OneOf<List<StudentDto>, Error>> Handle(GetStudentsQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<List<StudentsDto>, Error>> Handle(GetStudentsQuery request, CancellationToken cancellationToken)
         {
             var subDomain = _httpContextAccessor?.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             if (request.CourseId.HasValue)

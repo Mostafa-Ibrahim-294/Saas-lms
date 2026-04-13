@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.TenantStudents.Dtos
 {
-    public sealed class StudentDto
+    public sealed class StudentsDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -11,6 +11,5 @@
         public DateTime LastLogin { get; set; }
         public StudentFlagDto Flags { get; set; } = new();
         public List<int>? EnrolledCourses { get; set; } = new();
-        public List<StudentCourseDto> Courses { get; set; } = new();
     }
 }

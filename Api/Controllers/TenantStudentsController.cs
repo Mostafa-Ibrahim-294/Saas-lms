@@ -1,6 +1,7 @@
 ﻿using Application.Constants;
 using Application.Features.TenantStudents.Commands.DeleteStudent;
 using Application.Features.TenantStudents.Commands.InviteStudent;
+using Application.Features.TenantStudents.Queries.GetStudent;
 using Application.Features.TenantStudents.Queries.GetStudentsByCourseId;
 using Application.Features.TenantStudents.Queries.GetStudentStatistics;
 using MediatR;
@@ -23,6 +24,17 @@ namespace Api.Controllers
 
         [HttpGet()]
         public async Task<IActionResult> GetStudents([FromQuery] GetStudentsQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(query, cancellationToken);
+            return result.Match<IActionResult>(
+                student => Ok(student),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+
+
+        [HttpGet("{studentId}")]
+        public async Task<IActionResult> GetStudentById([FromRoute] GetStudentQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
             return result.Match<IActionResult>(

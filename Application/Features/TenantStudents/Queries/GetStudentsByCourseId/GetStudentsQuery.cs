@@ -2,5 +2,5 @@
 
 namespace Application.Features.TenantStudents.Queries.GetStudentsByCourseId
 {
-    public sealed record GetStudentsQuery(int? CourseId) : IRequest<OneOf<List<StudentDto>, Error>>;
+    public sealed record GetStudentsQuery(int? CourseId) : IRequest<OneOf<List<StudentsDto>, Error>>;
 }

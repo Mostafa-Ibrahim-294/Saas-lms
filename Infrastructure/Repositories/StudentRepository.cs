@@ -31,11 +31,10 @@ namespace Infrastructure.Repositories
                 .Select(s => s.Id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-        public async Task<List<StudentDto>> GetStudentsAsync(string subDomain, CancellationToken cancellationToken, int? courseId = null)
+        public async Task<List<StudentsDto>> GetStudentsAsync(string subDomain, CancellationToken cancellationToken, int? courseId = null)
         {
             var studentsQuery = _context.Students
                 .AsNoTracking()
-                //.Include(s => s.StudentSubscriptions)
                 .Where(s => s.Enrollments.Any(e => e.Course.Tenant.SubDomain == subDomain))
                 .AsQueryable();
 
@@ -43,7 +42,7 @@ namespace Infrastructure.Repositories
                 studentsQuery = studentsQuery.Where(s => s.Enrollments.Any(e => e.CourseId == courseId.Value));
 
             var students = await studentsQuery
-                .ProjectTo<StudentDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<StudentsDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
             return students;
@@ -94,6 +93,17 @@ namespace Infrastructure.Repositories
         public async Task CreateStudentAsync(Student student, CancellationToken cancellationToken)
         {
             await _context.Students.AddAsync(student, cancellationToken);
+        }
+        public async Task<StudentDto?> GetTenantStudentAsync(int studentId, string subDomain, CancellationToken cancellationToken)
+        {
+            var student = await _context.Students
+                .AsNoTracking()
+                .Where(s => s.Id == studentId && s.Enrollments.Any(e => e.Course.Tenant.SubDomain == subDomain))
+                .ProjectTo<StudentDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return student;
+
         }
     }
 }
