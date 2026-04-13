@@ -1,8 +1,5 @@
 ﻿using Domain.Abstractions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entites
 {
