@@ -1,4 +1,6 @@
-﻿namespace Application.Features.TenantStudents.Dtos
+﻿using Domain.Enums;
+
+namespace Application.Features.TenantStudents.Dtos
 {
     public sealed class TenantStudentProfile : Profile
     {
@@ -9,7 +11,13 @@
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
                 .ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => src.User.ProfilePicture))
                 .ForMember(dest => dest.AverageGrades, opt => opt.MapFrom(src => src.StudentGrades.Any() ? (int)src.StudentGrades.Average(sg => sg.Score) : 0))
-                .ForMember(dest => dest.EnrolledCourses, opt => opt.MapFrom(src => src.Enrollments.Select(e => e.CourseId).ToList()));
+                .ForMember(dest => dest.EnrolledCourses, opt => opt.MapFrom(src => src.Enrollments.Select(e => e.CourseId).ToList()))
+                .ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.StudentSubscriptions));
+
+            CreateMap<ICollection<StudentSubscription>, StudentFlagDto>()
+                .ForMember(dest => dest.HasActiveSubscription, opt => opt.MapFrom(src => src.Any(s => s.Status == StudentSubscriptionStatus.Active)))
+                .ForMember(dest => dest.HasExpiredSubscription, opt => opt.MapFrom(src => src.Any(s => s.Status == StudentSubscriptionStatus.Expired)))
+                .ForMember(dest => dest.HasUnpaidCourses, opt => opt.MapFrom(src => src.Any(s => s.Status == StudentSubscriptionStatus.Cancelled)));
         }
     }
 }

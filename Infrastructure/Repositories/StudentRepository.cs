@@ -35,6 +35,7 @@ namespace Infrastructure.Repositories
         {
             var studentsQuery = _context.Students
                 .AsNoTracking()
+                //.Include(s => s.StudentSubscriptions)
                 .Where(s => s.Enrollments.Any(e => e.Course.Tenant.SubDomain == subDomain))
                 .AsQueryable();
 

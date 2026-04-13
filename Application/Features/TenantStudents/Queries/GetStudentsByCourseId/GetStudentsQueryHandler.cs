@@ -19,7 +19,6 @@ namespace Application.Features.TenantStudents.Queries.GetStudentsByCourseId
         public async Task<OneOf<List<StudentDto>, Error>> Handle(GetStudentsQuery request, CancellationToken cancellationToken)
         {
             var subDomain = _httpContextAccessor?.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-
             if (request.CourseId.HasValue)
             {
                 var courseExists = await _courseRepository.GetCourseByIdAsync(request.CourseId.Value, subDomain!, cancellationToken);
