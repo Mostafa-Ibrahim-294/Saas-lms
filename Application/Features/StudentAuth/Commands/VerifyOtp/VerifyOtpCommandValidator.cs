@@ -2,7 +2,7 @@
 
 namespace Application.Features.StudentAuth.Commands.VerifyOtp
 {
-    public sealed class VerifyOtpCommandValidator : AbstractValidator<VerifyOtpCommand>
+    public sealed class VerifyOtpCommandValidator : AbstractValidator<VerifyOtpCodeCommand>
     {
         public VerifyOtpCommandValidator()
         {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.StudentAuth.Commands.VerifyOtp
 {
-    internal sealed class VerifyOtpCommandHandler : IRequestHandler<VerifyOtpCommand, OneOf<bool, Error>>
+    internal sealed class VerifyOtpCommandHandler : IRequestHandler<VerifyOtpCodeCommand, OneOf<bool, Error>>
     {
         private readonly HybridCache _hybridCache;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -18,7 +18,7 @@ namespace Application.Features.StudentAuth.Commands.VerifyOtp
             _httpContextAccessor = httpContextAccessor;
             _studentRepository = studentRepository;
         }
-        public async Task<OneOf<bool, Error>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
+        public async Task<OneOf<bool, Error>> Handle(VerifyOtpCodeCommand request, CancellationToken cancellationToken)
         {
             var verificationCode = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.VerificationCode];
             if (verificationCode == null)

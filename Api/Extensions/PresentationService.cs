@@ -22,8 +22,10 @@ namespace Api.Extensions
                 });
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(type => type.FullName);
+            }); builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
 
             builder.Host.UseSerilog((context, services, configuration) =>
                 configuration.ReadFrom.Configuration(context.Configuration)

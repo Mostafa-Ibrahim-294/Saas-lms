@@ -42,7 +42,7 @@ namespace Api.Controllers
 
 
         [HttpPost("verify-otp")]
-        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpCodeCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(
