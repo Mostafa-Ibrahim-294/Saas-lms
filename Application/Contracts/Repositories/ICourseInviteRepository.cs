@@ -8,11 +8,9 @@ namespace Application.Contracts.Repositories
         Task<int> SaveAsync(CancellationToken cancellationToken);
         Task<ValidateStudentInviteDto?> GetValidateStudentInviteAsync(string token, CancellationToken cancellationToken);
         Task<bool> IsValidTokenAsync(string token, CancellationToken cancellationToken);
-        Task<string?> GetInvitedMemberEmailAsync(string token, CancellationToken cancellationToken);
         Task<CourseInvite?> GetPendingInviteAsync(string email, int courseId, string subDomain,CancellationToken cancellationToken);
-        Task<int> GetCourseIdByTokenAsync(string token, CancellationToken cancellationToken);
         Task AcceptInviteAsync(string token, CancellationToken cancellationToken);
         Task DeclineInviteAsync(string token, CancellationToken cancellationToken);
-        Task<int> GetTenantIdByInviteTokenAsync(string Token, CancellationToken cancellationToken);
+        Task<CourseInvite?> GetCourseInviteByTokenAsync(string token, CancellationToken cancellationToken);
     }
 }

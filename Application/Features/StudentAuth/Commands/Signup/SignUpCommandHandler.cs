@@ -14,9 +14,10 @@ namespace Application.Features.StudentAuth.Commands.Signup
         private readonly HybridCache _hybridCache;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStudentRepository _studentRepository;
+        private readonly ITenantRepository _tenantRepository;
 
         public SignUpCommandHandler(UserManager<ApplicationUser> userManager, IMapper mapper, IEmailSender emailSender,
-            HybridCache hybridCache, IHttpContextAccessor httpContextAccessor, IStudentRepository studentRepository)
+            HybridCache hybridCache, IHttpContextAccessor httpContextAccessor, IStudentRepository studentRepository, ITenantRepository tenantRepository)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -24,6 +25,7 @@ namespace Application.Features.StudentAuth.Commands.Signup
             _hybridCache = hybridCache;
             _httpContextAccessor = httpContextAccessor;
             _studentRepository = studentRepository;
+            _tenantRepository = tenantRepository;
         }
         public async Task<OneOf<bool, Error>> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
@@ -34,13 +36,13 @@ namespace Application.Features.StudentAuth.Commands.Signup
             var newUser = _mapper.Map<ApplicationUser>(request);
             newUser.EmailConfirmed = true;
 
-            await _studentRepository.BeginTransactionAsync(cancellationToken);
+            await _tenantRepository.BeginTransactionAsync(cancellationToken);
             try
             {
                 var createdResult = await _userManager.CreateAsync(newUser);
                 if (!createdResult.Succeeded)
                 {
-                    await _studentRepository.RollbackTransactionAsync(cancellationToken);
+                    await _tenantRepository.RollbackTransactionAsync(cancellationToken);
                     var error = string.Join(", ", createdResult.Errors.Select(e => e.Description).First());
                     return new Error("UserCreationFailed", error, HttpStatusCode.BadRequest);
                 }
@@ -50,7 +52,7 @@ namespace Application.Features.StudentAuth.Commands.Signup
                 newStudent.UserId = newUser.Id;
 
                 await _studentRepository.CreateStudentAsync(newStudent, cancellationToken);
-                await _studentRepository.CommitTransactionAsync(cancellationToken);
+                await _tenantRepository.CommitTransactionAsync(cancellationToken);
 
                 var otpCode = await GenerateOtpHelper.GenerateOtp(request.Email, _hybridCache, _httpContextAccessor, cancellationToken);
                 var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(EmailConstants.OtpTemplate, new Dictionary<string, string>
@@ -63,7 +65,7 @@ namespace Application.Features.StudentAuth.Commands.Signup
             }
             catch
             {
-                await _studentRepository.RollbackTransactionAsync(cancellationToken);
+                await _tenantRepository.RollbackTransactionAsync(cancellationToken);
                 throw;
             }
         }

@@ -41,14 +41,6 @@ namespace Infrastructure.Repositories
                     ci.AcceptedAt == null &&
                     ci.Status == TenantInviteStatus.Pending, cancellationToken);
         }
-        public async Task<string?> GetInvitedMemberEmailAsync(string token, CancellationToken cancellationToken)
-        {
-            return await _context.CourseInvites
-                .AsNoTracking()
-                .Where(ti => ti.Token == token)
-                .Select(ti => ti.Email)
-                .FirstOrDefaultAsync(cancellationToken)!;
-        }
         public async Task<CourseInvite?> GetPendingInviteAsync(string email, int courseId, string subDomain, CancellationToken cancellationToken)
         {
             return await _context.CourseInvites
@@ -56,14 +48,6 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(ci => ci.Email == email && ci.CourseId == courseId
                     && ci.Status == TenantInviteStatus.Pending && ci.ExpiresAt > DateTime.UtcNow
                     && ci.Tenant.SubDomain == subDomain, cancellationToken);
-        }
-        public async Task<int> GetCourseIdByTokenAsync(string token, CancellationToken cancellationToken)
-        {
-            return await _context.CourseInvites
-                .AsNoTracking()
-                .Where(ci => ci.Token == token)
-                .Select(ci => ci.CourseId)
-                .FirstOrDefaultAsync(cancellationToken);
         }
         public async Task AcceptInviteAsync(string token, CancellationToken cancellationToken)
         {
@@ -82,13 +66,11 @@ namespace Infrastructure.Repositories
                     && ci.ExpiresAt > DateTime.UtcNow && ci.AcceptedAt == null)
                 .ExecuteUpdateAsync(setters => setters.SetProperty(ci => ci.Status, TenantInviteStatus.Declined), cancellationToken);
         }
-        public async Task<int> GetTenantIdByInviteTokenAsync(string Token, CancellationToken cancellationToken)
+        public Task<CourseInvite?> GetCourseInviteByTokenAsync(string token, CancellationToken cancellationToken)
         {
-            return await _context.CourseInvites
+            return _context.CourseInvites
                 .AsNoTracking()
-                .Where(ci => ci.Token == Token)
-                .Select(ci => ci.Course.TenantId)
-                .FirstOrDefaultAsync(cancellationToken);
+                .FirstOrDefaultAsync(ci => ci.Token == token, cancellationToken);
         }
     }
 }

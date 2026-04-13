@@ -40,5 +40,6 @@ namespace Domain.Entites
         public ICollection<Announcement> Announcements { get; set; } = [];
         public ICollection<Enrollment> Enrollments { get; set; } = [];
         public ICollection<Schedule> Schedules { get; set; } = [];
+        public ICollection<StudentSubscription> StudentSubscriptions { get; set; } = [];
     }
 }

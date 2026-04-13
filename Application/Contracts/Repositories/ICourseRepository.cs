@@ -1,9 +1,6 @@
 ﻿using Application.Features.Courses.Dtos;
 using Application.Features.Public.Dtos;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Contracts.Repositories
 {
@@ -20,5 +17,6 @@ namespace Application.Contracts.Repositories
         Task RemoveCourseAsync(Course course, CancellationToken cancellationToken);
         Task<int> SaveAsync(CancellationToken cancellationToken);
         Task<WebsiteCourseDetailsDto?> GetWebsiteCourseDetailsAsync(int courseId, string subDomain, string? studentId, CancellationToken cancellationToken);
+        Task<Course> GetCourseAsync(int courseId, int tenantId, CancellationToken cancellationToken);
     }
 }

@@ -42,5 +42,6 @@ namespace Domain.Entites
         public ICollection<CourseInvite> CourseInvites { get; set; } = [];
         public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
         public ICollection<Schedule> Schedules { get; set; } = [];
+        public ICollection<StudentSubscription> StudentSubscriptions { get; set; } = [];
     }
 }

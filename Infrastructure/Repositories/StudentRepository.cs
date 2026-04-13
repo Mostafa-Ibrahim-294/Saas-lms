@@ -1,7 +1,6 @@
 ﻿using Application.Features.TenantStudents.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Repositories
 {
@@ -9,7 +8,6 @@ namespace Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        private IDbContextTransaction? _transaction;
         public StudentRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
@@ -95,30 +93,6 @@ namespace Infrastructure.Repositories
         public async Task CreateStudentAsync(Student student, CancellationToken cancellationToken)
         {
             await _context.Students.AddAsync(student, cancellationToken);
-        }
-        public async Task BeginTransactionAsync(CancellationToken cancellationToken)
-        {
-            if (_transaction is null)
-            {
-                _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-            }
-        }
-        public async Task CommitTransactionAsync(CancellationToken cancellationToken)
-        {
-            if (_transaction is null) return;
-
-            await _context.SaveChangesAsync(cancellationToken);
-            await _transaction.CommitAsync(cancellationToken);
-            await _transaction.DisposeAsync();
-            _transaction = null;
-        }
-        public async Task RollbackTransactionAsync(CancellationToken cancellationToken)
-        {
-            if (_transaction is null) return;
-
-            await _transaction.RollbackAsync(cancellationToken);
-            await _transaction.DisposeAsync();
-            _transaction = null;
         }
     }
 }

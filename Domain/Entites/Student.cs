@@ -19,5 +19,6 @@ namespace Domain.Entites
         public ICollection<SessionParticipant> SessionParticipants { get; set; } = [];
         public ICollection<Order> Orders { get; set; } = [];
         public ICollection<StudentGrade> StudentGrades { get; set; } = [];
+        public ICollection<StudentSubscription> StudentSubscriptions { get; set; } = [];
     }
 }

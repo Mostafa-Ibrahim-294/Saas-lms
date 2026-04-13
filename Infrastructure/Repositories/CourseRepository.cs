@@ -207,5 +207,11 @@ namespace Infrastructure.Repositories
             }
             return course;
         }
+        public async Task<Course> GetCourseAsync(int courseId, int tenantId, CancellationToken cancellationToken)
+        {
+            var course = await _dbContext.Courses.Where(c => c.Id == courseId && c.TenantId == tenantId)
+                .FirstOrDefaultAsync(cancellationToken);
+            return course!;
+        }
     }
 }

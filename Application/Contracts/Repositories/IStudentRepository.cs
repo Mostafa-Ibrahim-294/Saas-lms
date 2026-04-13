@@ -11,8 +11,5 @@ namespace Application.Contracts.Repositories
         Task<StudentStatisticsDto> GetStudentStatisticsAsync(string subDomain, CancellationToken cancellationToken);
         Task<bool> DeleteStudentAsync(int studentId, int courseId, CancellationToken cancellationToken);
         Task<string> GetStudentUserIdAsync(int studentId, CancellationToken cancellationToken);
-        Task BeginTransactionAsync(CancellationToken cancellationToken);
-        Task CommitTransactionAsync(CancellationToken cancellationToken);
-        Task RollbackTransactionAsync(CancellationToken cancellationToken);
     }
 }

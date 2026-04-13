@@ -26,9 +26,11 @@ namespace Application.Features.Students.Commands.DeclineInvite
         }
         public async Task<OneOf<StudentResponse, Error>> Handle(DeclineInviteCommand request, CancellationToken cancellationToken)
         {
-            var tenantId = await _courseInviteRepository.GetTenantIdByInviteTokenAsync(request.Token, cancellationToken);
-            var subDomain = await _tenantRepository.GetSubDomainAsync(tenantId, cancellationToken);
+            var courseInvite = await _courseInviteRepository.GetCourseInviteByTokenAsync(request.Token, cancellationToken);
+            if (courseInvite is null)
+                return CourseInviteErrors.InviteError;
 
+            var subDomain = await _tenantRepository.GetSubDomainAsync(courseInvite.TenantId, cancellationToken);
             var isValidToken = await _courseInviteRepository.IsValidTokenAsync(request.Token, cancellationToken);
             if (!isValidToken)
                 return CourseInviteErrors.InviteExpired;
@@ -51,11 +53,7 @@ namespace Application.Features.Students.Commands.DeclineInvite
             if (student is null)
                 return CourseInviteErrors.InviteError;
 
-            var invitedEmail = await _courseInviteRepository.GetInvitedMemberEmailAsync(request.Token, cancellationToken);
-            if (invitedEmail is null)
-                return CourseInviteErrors.InviteError;
-
-            if (!string.Equals(student.Email, invitedEmail))
+            if (!string.Equals(student.Email, courseInvite.Email))
                 return TenantInviteErrors.InviteError;
 
             await _courseInviteRepository.DeclineInviteAsync(request.Token, cancellationToken);

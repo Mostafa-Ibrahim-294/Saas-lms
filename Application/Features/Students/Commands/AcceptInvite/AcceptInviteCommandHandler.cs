@@ -13,15 +13,23 @@ namespace Application.Features.Students.Commands.AcceptInvite
         private readonly IEnrollmentRepository _enrollmentRepository;
         private readonly HybridCache _hybridCache;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IStudentSubscriptionRepository _studentSubscriptionRepository;
+        private readonly ICourseRepository _courseRepository;
+        private readonly ITenantRepository _tenantRepository;
 
-        public AcceptInviteCommandHandler(ICourseInviteRepository courseInviteRepository,IHttpContextAccessor httpContextAccessor,
-            IEnrollmentRepository enrollmentRepository, HybridCache hybridCache, UserManager<ApplicationUser> userManager)
+        public AcceptInviteCommandHandler(ICourseInviteRepository courseInviteRepository, IHttpContextAccessor httpContextAccessor,
+            IEnrollmentRepository enrollmentRepository, HybridCache hybridCache, UserManager<ApplicationUser> userManager,
+            IStudentSubscriptionRepository studentSubscriptionRepository, ICourseRepository courseRepository,
+            ITenantRepository tenantRepository)
         {
             _courseInviteRepository = courseInviteRepository;
             _httpContextAccessor = httpContextAccessor;
             _enrollmentRepository = enrollmentRepository;
             _hybridCache = hybridCache;
             _userManager = userManager;
+            _studentSubscriptionRepository = studentSubscriptionRepository;
+            _courseRepository = courseRepository;
+            _tenantRepository = tenantRepository;
         }
         public async Task<OneOf<StudentResponse, Error>> Handle(AcceptInviteCommand request, CancellationToken cancellationToken)
         {
@@ -47,15 +55,16 @@ namespace Application.Features.Students.Commands.AcceptInvite
             if (student is null)
                 return CourseInviteErrors.InviteError;
 
-            var invitedEmail = await _courseInviteRepository.GetInvitedMemberEmailAsync(request.Token, cancellationToken);
-            if (invitedEmail is null)
+            var courseInvite = await _courseInviteRepository.GetCourseInviteByTokenAsync(request.Token, cancellationToken);
+            if (courseInvite is null)
                 return CourseInviteErrors.InviteError;
 
-            if (!string.Equals(student.Email, invitedEmail))
+            if (!string.Equals(student.Email, courseInvite.Email))
                 return TenantInviteErrors.InviteError;
 
-            var courseId = await _courseInviteRepository.GetCourseIdByTokenAsync(request.Token, cancellationToken);
-            var tenantId = await _courseInviteRepository.GetTenantIdByInviteTokenAsync(request.Token, cancellationToken);
+            var courseId = courseInvite.CourseId;
+            var tenantId = courseInvite.TenantId;
+            var course = await _courseRepository.GetCourseAsync(courseId, tenantId, cancellationToken);
 
             var newEnrollment = new Enrollment
             {
@@ -64,10 +73,45 @@ namespace Application.Features.Students.Commands.AcceptInvite
                 EnrollmentType = EnrollmentType.Invited,
                 TenantId = tenantId
             };
-            await _enrollmentRepository.CreateEnrollmentAsync(newEnrollment, cancellationToken);
-            await _enrollmentRepository.SaveAsync(cancellationToken);
-            await _courseInviteRepository.AcceptInviteAsync(request.Token, cancellationToken);
-            return new StudentResponse { Message = MessagesConstants.CourseInviteAccepted };
+            var now = DateOnly.FromDateTime(DateTime.UtcNow);
+            var newSubscription = new StudentSubscription
+            {
+                StartDate = now,
+                EndDate = CalculateEndDate(course, now),
+                StudentId = session.StudentId,
+                CourseId = courseId,
+                TenantId = tenantId
+            };
+
+            await _tenantRepository.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                await _enrollmentRepository.CreateEnrollmentAsync(newEnrollment, cancellationToken);
+                await _studentSubscriptionRepository.CreateSubscriptionAsync(newSubscription, cancellationToken);
+                await _courseInviteRepository.AcceptInviteAsync(request.Token, cancellationToken);
+                await _tenantRepository.CommitTransactionAsync(cancellationToken);
+
+                return new StudentResponse { Message = MessagesConstants.CourseInviteAccepted };
+            }
+            catch
+            {
+                await _tenantRepository.RollbackTransactionAsync(cancellationToken);
+                return CourseInviteErrors.InviteError;
+            }
+        }
+        private static DateOnly? CalculateEndDate(Course course, DateOnly now)
+        {
+            return course.PricingType switch
+            {
+                PricingType.PerSemester => now.AddMonths(3),
+                PricingType.Subscription => course.BillingCycle switch
+                {
+                    BillingCycle.Monthly => now.AddMonths(1),
+                    BillingCycle.Annually => now.AddMonths(8),
+                    _ => null
+                },
+                _ => null
+            };
         }
     }
 }
