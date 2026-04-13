@@ -53,9 +53,9 @@ namespace Infrastructure.Repositories
         {
             return await _context.CourseInvites
                 .AsNoTracking()
-                .FirstOrDefaultAsync(ci => ci.Email == email &&
-                    ci.CourseId == courseId && ci.Status == TenantInviteStatus.Pending &&
-                    ci.Tenant.SubDomain == subDomain, cancellationToken);
+                .FirstOrDefaultAsync(ci => ci.Email == email && ci.CourseId == courseId
+                    && ci.Status == TenantInviteStatus.Pending && ci.ExpiresAt > DateTime.UtcNow
+                    && ci.Tenant.SubDomain == subDomain, cancellationToken);
         }
         public async Task<int> GetCourseIdByTokenAsync(string token, CancellationToken cancellationToken)
         {
