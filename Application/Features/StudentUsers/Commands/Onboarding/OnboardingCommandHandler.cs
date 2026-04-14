@@ -44,11 +44,14 @@ namespace Application.Features.StudentUsers.Commands.Onboarding
             if (student is null)
                 return UserErrors.Unauthorized;
 
+            var studentUserId = await _studentRepository.GetStudentUserIdAsync(session.StudentId, cancellationToken);
+
             await _tenantRepository.BeginTransactionAsync(cancellationToken);
             try
             {
                 _mapper.Map(request, student);
-
+                
+                await _studentRepository.UpdateHasOnboardedAsync(studentUserId, cancellationToken);
                 var subjectIds = await _studentSubjectRepository.GetSubjectIdsAsync(request.Subjects, cancellationToken);
                 var newStudentSubjects = subjectIds.Select(kvp => new StudentSubject
                 {

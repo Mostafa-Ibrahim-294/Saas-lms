@@ -14,5 +14,6 @@ namespace Application.Contracts.Repositories
         Task<string> GetStudentUserIdAsync(int studentId, CancellationToken cancellationToken);
         Task<StudentDto?> GetTenantStudentAsync(int studentId, string subDomain, CancellationToken cancellationToken);
         Task<List<AvailableSubjectDto>> GetAvailableSubjectsAsync(CancellationToken cancellationToken);
+        Task UpdateHasOnboardedAsync(string userId, CancellationToken cancellationToken);
     }
 }

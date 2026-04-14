@@ -123,5 +123,11 @@ namespace Infrastructure.Repositories
                 .ProjectTo<AvailableSubjectDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
+        public async Task UpdateHasOnboardedAsync(string userId, CancellationToken cancellationToken)
+        {
+            await _context.Users
+                .Where(s => s.Id == userId)
+                .ExecuteUpdateAsync(s => s.SetProperty(p => p.HasOnboarded, true), cancellationToken);
+        }
     }
 }
