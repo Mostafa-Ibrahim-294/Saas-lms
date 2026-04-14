@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrations : Migration
+    public partial class ResetAllMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,6 +58,23 @@ namespace Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AvailableSubjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Grade = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Key = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DisplayName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Semester = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Active = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AvailableSubjects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -250,6 +267,35 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ParentEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Grade = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    XP = table.Column<int>(type: "integer", nullable: false),
+                    Level = table.Column<int>(type: "integer", nullable: false),
+                    Goal = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    Semester = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    InviteCode = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LevelUpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Students_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tenants",
                 columns: table => new
                 {
@@ -322,6 +368,36 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_PlanPricings_Plans_PlanId",
                         column: x => x.PlanId,
                         principalTable: "Plans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentSubjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Confidence = table.Column<int>(type: "integer", nullable: false),
+                    Progress = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CurrentChaper = table.Column<int>(type: "integer", nullable: true),
+                    StudentId = table.Column<int>(type: "integer", nullable: false),
+                    AvailableSubjectId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentSubjects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentSubjects_AvailableSubjects_AvailableSubjectId",
+                        column: x => x.AvailableSubjectId,
+                        principalTable: "AvailableSubjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentSubjects_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -769,38 +845,6 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ParentName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ParentEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ParentPhone = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    Grade = table.Column<string>(type: "text", nullable: false),
-                    TeachingLevelId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Students_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Students_TeachingLevels_TeachingLevelId",
-                        column: x => x.TeachingLevelId,
-                        principalTable: "TeachingLevels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PageBlocks",
                 columns: table => new
                 {
@@ -938,30 +982,6 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Modules",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    Order = table.Column<int>(type: "integer", nullable: false),
-                    IsFree = table.Column<bool>(type: "boolean", nullable: false),
-                    CourseId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Modules", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Modules_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CourseProgresses",
                 columns: table => new
                 {
@@ -1027,6 +1047,30 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Modules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Order = table.Column<int>(type: "integer", nullable: false),
+                    IsFree = table.Column<bool>(type: "boolean", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Modules_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -1068,6 +1112,83 @@ namespace Infrastructure.Persistence.Migrations
                         principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Schedules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    AllDay = table.Column<bool>(type: "boolean", nullable: false),
+                    Color = table.Column<string>(type: "text", nullable: false),
+                    RepeatEvent = table.Column<bool>(type: "boolean", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    RepeatFrequency = table.Column<int>(type: "integer", nullable: true),
+                    RepeatPeriodEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    StartAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Schedules", x => x.Id);
+                    table.CheckConstraint("CK_Schedule_End_After_Start", "\"EndAt\" > \"StartAt\"");
+                    table.CheckConstraint("CK_Schedule_Repeat_Valid", "\"RepeatEvent\" = false OR (\"RepeatFrequency\" IS NOT NULL AND \"RepeatPeriodEnd\" IS NOT NULL)");
+                    table.ForeignKey(
+                        name: "FK_Schedules_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Schedules_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
+                    StudentId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentSubscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentSubscriptions_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentSubscriptions_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudentSubscriptions_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1876,6 +1997,12 @@ namespace Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AvailableSubjects_Key",
+                table: "AvailableSubjects",
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Categories_TenantId",
                 table: "Categories",
                 column: "TenantId");
@@ -2232,6 +2359,16 @@ namespace Infrastructure.Persistence.Migrations
                 column: "PermissionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Schedules_CourseId_Type",
+                table: "Schedules",
+                columns: new[] { "CourseId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedules_TenantId_DateRange",
+                table: "Schedules",
+                columns: new[] { "TenantId", "StartAt", "EndAt" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SessionParticipants_Attended",
                 table: "SessionParticipants",
                 column: "Attended");
@@ -2267,14 +2404,41 @@ namespace Infrastructure.Persistence.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_TeachingLevelId",
+                name: "IX_Students_InviteCode",
                 table: "Students",
-                column: "TeachingLevelId");
+                column: "InviteCode",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_UserId",
                 table: "Students",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentSubjects_AvailableSubjectId",
+                table: "StudentSubjects",
+                column: "AvailableSubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentSubjects_StudentId_AvailableSubjectId",
+                table: "StudentSubjects",
+                columns: new[] { "StudentId", "AvailableSubjectId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentSubscriptions_CourseId",
+                table: "StudentSubscriptions",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentSubscriptions_StudentId",
+                table: "StudentSubscriptions",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentSubscriptions_TenantId",
+                table: "StudentSubscriptions",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subjects_TenantId",
@@ -2482,10 +2646,22 @@ namespace Infrastructure.Persistence.Migrations
                 name: "RolePermissions");
 
             migrationBuilder.DropTable(
+                name: "Schedules");
+
+            migrationBuilder.DropTable(
                 name: "SessionParticipants");
 
             migrationBuilder.DropTable(
                 name: "StudentGrades");
+
+            migrationBuilder.DropTable(
+                name: "StudentSubjects");
+
+            migrationBuilder.DropTable(
+                name: "StudentSubscriptions");
+
+            migrationBuilder.DropTable(
+                name: "TeachingLevels");
 
             migrationBuilder.DropTable(
                 name: "TenantInvites");
@@ -2533,6 +2709,9 @@ namespace Infrastructure.Persistence.Migrations
                 name: "LiveSessions");
 
             migrationBuilder.DropTable(
+                name: "AvailableSubjects");
+
+            migrationBuilder.DropTable(
                 name: "PlanFeatures");
 
             migrationBuilder.DropTable(
@@ -2573,9 +2752,6 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ModuleItems");
-
-            migrationBuilder.DropTable(
-                name: "TeachingLevels");
 
             migrationBuilder.DropTable(
                 name: "Modules");
