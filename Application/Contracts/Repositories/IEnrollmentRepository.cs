@@ -1,4 +1,6 @@
-﻿namespace Application.Contracts.Repositories
+﻿using Application.Features.StudentCourse.Dtos;
+
+namespace Application.Contracts.Repositories
 {
     public interface IEnrollmentRepository
     {
@@ -7,5 +9,6 @@
         Task<bool> StudentIsAlreadyEnrolledAsync(int studentId, int courseId, CancellationToken cancellationToken);
         Task<List<string>> GetEmailsByCourseIdsAsync(int[] courseIds, CancellationToken cancellationToken);
         Task<List<string>> GetAllStudentEmailsAsync(int tenantId, CancellationToken cancellationToken);
+        Task<List<StudentCourseDto>> GetStudentCoursesAsync(int studentId, CancellationToken cancellationToken);
     }
 }

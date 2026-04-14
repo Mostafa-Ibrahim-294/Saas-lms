@@ -36,7 +36,7 @@ namespace Application.Features.StudentAuth.Commands.VerifyOtp
                email,
                _ => ValueTask.FromResult<string?>(null),
                cancellationToken: cancellationToken
-           );
+            );
             if (cachedOtp is null)
                 return UserErrors.InvalidOtpCode;
 

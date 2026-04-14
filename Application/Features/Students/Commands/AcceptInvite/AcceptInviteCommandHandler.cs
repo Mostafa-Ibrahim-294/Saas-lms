@@ -51,15 +51,15 @@ namespace Application.Features.Students.Commands.AcceptInvite
             if (session is null)
                 return UserErrors.Unauthorized;
 
-            var student = await _userManager.FindByIdAsync(session.UserId);
-            if (student is null)
+            var studentUser = await _userManager.FindByIdAsync(session.UserId);
+            if (studentUser is null)
                 return CourseInviteErrors.InviteError;
 
             var courseInvite = await _courseInviteRepository.GetCourseInviteByTokenAsync(request.Token, cancellationToken);
             if (courseInvite is null)
                 return CourseInviteErrors.InviteError;
 
-            if (!string.Equals(student.Email, courseInvite.Email))
+            if (!string.Equals(studentUser.Email, courseInvite.Email))
                 return TenantInviteErrors.InviteError;
 
             var courseId = courseInvite.CourseId;

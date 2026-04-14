@@ -1,12 +1,17 @@
-﻿namespace Infrastructure.Repositories
+﻿using Application.Features.StudentCourse.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+
+namespace Infrastructure.Repositories
 {
     internal sealed class EnrollmentRepository : IEnrollmentRepository
     {
         private readonly AppDbContext _context;
-
-        public EnrollmentRepository(AppDbContext context)
+        private readonly IMapper _mapper;
+        public EnrollmentRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task CreateEnrollmentAsync(Enrollment enrollment, CancellationToken cancellationToken)
         {
@@ -35,6 +40,13 @@
                 .Where(e => e.Course.TenantId == tenantId)
                 .Select(e => e.Student.User.Email!)
                 .Distinct()
+                .ToListAsync(cancellationToken);
+        }
+        public async Task<List<StudentCourseDto>> GetStudentCoursesAsync(int studentId, CancellationToken cancellationToken)
+        {
+            return await _context.Enrollments
+                .Where(e => e.StudentId == studentId)
+                .ProjectTo<StudentCourseDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
     }

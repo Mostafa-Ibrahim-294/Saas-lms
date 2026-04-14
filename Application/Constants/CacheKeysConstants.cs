@@ -11,5 +11,6 @@
         public const string CourseModuleKey = "Course_Module";
         public const string DiscussionStatistics = "Discussion_Statistics";
         public const string SessionKey = "Session";
+        public const string StudentCoursesKey = "Student_Courses";
     }
 }
