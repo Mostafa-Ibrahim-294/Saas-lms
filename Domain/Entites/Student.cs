@@ -1,4 +1,5 @@
 ﻿using Domain.Abstractions;
+using System.Security.Cryptography;
 
 namespace Domain.Entites
 {
@@ -25,5 +26,24 @@ namespace Domain.Entites
         public ICollection<StudentGrade> StudentGrades { get; set; } = [];
         public ICollection<StudentSubscription> StudentSubscriptions { get; set; } = [];
         public ICollection<StudentSubject> StudentSubjects { get; set; } = [];
+
+        public static Student Create(string userId, string parentEmail)
+        {
+            return new Student
+            {
+                UserId = userId,
+                ParentEmail = parentEmail,
+                InviteCode = GenerateInviteCode()
+            };
+        }
+        private static string GenerateInviteCode()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            return RandomNumberGenerator.GetString(chars, 6);
+        }
+        public void RegenerateInviteCode()
+        {
+            InviteCode = GenerateInviteCode();
+        }
     }
 }

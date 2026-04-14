@@ -48,9 +48,7 @@ namespace Application.Features.StudentAuth.Commands.Signup
                 }
                 await _userManager.AddToRoleAsync(newUser, RoleConstants.Student);
 
-                var newStudent = _mapper.Map<Student>(request);
-                newStudent.UserId = newUser.Id;
-
+                var newStudent = Student.Create(newUser.Id, request.ParentEmail);
                 await _studentRepository.CreateStudentAsync(newStudent, cancellationToken);
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
 

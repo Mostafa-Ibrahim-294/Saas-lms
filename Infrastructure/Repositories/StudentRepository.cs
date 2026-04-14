@@ -92,7 +92,17 @@ namespace Infrastructure.Repositories
         }
         public async Task CreateStudentAsync(Student student, CancellationToken cancellationToken)
         {
-            await _context.Students.AddAsync(student, cancellationToken);
+            const int maxRetries = 5;
+            for (int i = 0; i < maxRetries; i++)
+            {
+                var exists = await _context.Students.AnyAsync(s => s.InviteCode == student.InviteCode, cancellationToken);
+                if (!exists)
+                {
+                    await _context.Students.AddAsync(student, cancellationToken);
+                    return;
+                }
+                student.RegenerateInviteCode();
+            }
         }
         public async Task<StudentDto?> GetTenantStudentAsync(int studentId, string subDomain, CancellationToken cancellationToken)
         {
