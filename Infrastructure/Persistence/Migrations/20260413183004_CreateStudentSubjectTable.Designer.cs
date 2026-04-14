@@ -5,6 +5,7 @@ using System.Text.Json;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260413183004_CreateStudentSubjectTable")]
+    partial class CreateStudentSubjectTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1949,9 +1952,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AvailableSubjectId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Confidence")
                         .HasColumnType("integer");
 
@@ -1967,11 +1967,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AvailableSubjectId");
+                    b.HasIndex("SubjectId");
 
-                    b.HasIndex("StudentId", "AvailableSubjectId")
+                    b.HasIndex("StudentId", "SubjectId")
                         .IsUnique();
 
                     b.ToTable("StudentSubjects");
@@ -3472,21 +3475,21 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.StudentSubject", b =>
                 {
-                    b.HasOne("Domain.Entites.AvailableSubject", "AvailableSubject")
-                        .WithMany("StudentSubjects")
-                        .HasForeignKey("AvailableSubjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entites.Student", "Student")
                         .WithMany("StudentSubjects")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AvailableSubject");
+                    b.HasOne("Domain.Entites.Subject", "Subject")
+                        .WithMany("StudentSubjects")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Student");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("Domain.Entites.StudentSubscription", b =>
@@ -3813,11 +3816,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Files");
                 });
 
-            modelBuilder.Entity("Domain.Entites.AvailableSubject", b =>
-                {
-                    b.Navigation("StudentSubjects");
-                });
-
             modelBuilder.Entity("Domain.Entites.BlockType", b =>
                 {
                     b.Navigation("PageBlocks");
@@ -3948,6 +3946,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("StudentSubjects");
 
                     b.Navigation("StudentSubscriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Subject", b =>
+                {
+                    b.Navigation("StudentSubjects");
                 });
 
             modelBuilder.Entity("Domain.Entites.Subscription", b =>

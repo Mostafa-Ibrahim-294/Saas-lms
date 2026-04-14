@@ -18,7 +18,6 @@ namespace Infrastructure.Repositories
         public Task<Student?> GetStudentAsync(int studentId, CancellationToken cancellationToken)
         {
             return _context.Students
-                .AsNoTracking()
                 .Include(s => s.User)
                 .Include(s => s.StudentGrades)
                 .Include(s => s.Enrollments)

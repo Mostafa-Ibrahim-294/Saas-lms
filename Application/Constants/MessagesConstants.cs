@@ -50,5 +50,7 @@
         public const string ScheduleCreated = "تم إنشاء الجدول بنجاح";
         public const string ScheduleUpdated = "تم تحديث الجدول بنجاح";
         public const string ScheduleDeleted = "تم حذف الجدول بنجاح";
+
+        public const string StudentOnboardingCompleted = "تم إكمال عملية الانضمام بنجاح.";    
     }
 }

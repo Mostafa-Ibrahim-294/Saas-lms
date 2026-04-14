@@ -1,11 +1,12 @@
-﻿using Application.Features.StudentUsers.Queries.GetProfile;
+﻿using Application.Features.StudentUsers.Commands.Onboarding;
+using Application.Features.StudentUsers.Queries.GetProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/student/users/me")]
+    [Route("api/students")]
     [ApiController]
     [Authorize]
     public class StudentUsersController : ControllerBase
@@ -17,12 +18,23 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet()]
+        [HttpGet("users/me")]
         public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetProfileQuery(), cancellationToken);
             return result.Match<IActionResult>(
                 profile => Ok(profile),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+
+
+        [HttpPost("onboarding")]
+        public async Task<IActionResult> Onboarding([FromBody] OnboardingCommand command, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+            return result.Match<IActionResult>(
+                response => Ok(response),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
         }

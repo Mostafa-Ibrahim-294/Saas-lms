@@ -60,6 +60,7 @@ namespace Infrastructure.Persistence
         internal DbSet<Schedule> Schedules { get; set; }
         public DbSet<StudentSubscription> StudentSubscriptions { get; set; }
         public DbSet<AvailableSubject> AvailableSubjects { get; set; }
+        public DbSet<StudentSubject> StudentSubjects { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
