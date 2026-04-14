@@ -11,9 +11,9 @@ namespace Application.Contracts.Repositories
         Task<List<StudentsDto>> GetStudentsAsync(string subDomain, CancellationToken cancellationToken, int? courseId = null);
         Task<StudentStatisticsDto> GetStudentStatisticsAsync(string subDomain, CancellationToken cancellationToken);
         Task<bool> DeleteStudentAsync(int studentId, int courseId, CancellationToken cancellationToken);
-        Task<string> GetStudentUserIdAsync(int studentId, CancellationToken cancellationToken);
         Task<StudentDto?> GetTenantStudentAsync(int studentId, string subDomain, CancellationToken cancellationToken);
         Task<List<AvailableSubjectDto>> GetAvailableSubjectsAsync(CancellationToken cancellationToken);
         Task UpdateHasOnboardedAsync(string userId, CancellationToken cancellationToken);
+        Task<string> GetStudentEmailAsync(string userId, CancellationToken cancellationToken);
     }
 }

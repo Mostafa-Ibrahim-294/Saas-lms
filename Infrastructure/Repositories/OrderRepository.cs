@@ -39,24 +39,38 @@ namespace Infrastructure.Repositories
                     TotalRevenue = g.Where(o => o.Status == OrderStatus.Approved).Sum(o => o.PricePaid)
                 }).FirstOrDefaultAsync(cancellationToken) ?? new TenantOrderStatisticsDto();
         }
-        public async Task<bool> ApproveOrderAsync(int orderId, int tenantId, string actor, CancellationToken cancellationToken)
+        public async Task<bool> ApproveOrderWithEnrollmentAsync(int orderId, int tenantId, string actor,Enrollment enrollment,
+            StudentSubscription subscription, CancellationToken cancellationToken)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.TenantId == tenantId);
-            if (order == null || order.Status != OrderStatus.Pending)
-                return false;
-
-            order.Status = OrderStatus.Approved;
-            order.ApprovedAt = DateTime.UtcNow;
-            order.OrderTimeLines.Add(new OrderTimeLine
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            try
             {
-                Description = OrderTimeLineConstants.OrderTimeLineApproved,
-                Actor = actor,
-                Type = OrderTimeLineType.Approved,
-                OrderId = order.Id
-            });
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync(cancellationToken);
-            return true;
+                var order = await _context.Orders
+                    .FirstOrDefaultAsync(o => o.Id == orderId && o.TenantId == tenantId, cancellationToken);
+                if (order is null || order.Status != OrderStatus.Pending)
+                    return false;
+
+                order.Status = OrderStatus.Approved;
+                order.ApprovedAt = DateTime.UtcNow;
+                order.OrderTimeLines.Add(new OrderTimeLine
+                {
+                    Description = OrderTimeLineConstants.OrderTimeLineApproved,
+                    Actor = actor,
+                    Type = OrderTimeLineType.Approved,
+                    OrderId = order.Id
+                });
+
+                await _context.Enrollments.AddAsync(enrollment, cancellationToken);
+                await _context.StudentSubscriptions.AddAsync(subscription, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return false;
+            }
         }
         public async Task<bool> DeclineOrderAsync(int orderId, int tenantId, string actor, string? reason, CancellationToken cancellationToken)
         {
@@ -120,6 +134,15 @@ namespace Infrastructure.Repositories
             _context.Orders.UpdateRange(orders);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
+        }
+        public Task<Order?> GetOrderAsync(int tenantId, int orderId, CancellationToken cancellationToken)
+        {
+            return _context.Orders
+                .AsNoTracking()
+                .Include(o => o.Course)
+                    .ThenInclude(c => c.CreatedBy)
+                .Where(o => o.Id == orderId && o.TenantId == tenantId)
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

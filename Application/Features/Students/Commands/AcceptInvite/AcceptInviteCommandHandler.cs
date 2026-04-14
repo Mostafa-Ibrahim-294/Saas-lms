@@ -90,7 +90,7 @@ namespace Application.Features.Students.Commands.AcceptInvite
                 await _studentSubscriptionRepository.CreateSubscriptionAsync(newSubscription, cancellationToken);
                 await _courseInviteRepository.AcceptInviteAsync(request.Token, cancellationToken);
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
-
+                await _hybridCache.RemoveAsync($"{CacheKeysConstants.StudentCoursesKey}_{session.StudentId}", cancellationToken);
                 return new StudentResponse { Message = MessagesConstants.CourseInviteAccepted };
             }
             catch

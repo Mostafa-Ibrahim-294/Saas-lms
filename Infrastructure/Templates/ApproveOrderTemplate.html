@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمت الموافقة على طلبك</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background-color: #27ae60;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+            color: #333;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .course-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .teacher-name {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 20px;
+            background-color: #27ae60;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .footer {
+            background-color: #f0f0f0;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="header">
+            🎉 تم قبول طلبك بنجاح
+        </div>
+
+        <div class="content">
+
+            <div class="success-icon">✅</div>
+
+            <p>مرحبًا <strong>{{StudentName}}</strong> 👋</p>
+
+            <p class="message">
+                نود إعلامك بأنه تم <span class="highlight">الموافقة على طلبك</span> للانضمام إلى الكورس التالي:
+            </p>
+
+            <div class="course-name">{{CourseName}}</div>
+
+            <div class="teacher-name">
+                بإشراف: {{TeacherName}}
+            </div>
+
+            <p class="message">
+                يمكنك الآن الدخول إلى الكورس والبدء في التعلم مباشرة من حسابك 🎓
+            </p>
+
+            <a href="{{CourseLink}}" class="btn">
+                الدخول إلى الكورس
+            </a>
+
+        </div>
+
+        <div class="footer">
+            © 2026 منصتك التعليمية - جميع الحقوق محفوظة
+        </div>
+
+    </div>
+</body>
+</html>

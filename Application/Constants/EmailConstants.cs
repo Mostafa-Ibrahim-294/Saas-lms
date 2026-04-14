@@ -26,5 +26,9 @@
 
         public const string LoginOtpTemplate = "LoginOtpTemplate";
         public const string ResendOtpTemplate = "ResendOtpTemplate";
+
+        public const string ApproveOrderTemplate = "ApproveOrderTemplate";
+        public const string CourseLink = "https://students.waey.online/dashboard/courses";
+        public const string OrderApprovalSubject = "تمت الموافقة على طلبك";
     }
 }

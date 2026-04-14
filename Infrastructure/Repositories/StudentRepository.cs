@@ -81,15 +81,6 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
-        public async Task<string> GetStudentUserIdAsync(int studentId, CancellationToken cancellationToken)
-        {
-            var userId = await _context.Students
-                .AsNoTracking()
-                .Where(s => s.Id == studentId)
-                .Select(s => s.UserId)
-                .FirstOrDefaultAsync(cancellationToken);
-            return userId!;
-        }
         public async Task CreateStudentAsync(Student student, CancellationToken cancellationToken)
         {
             const int maxRetries = 5;
@@ -128,6 +119,15 @@ namespace Infrastructure.Repositories
             await _context.Users
                 .Where(s => s.Id == userId)
                 .ExecuteUpdateAsync(s => s.SetProperty(p => p.HasOnboarded, true), cancellationToken);
+        }
+        public async Task<string> GetStudentEmailAsync(string userId, CancellationToken cancellationToken)
+        {
+            var result = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .Select(u => u.Email)
+                .FirstOrDefaultAsync(cancellationToken);
+            return result!;
         }
     }
 }
