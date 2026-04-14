@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Repositories;
 using Application.Features.TenantStudents.Dtos;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 using System.Text.Json;
 
 namespace Application.Features.StudentUsers.Commands.Onboarding
@@ -44,15 +45,17 @@ namespace Application.Features.StudentUsers.Commands.Onboarding
             if (student is null)
                 return UserErrors.Unauthorized;
 
-            var studentUserId = await _studentRepository.GetStudentUserIdAsync(session.StudentId, cancellationToken);
-
             await _tenantRepository.BeginTransactionAsync(cancellationToken);
             try
             {
                 _mapper.Map(request, student);
                 
-                await _studentRepository.UpdateHasOnboardedAsync(studentUserId, cancellationToken);
+                await _studentRepository.UpdateHasOnboardedAsync(session.UserId, cancellationToken);
                 var subjectIds = await _studentSubjectRepository.GetSubjectIdsAsync(request.Subjects, cancellationToken);
+                var missingSubjects = request.Subjects.Except(subjectIds.Keys).ToList();
+                if (missingSubjects.Any())
+                    return new Error("InvalidSubjects", $"لم يتم العثور على المواد التالية: {string.Join("، ", missingSubjects)}",HttpStatusCode.BadRequest);
+                
                 var newStudentSubjects = subjectIds.Select(kvp => new StudentSubject
                 {
                     Confidence = request.Confidence[kvp.Key],
