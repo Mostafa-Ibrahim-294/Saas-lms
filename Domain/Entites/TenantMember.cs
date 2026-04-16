@@ -22,5 +22,6 @@
         public ICollection<StudentGrade> StudentGrades { get; set; } = [];
         public ICollection<CourseInvite> CourseInvites { get; set; } = [];
         public ICollection<Announcement> Announcements { get; set; } = [];
+        public ICollection<Enrollment> Enrollments { get; set; } = [];
     }
 }

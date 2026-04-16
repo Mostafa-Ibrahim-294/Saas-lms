@@ -16,11 +16,15 @@ namespace Application.Features.Students.Commands.AcceptInvite
         private readonly IStudentSubscriptionRepository _studentSubscriptionRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly ITenantRepository _tenantRepository;
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IModuleItemRepository _moduleItemRepository;
+        private readonly ITenantMemberRepository _tenantMemberRepository;
 
         public AcceptInviteCommandHandler(ICourseInviteRepository courseInviteRepository, IHttpContextAccessor httpContextAccessor,
             IEnrollmentRepository enrollmentRepository, HybridCache hybridCache, UserManager<ApplicationUser> userManager,
             IStudentSubscriptionRepository studentSubscriptionRepository, ICourseRepository courseRepository,
-            ITenantRepository tenantRepository)
+            ITenantRepository tenantRepository, IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository,
+            ITenantMemberRepository tenantMemberRepository)
         {
             _courseInviteRepository = courseInviteRepository;
             _httpContextAccessor = httpContextAccessor;
@@ -30,6 +34,9 @@ namespace Application.Features.Students.Commands.AcceptInvite
             _studentSubscriptionRepository = studentSubscriptionRepository;
             _courseRepository = courseRepository;
             _tenantRepository = tenantRepository;
+            _moduleRepository = moduleRepository;
+            _moduleItemRepository = moduleItemRepository;
+            _tenantMemberRepository = tenantMemberRepository;
         }
         public async Task<OneOf<StudentResponse, Error>> Handle(AcceptInviteCommand request, CancellationToken cancellationToken)
         {
@@ -65,13 +72,19 @@ namespace Application.Features.Students.Commands.AcceptInvite
             var courseId = courseInvite.CourseId;
             var tenantId = courseInvite.TenantId;
             var course = await _courseRepository.GetCourseAsync(courseId, tenantId, cancellationToken);
+            int? firstModuleId = await _moduleRepository.GetFirstModuleIdAsync(courseId, cancellationToken);
+            int? firstModuleItemId = await _moduleItemRepository.GetFirstModuleItemAsync(firstModuleId, cancellationToken);
+            int? invitedBy = await _tenantMemberRepository.GetTenantmemberIdAsync(tenantId, cancellationToken);
 
             var newEnrollment = new Enrollment
             {
                 CourseId = courseId,
                 StudentId = session.StudentId,
                 EnrollmentType = EnrollmentType.Invited,
-                TenantId = tenantId
+                TenantId = tenantId,
+                CurrentModuleId = firstModuleId,
+                CurrentModuleItemId = firstModuleItemId,
+                InvitedBy = invitedBy,
             };
             var now = DateOnly.FromDateTime(DateTime.UtcNow);
             var newSubscription = new StudentSubscription

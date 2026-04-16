@@ -17,11 +17,14 @@ namespace Application.Features.TenantOrders.Commands.ApproveOrder
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly HybridCache _hybridCache;
         private readonly IStudentRepository _studentRepository;
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IModuleItemRepository _moduleItemRepository;
         private readonly IEmailSender _emailSender;
 
         public ApproveOrderCommandHandler(IOrderRepository orderRepository, ITenantRepository tenantRepository, IEmailSender emailSender,
             IHttpContextAccessor httpContextAccessor, ICurrentUserId currentUserId, ITenantMemberRepository tenantMemberRepository,
-            ISubscriptionRepository subscriptionRepository, HybridCache hybridCache, IStudentRepository studentRepository)
+            ISubscriptionRepository subscriptionRepository, HybridCache hybridCache, IStudentRepository studentRepository,
+            IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository)
         {
             _orderRepository = orderRepository;
             _tenantRepository = tenantRepository;
@@ -31,6 +34,8 @@ namespace Application.Features.TenantOrders.Commands.ApproveOrder
             _subscriptionRepository = subscriptionRepository;
             _hybridCache = hybridCache;
             _studentRepository = studentRepository;
+            _moduleRepository = moduleRepository;
+            _moduleItemRepository = moduleItemRepository;
             _emailSender = emailSender;
         }
         public async Task<OneOf<TenantOrderResponse, Error>> Handle(ApproveOrderCommand request, CancellationToken cancellationToken)
@@ -54,14 +59,21 @@ namespace Application.Features.TenantOrders.Commands.ApproveOrder
             var currentTenantMember = await _tenantMemberRepository.GetCurrentTenantMemberAsync(userId, cancellationToken);
             var actor = $"{currentTenantMember!.FirstName} {currentTenantMember!.LastName}";
 
-            var now = DateOnly.FromDateTime(DateTime.UtcNow);
+            int? firstModuleId = await _moduleRepository.GetFirstModuleIdAsync(order.CourseId, cancellationToken);
+            int? firstModuleItemId = await _moduleItemRepository.GetFirstModuleItemAsync(firstModuleId, cancellationToken);
+
             var newEnrollment = new Enrollment
             {
                 CourseId = order.CourseId,
                 StudentId = order.StudentId,
-                EnrollmentType = EnrollmentType.Paid,
-                TenantId = tenantId
+                EnrollmentType = EnrollmentType.Purchased,
+                TenantId = tenantId,
+                CurrentModuleId = firstModuleId,
+                CurrentModuleItemId = firstModuleItemId,
+                OrderId = order.Id
             };
+
+            var now = DateOnly.FromDateTime(DateTime.UtcNow);
             var newSubscription = new StudentSubscription
             {
                 StartDate = now,

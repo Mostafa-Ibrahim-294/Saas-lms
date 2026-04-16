@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Contracts.Repositories
+﻿namespace Application.Contracts.Repositories
 {
     public interface IModuleRepository
     {
@@ -12,5 +8,6 @@ namespace Application.Contracts.Repositories
         Task<int> CreateModule(Module module, CancellationToken cancellationToken);
         Task<Module?> GetModuleByIdAsync(int moduleId, CancellationToken cancellationToken);
         Task RemoveModule(Module module, CancellationToken cancellationToken);
+        Task<int?> GetFirstModuleIdAsync(int courseId, CancellationToken cancellationToken);
     }
 }

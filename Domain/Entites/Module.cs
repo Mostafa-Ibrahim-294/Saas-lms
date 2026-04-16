@@ -13,5 +13,6 @@ namespace Domain.Entites
         public int CourseId { get; set; }
         public Course Course { get; set; } = null!;
         public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<Enrollment> Enrollments { get; set; } = [];
     }
 }

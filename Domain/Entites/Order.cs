@@ -24,5 +24,6 @@ namespace Domain.Entites
         public int StudentId { get; set; }
         public Student Student { get; set; } = null!;
         public ICollection<OrderTimeLine> OrderTimeLines { get; set; } = [];
+        public ICollection<Enrollment> Enrollments { get; set; } = [];
     }
 }
