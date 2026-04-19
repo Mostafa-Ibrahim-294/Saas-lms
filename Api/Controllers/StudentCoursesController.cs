@@ -1,4 +1,5 @@
 ﻿using Application.Features.StudentCourse.Queries.GetStudentCourse;
+using Application.Features.StudentCourse.Queries.GetStudentCourseLiveSession;
 using Application.Features.StudentCourse.Queries.GetStudentCourseLiveSessions;
 using Application.Features.StudentCourse.Queries.GetStudentCourseModules;
 using Application.Features.StudentCourse.Queries.GetStudentCourses;
@@ -58,6 +59,17 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetStudentCourseLiveSessionsQuery(courseId), cancellationToken);
             return result.Match(
                 liveSessions => Ok(liveSessions),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+
+
+        [HttpGet("{courseId}/live-sessions/{sessionId}")]
+        public async Task<IActionResult> GetStudentCourseLiveSession([FromRoute] int courseId, [FromRoute] int sessionId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetStudentCourseLiveSessionQuery(courseId, sessionId), cancellationToken);
+            return result.Match(
+                liveSession => Ok(liveSession),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
         }

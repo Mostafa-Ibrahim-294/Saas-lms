@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Features.StudentCourse.Dtos
+﻿namespace Application.Features.StudentCourse.Dtos
 {
     public sealed class StudentCourseProfile : Profile
     {
@@ -76,12 +74,23 @@ namespace Application.Features.StudentCourse.Dtos
 
 
             // GetStudentCourseLiveSessions
-            CreateMap<LiveSession, StudentCourseLiveSessionDto>()
+            CreateMap<LiveSession, StudentCourseLiveSessionsDto>()
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.ScheduledAt))
                 .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => $"{src.Host.User.FirstName} {src.Host.User.LastName}"))
                 .ForMember(dest => dest.Recorded, opt => opt.MapFrom(src => src.RecordingUrl != null))
                 .ForMember(dest => dest.JoinUrl, opt => opt.MapFrom(src => src.ZoomJoinUrl));
 
+
+            // GetStudentCourseLiveSession
+            CreateMap<LiveSession, StudentCourseLiveSessionDto>()
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.ScheduledAt))
+                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => $"{src.Host.User.FirstName} {src.Host.User.LastName}"))
+                .ForMember(dest => dest.Recorded, opt => opt.MapFrom(src => src.RecordingUrl != null))
+                .ForMember(dest => dest.JoinUrl, opt => opt.MapFrom(src => src.ZoomJoinUrl))
+            .ForMember(dest => dest.Course, opt => opt.MapFrom(src => src.Course));
+
+            CreateMap<Course, CourseDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
         }
     }
 }

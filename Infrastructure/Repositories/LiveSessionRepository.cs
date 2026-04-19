@@ -16,7 +16,10 @@ namespace Infrastructure.Repositories
             _context = context;
             _mapper = mapper;
         }
-
+        public async Task<bool> LiveSessionIsExsitAsync(int sessionId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _context.LiveSessions.AnyAsync(l => l.Id == sessionId && l.CourseId == courseId, cancellationToken);
+        }
         public async Task<LiveSession?> GetByZoomMeetingIdAsync(string zoomMeetingId, CancellationToken cancellationToken) =>
              await _context.LiveSessions
                 .FirstOrDefaultAsync(ls => ls.ZoomMeetingId == zoomMeetingId, cancellationToken);
@@ -102,12 +105,20 @@ namespace Infrastructure.Repositories
                 TotalStudents = totalStudents
             };
         }
-        public async Task<List<StudentCourseLiveSessionDto>> GetStudentCourseLiveSessionsAsync(int courseId, CancellationToken cancellationToken)
+        public async Task<List<StudentCourseLiveSessionsDto>> GetStudentCourseLiveSessionsAsync(int courseId, CancellationToken cancellationToken)
         {
             return await _context.LiveSessions
                 .Where(ls => ls.CourseId == courseId)
-                .ProjectTo<StudentCourseLiveSessionDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<StudentCourseLiveSessionsDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+        public async Task<StudentCourseLiveSessionDto> GetStudentCourseLiveSessionAsync(int sessionId, int courseId, CancellationToken cancellationToken)
+        {
+            var result = await _context.LiveSessions
+                .Where(ls => ls.Id == sessionId && ls.CourseId == courseId)
+                .ProjectTo<StudentCourseLiveSessionDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+            return result!;
         }
     }
 }
