@@ -5,7 +5,7 @@ namespace Application.Contracts.Repositories
 {
     public interface ILiveSessionRepository
     {
-        Task<bool> LiveSessionIsExsitAsync(int sessionId, int courseId, CancellationToken cancellationToken);
+        Task<bool> LiveSessionIsExistAsync(int sessionId, int courseId, CancellationToken cancellationToken);
         Task<LiveSession?> GetLiveSessionAsync(int sessionId, CancellationToken cancellationToken);
         Task<LiveSession?> GetByZoomMeetingIdAsync(string zoomMeetingId, CancellationToken cancellationToken);
         Task<List<LiveSessionDto>> GetLiveSessionsByTenantIdAsync(int tenantId, CancellationToken cancellationToken);

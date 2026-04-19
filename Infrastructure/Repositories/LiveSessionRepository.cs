@@ -16,7 +16,7 @@ namespace Infrastructure.Repositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<bool> LiveSessionIsExsitAsync(int sessionId, int courseId, CancellationToken cancellationToken)
+        public async Task<bool> LiveSessionIsExistAsync(int sessionId, int courseId, CancellationToken cancellationToken)
         {
             return await _context.LiveSessions.AnyAsync(l => l.Id == sessionId && l.CourseId == courseId, cancellationToken);
         }

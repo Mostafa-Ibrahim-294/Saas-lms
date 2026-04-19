@@ -1,7 +1,9 @@
 ﻿using Application.Features.ModuleItems.Dtos;
+using Application.Features.StudentLessons.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
+using System.Text.Json;
 
 namespace Infrastructure.Repositories
 {
@@ -121,6 +123,26 @@ namespace Infrastructure.Repositories
                 .Where(mt => mt.ModuleId == moduleId && mt.Order == 1)
                 .Select(mt => (int?)mt.Id)
                 .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task<bool> ModuleItemIsExistAsync(int moduleItemId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.ModuleItems
+                .AnyAsync(mi => mi.Id == moduleItemId && mi.CourseId == courseId, cancellationToken);
+        }
+        public async Task<StudentLessonItemDto> GetStudentLessonItemAsync(int moduleItemId, int courseId, CancellationToken cancellationToken)
+        {
+            var result = await _dbContext.ModuleItems
+                .Where(mi => mi.Id == moduleItemId && mi.CourseId == courseId)
+                .Include(mi => mi.Lesson)
+                    .ThenInclude(l => l!.File)
+                .Include(mi => mi.Lesson)
+                    .ThenInclude(l => l!.LessonViews)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (result is null) 
+                return null!;
+
+            return _mapper.Map<StudentLessonItemDto>(result);
         }
     }
 }

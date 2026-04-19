@@ -1,4 +1,5 @@
 ﻿using Application.Features.ModuleItems.Dtos;
+using Application.Features.StudentLessons.Dtos;
 using Domain.Enums;
 
 namespace Application.Contracts.Repositories
@@ -21,5 +22,7 @@ namespace Application.Contracts.Repositories
         Task<QuizDto?> GetQuizWithQuestions(int moduleItemId, CancellationToken cancellationToken);
         Task AddTenantQuestionsAsync(int quizId, IEnumerable<QuizQuestion> questions, CancellationToken cancellationToken);
         Task<int?> GetFirstModuleItemAsync(int? moduleId, CancellationToken cancellationToken);
+        Task<bool> ModuleItemIsExistAsync(int moduleItemId, int courseId, CancellationToken cancellationToken);
+        Task<StudentLessonItemDto> GetStudentLessonItemAsync(int moduleItemId, int courseId, CancellationToken cancellationToken);
     }
 }

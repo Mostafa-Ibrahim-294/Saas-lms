@@ -1,29 +1,29 @@
 ﻿using Application.Contracts.Repositories;
-using Application.Features.StudentCourse.Dtos;
+using Application.Features.StudentLessons.Dtos;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
-namespace Application.Features.StudentCourse.Queries.GetStudentCourseLiveSession
+namespace Application.Features.StudentLessons.Queries.GetStudentLessonItem
 {
-    internal sealed class GetStudentCourseLiveSessionQueryHandler : IRequestHandler<GetStudentCourseLiveSessionQuery, OneOf<StudentCourseLiveSessionDto, Error>>
+    internal sealed class GetStudentLessonItemQueryHandler : IRequestHandler<GetStudentLessonItemQuery, OneOf<StudentLessonItemDto, Error>>
     {
         private readonly HybridCache _hybridCache;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEnrollmentRepository _enrollmentRepository;
-        private readonly ILiveSessionRepository _liveSessionRepository;
         private readonly IStudentSubscriptionRepository _studentSubscriptionRepository;
+        private readonly IModuleItemRepository _moduleItemRepository;
 
-        public GetStudentCourseLiveSessionQueryHandler(HybridCache hybridCache, IHttpContextAccessor httpContextAccessor,
-            IEnrollmentRepository enrollmentRepository, ILiveSessionRepository liveSessionRepository,
-            IStudentSubscriptionRepository studentSubscriptionRepository)
+        public GetStudentLessonItemQueryHandler(HybridCache hybridCache, IHttpContextAccessor httpContextAccessor,
+            IEnrollmentRepository enrollmentRepository, IStudentSubscriptionRepository studentSubscriptionRepository,
+            IModuleItemRepository moduleItemRepository)
         {
             _hybridCache = hybridCache;
             _httpContextAccessor = httpContextAccessor;
             _enrollmentRepository = enrollmentRepository;
-            _liveSessionRepository = liveSessionRepository;
             _studentSubscriptionRepository = studentSubscriptionRepository;
+            _moduleItemRepository = moduleItemRepository;
         }
-        public async Task<OneOf<StudentCourseLiveSessionDto, Error>> Handle(GetStudentCourseLiveSessionQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<StudentLessonItemDto, Error>> Handle(GetStudentLessonItemQuery request, CancellationToken cancellationToken)
         {
             var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionId];
             var cachedSessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
@@ -47,11 +47,11 @@ namespace Application.Features.StudentCourse.Queries.GetStudentCourseLiveSession
             if (!subscriptionIsActive)
                 return StudentSubscriptionErrors.StudentSubscribedExpired;
 
-            var liveSessionIsExsit = await _liveSessionRepository.LiveSessionIsExistAsync(request.SessionId, request.CourseId, cancellationToken);
-            if (!liveSessionIsExsit)
-                return LiveSessionErrors.SessionNotFound;
+            var moduleItemIsExist = await _moduleItemRepository.ModuleItemIsExistAsync(request.ItemId, request.CourseId, cancellationToken);
+            if (!moduleItemIsExist)
+                return ModuleItemErrors.ModuleItemNotFound;
 
-            return await _liveSessionRepository.GetStudentCourseLiveSessionAsync(request.SessionId, request.CourseId, cancellationToken);
+            return await _moduleItemRepository.GetStudentLessonItemAsync(request.ItemId, request.CourseId, cancellationToken);
         }
     }
 }
