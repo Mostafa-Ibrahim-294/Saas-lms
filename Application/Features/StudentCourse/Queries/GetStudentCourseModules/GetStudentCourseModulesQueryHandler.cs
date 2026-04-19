@@ -3,21 +3,22 @@ using Application.Features.StudentCourse.Dtos;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
-namespace Application.Features.StudentCourse.Queries.GetStudentCourses
+namespace Application.Features.StudentCourse.Queries.GetStudentCourseModules
 {
-    internal sealed class GetStudentCoursesQueryHandler : IRequestHandler<GetStudentCoursesQuery, OneOf<List<StudentCoursesDto>, Error>>
+    internal sealed class GetStudentCourseModulesQueryHandler : IRequestHandler<GetStudentCourseModulesQuery, OneOf<List<StudentModuleDto>, Error>>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HybridCache _hybridCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEnrollmentRepository _enrollmentRepository;
-        public GetStudentCoursesQueryHandler(IHttpContextAccessor httpContextAccessor, HybridCache hybridCache,
-            IEnrollmentRepository enrollmentRepository) 
+
+        public GetStudentCourseModulesQueryHandler(HybridCache hybridCache, IHttpContextAccessor httpContextAccessor,
+            IEnrollmentRepository enrollmentRepository)
         {
-            _httpContextAccessor = httpContextAccessor;
             _hybridCache = hybridCache;
+            _httpContextAccessor = httpContextAccessor;
             _enrollmentRepository = enrollmentRepository;
         }
-        public async Task<OneOf<List<StudentCoursesDto>,Error>> Handle(GetStudentCoursesQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<List<StudentModuleDto>, Error>> Handle(GetStudentCourseModulesQuery request, CancellationToken cancellationToken)
         {
             var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionId];
             var cachedSessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
@@ -33,15 +34,10 @@ namespace Application.Features.StudentCourse.Queries.GetStudentCourses
             if (session is null)
                 return UserErrors.Unauthorized;
 
-
-            var cacheKey = $"{CacheKeysConstants.StudentCoursesKey}_{session.StudentId}";
-            return await _hybridCache.GetOrCreateAsync(cacheKey, async entry =>
-            {
-                return await _enrollmentRepository.GetStudentCoursesAsync(session.StudentId, cancellationToken);
-            }, new HybridCacheEntryOptions
-            {
-                Expiration = TimeSpan.FromHours(1)
-            }, cancellationToken: cancellationToken);
+            var result = await _enrollmentRepository.GetStudentCourseModulesAsync(session.StudentId, request.CourseId, cancellationToken);
+            if (result is null)
+                return StudentCourseErrors.StudentNotEnrolledInCourse;
+            return result;
         }
     }
 }

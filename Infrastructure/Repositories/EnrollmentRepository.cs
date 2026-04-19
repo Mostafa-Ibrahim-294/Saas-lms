@@ -42,12 +42,52 @@ namespace Infrastructure.Repositories
                 .Distinct()
                 .ToListAsync(cancellationToken);
         }
-        public async Task<List<StudentCourseDto>> GetStudentCoursesAsync(int studentId, CancellationToken cancellationToken)
+        public async Task<List<StudentCoursesDto>> GetStudentCoursesAsync(int studentId, CancellationToken cancellationToken)
         {
             return await _context.Enrollments
                 .Where(e => e.StudentId == studentId)
-                .ProjectTo<StudentCourseDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<StudentCoursesDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+        public async Task<StudentCourseDto?> GetStudentCourseAsync(int studentId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _context.Enrollments
+                .AsNoTracking()
+                .Where(e => e.StudentId == studentId && e.CourseId == courseId)
+                .ProjectTo<StudentCourseDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task<List<StudentModuleDto>?> GetStudentCourseModulesAsync(int studentId, int courseId, CancellationToken cancellationToken)
+        {
+            var currentModuleItemId = await _context.Enrollments
+                .AsNoTracking()
+                .Where(e => e.StudentId == studentId && e.CourseId == courseId)
+                .Select(e => e.CurrentModuleItemId)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (currentModuleItemId is null)
+                return null;
+
+            return await _context.Enrollments
+                .AsNoTracking()
+                .Where(e => e.StudentId == studentId && e.CourseId == courseId)
+                .SelectMany(e => e.Course.Modules)
+                .Select(m => new StudentModuleDto
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Description = m.Description,
+                    TotalItems = m.ModuleItems.Count,
+                    CompletedItems = 0,
+                    IsCurrentModule = m.ModuleItems.Any(mi => mi.Id == currentModuleItemId),
+                    ModuleItems = m.ModuleItems.Select(mi => new ModuleItemDto
+                    {
+                        Id = mi.Id,
+                        Title = mi.Title,
+                        Type = mi.Type,
+                        DueDate = mi.Assignment != null ? mi.Assignment.DueDate : null
+                    }).ToList()
+                }).ToListAsync(cancellationToken);
         }
     }
 }

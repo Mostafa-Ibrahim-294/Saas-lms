@@ -2,5 +2,5 @@
 
 namespace Application.Features.StudentCourse.Queries.GetStudentCourses
 {
-    public sealed record GetStudentCoursesQuery : IRequest<OneOf<List<StudentCourseDto>, Error>>;
+    public sealed record GetStudentCoursesQuery : IRequest<OneOf<List<StudentCoursesDto>, Error>>;
 }
