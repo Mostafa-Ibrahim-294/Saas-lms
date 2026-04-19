@@ -1,4 +1,5 @@
 ﻿using Application.Features.Discussions.Dtos;
+using Application.Features.StudentLessons.Dtos;
 using Domain.Enums;
 
 namespace Application.Contracts.Repositories
@@ -14,5 +15,6 @@ namespace Application.Contracts.Repositories
         Task<bool> DeleteDiscussionThreadAsync(int threadId, string subDomain, CancellationToken cancellationToken);
         Task<bool> DeleteDiscussionThreadReplyAsync(int threadId, int replyId, string subDomain, CancellationToken cancellationToken);
         Task<bool> UpdateDiscussionReplyAsync(int threadId, int replyId, string body, string subDomain, CancellationToken cancellationToken);
+        Task<List<StudentDiscussionDto>> GetStudentDiscussionAsync(int itemId, int courseId, CancellationToken cancellationToken);
     }
 }

@@ -1,5 +1,8 @@
 ﻿using Application.Constants;
 using Application.Features.Discussions.Dtos;
+using Application.Features.StudentLessons.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Enums;
 
 namespace Infrastructure.Repositories
@@ -7,10 +10,12 @@ namespace Infrastructure.Repositories
     internal sealed class DiscussionRepository : IDiscussionRepository
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public DiscussionRepository(AppDbContext context)
+        public DiscussionRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<AllDiscussionsDto> GetAllDiscussionsAsync(string subDomain, string currentUser, string? Q, int? CourseId, ModuleItemType? Type, int? Cursor, int? Limit, CancellationToken cancellationToken)
@@ -161,7 +166,7 @@ namespace Infrastructure.Repositories
         {
             var reply = await _context.DicussionThreadReplies
                 .FirstOrDefaultAsync(dtr => dtr.Id == replyId && dtr.DicussionId == threadId && dtr.Tenant.SubDomain == subDomain, cancellationToken);
-            if(reply is null)
+            if (reply is null)
                 return false;
 
             _context.DicussionThreadReplies.Remove(reply);
@@ -175,9 +180,16 @@ namespace Infrastructure.Repositories
             .ExecuteUpdateAsync(setters => setters.SetProperty(r => r.Body, body), cancellationToken);
 
             if (result == 0)
-             return false;
+                return false;
 
             return true;
+        }
+        public async Task<List<StudentDiscussionDto>> GetStudentDiscussionAsync(int itemId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _context.DicussionThreads
+                .Where(dt => dt.ItemId == itemId && dt.CourseId == courseId)
+                .ProjectTo<StudentDiscussionDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
     }
 }

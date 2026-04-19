@@ -14,6 +14,18 @@ namespace Application.Features.StudentLessons.Dtos
             CreateMap<Domain.Entites.File, ContentDto>()
                 .ForMember(dest => dest.VideoId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.VideoUrl, opt => opt.MapFrom(src => src.Url));
+
+
+            CreateMap<DicussionThread, StudentDiscussionDto>()
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User))
+                .ForMember(dest => dest.Replies, opt => opt.MapFrom(src => src.Replies));
+
+            CreateMap<DicussionThreadReply, ReplyDto>()
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Body))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User));
+
+            CreateMap<ApplicationUser, AuthorDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
         }
     }
 }
