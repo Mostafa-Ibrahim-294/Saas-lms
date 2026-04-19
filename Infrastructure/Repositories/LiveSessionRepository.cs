@@ -1,4 +1,5 @@
-﻿using Application.Features.Tenants.Dtos;
+﻿using Application.Features.StudentCourse.Dtos;
+using Application.Features.Tenants.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
@@ -100,6 +101,13 @@ namespace Infrastructure.Repositories
                 RecordingsAvailable = recordingsAvailable,
                 TotalStudents = totalStudents
             };
+        }
+        public async Task<List<StudentCourseLiveSessionDto>> GetStudentCourseLiveSessionsAsync(int courseId, CancellationToken cancellationToken)
+        {
+            return await _context.LiveSessions
+                .Where(ls => ls.CourseId == courseId)
+                .ProjectTo<StudentCourseLiveSessionDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
     }
 }

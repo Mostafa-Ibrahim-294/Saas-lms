@@ -43,7 +43,7 @@ namespace Application.Features.StudentCourse.Dtos
                         .FirstOrDefault())
                 );
 
-
+            // GetStudentCourse
             CreateMap<Enrollment, StudentCourseDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CourseId))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Course.Title))
@@ -73,6 +73,15 @@ namespace Application.Features.StudentCourse.Dtos
 
             CreateMap<ModuleItem, CurrentModuleItemDto>()
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.Assignment != null ? src.Assignment.DueDate : (DateTime?)null));
+
+
+            // GetStudentCourseLiveSessions
+            CreateMap<LiveSession, StudentCourseLiveSessionDto>()
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.ScheduledAt))
+                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => $"{src.Host.User.FirstName} {src.Host.User.LastName}"))
+                .ForMember(dest => dest.Recorded, opt => opt.MapFrom(src => src.RecordingUrl != null))
+                .ForMember(dest => dest.JoinUrl, opt => opt.MapFrom(src => src.ZoomJoinUrl));
+
         }
     }
 }

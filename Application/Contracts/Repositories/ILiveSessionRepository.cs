@@ -1,4 +1,5 @@
-﻿using Application.Features.Tenants.Dtos;
+﻿using Application.Features.StudentCourse.Dtos;
+using Application.Features.Tenants.Dtos;
 
 namespace Application.Contracts.Repositories
 {
@@ -12,5 +13,6 @@ namespace Application.Contracts.Repositories
         Task<int> SaveAsync(CancellationToken cancellationToken);
         Task DeleteAsync(int SessionId, CancellationToken cancellationToken);
         Task<GetLiveSessionsStatisticsResponse> GetStatisticsAsync(string userId, int tenantId, CancellationToken cancellationToken);
+        Task<List<StudentCourseLiveSessionDto>> GetStudentCourseLiveSessionsAsync(int courseId, CancellationToken cancellationToken);
     }
 }
