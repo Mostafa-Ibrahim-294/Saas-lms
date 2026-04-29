@@ -6,6 +6,7 @@ using Application.Features.StudentLessons.Commands.UpdateStudentDiscussion;
 using Application.Features.StudentLessons.Commands.UpdateStudentDiscussionReply;
 using Application.Features.StudentLessons.Queries.GetStudentDiscussions;
 using Application.Features.StudentLessons.Queries.GetStudentLessonItem;
+using Application.Features.StudentLessons.Queries.GetStudentLessonProgress;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,17 @@ namespace Api.Controllers
         {
             _mediator = mediator;
         }
+
+        [HttpGet("progress")]
+        public async Task<IActionResult> GetStudentLessonProgress([FromRoute] int courseId, [FromRoute] int itemId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetStudentLessonProgressQuery(courseId, itemId), cancellationToken);
+            return result.Match(
+                progress => Ok(progress),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+
 
         [HttpGet()]
         public async Task<IActionResult> GetStudentLessonItem([FromRoute] int courseId, [FromRoute] int itemId, CancellationToken cancellationToken)

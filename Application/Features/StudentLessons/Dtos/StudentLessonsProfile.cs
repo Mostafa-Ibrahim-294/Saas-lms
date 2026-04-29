@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using System.Text.Json;
 
 namespace Application.Features.StudentLessons.Dtos
 {
@@ -26,6 +27,28 @@ namespace Application.Features.StudentLessons.Dtos
 
             CreateMap<ApplicationUser, AuthorDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+
+            CreateMap<LessonView, StudentLessonProgressDto>()
+                .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.Lesson.CourseId))
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(src => src.ModuleItemId))
+                .ForMember(dest => dest.VideoId, opt => opt.MapFrom(src => src.Lesson.VideoId))
+                .ForMember(dest => dest.DurationSeconds, opt => opt.MapFrom(src =>
+                    src.Lesson.File.Metadata != null &&
+                    src.Lesson.File.Metadata.ContainsKey("duration")
+                        ? int.Parse(src.Lesson.File.Metadata["duration"])
+                        : 0
+                ))
+                .ForMember(dest => dest.CompletionPercentage, opt => opt.MapFrom(src =>
+                    src.Lesson.File.Metadata != null &&
+                    src.Lesson.File.Metadata.ContainsKey("duration") &&
+                    double.Parse(src.Lesson.File.Metadata["duration"]) != 0
+                        ? (src.WatchedSeconds / double.Parse(src.Lesson.File.Metadata["duration"])) * 100
+                        : 0
+                ))
+                .ForMember(dest => dest.IsCompleted, opt => opt.MapFrom(src => src.Status == ViewStatus.Completed))
+                .ForMember(dest => dest.ViewsCount, opt => opt.MapFrom(src => src.ViewCount))
+                .ForMember(dest => dest.FirstViewedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.LastViewedAt, opt => opt.MapFrom(src => src.LastWatchedAt));
         }
     }
 }
