@@ -109,7 +109,7 @@ namespace Application.Features.Tenants.Commands.UpdateLiveSession
                     BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(student.User.Email!, EmailConstants.UpdateSubject, emailBody));
                 }
             }
-            return new UpdateLiveSessionDto { Message = LiveSessionConstants.UpdateSessionResponse };
+            return new UpdateLiveSessionDto { Message = MessagesConstants.LiveSessionUpdated };
         }
     }
 }

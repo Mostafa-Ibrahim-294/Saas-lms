@@ -1,8 +1,5 @@
 ﻿using Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Modules.Commands.CreateModule
 {
@@ -57,13 +54,13 @@ namespace Application.Features.Modules.Commands.CreateModule
                 module.Order = maxOrder + 1;
             }
             var moduleId = await _moduleRepository.CreateModule(module, cancellationToken);
-            if(request.Order <= maxOrder)
+            if (request.Order <= maxOrder)
             {
                 await _moduleRepository.IncreaseOrder(moduleId, course.Id, request.Order, cancellationToken);
             }
             await _hybridCache.RemoveAsync($"{CacheKeysConstants.CourseStatisticsKey}-{request.CourseId}", cancellationToken);
-            return new SuccessDto 
-            { 
+            return new SuccessDto
+            {
                 Id = moduleId.ToString(),
                 Message = $"{nameof(Module)} {SuccessConstants.ItemCreated}"
             };

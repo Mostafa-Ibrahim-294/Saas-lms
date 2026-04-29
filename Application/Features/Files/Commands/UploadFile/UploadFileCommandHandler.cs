@@ -1,6 +1,4 @@
-﻿using Application.Common;
-using Application.Constants;
-using Application.Contracts.Files;
+﻿using Application.Contracts.Files;
 using Application.Contracts.Repositories;
 using Application.Features.Files.Dtos;
 using Domain.Enums;
@@ -39,14 +37,14 @@ namespace Application.Features.Files.Commands.UploadFile
             if (!string.IsNullOrEmpty(subdomain))
             {
                 var id = await _tenantRepository.GetTenantIdAsync(subdomain, cancellationToken);
-                tenantId = id > 0 ? id : null; 
+                tenantId = id > 0 ? id : null;
             }
 
             var cdnUrl = await _fileService.UploadFileAsync(request.File, path);
             if (cdnUrl == null)
                 return FileErrors.UploadFailed;
 
-            var file = new Domain.Entites.File
+            var newFile = new Domain.Entites.File
             {
                 Id = fileId,
                 Name = fileName,
@@ -57,8 +55,7 @@ namespace Application.Features.Files.Commands.UploadFile
                 Status = request.EnableEmbedding ? FileStatus.Processing : FileStatus.Success,
                 TenantId = tenantId
             };
-
-            await _fileRepository.CreateAsync(file, cancellationToken);
+            await _fileRepository.CreateAsync(newFile, cancellationToken);
             await _fileRepository.SaveAsync(cancellationToken);
 
             if (request.EnableEmbedding)

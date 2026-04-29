@@ -1,17 +1,20 @@
 ﻿using Application.Features.Lessons.Dtos;
+using Application.Features.StudentLessons.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories
 {
     internal sealed class LessonRepository : ILessonRepository
     {
         private readonly AppDbContext _dbContext;
-        public LessonRepository(AppDbContext dbContext)
+        private readonly IMapper _mapper;
+
+        public LessonRepository(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
         public async Task<List<StudentViewsDto>> GetAllStudentsViewsAsync(int courseId, int itemId, CancellationToken cancellationToken)
         {
@@ -32,8 +35,12 @@ namespace Infrastructure.Repositories
                         Device = studentView != null ? studentView.Device : null
                     }).ToListAsync(cancellationToken);
         }
+<<<<<<< HEAD
 
         public async Task<LessonOverviewDto?> GetLessonOverviewAsync(int itemId, CancellationToken cancellationToken)
+=======
+        public async Task<LessonOverviewDto?> GetLessonOverviewAsync(int courseId, int itemId, CancellationToken cancellationToken)
+>>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         {
             return await _dbContext.LessonViews.Where(lv => lv.ModuleItemId == itemId)
                 .GroupBy(lv => lv.ModuleItemId)
@@ -47,18 +54,17 @@ namespace Infrastructure.Repositories
         }
         public async Task<DateTime> GetPeakActivityTimeAsync(int itemId, CancellationToken cancellationToken)
         {
-           return await _dbContext.LessonViews.Where(lv => lv.ModuleItemId == itemId)
-                .GroupBy(lv => lv.CreatedAt)
-                .Select(g => new
-                {
-                    TimeSlot = g.Key,
-                    ViewCount = g.Sum(s => s.ViewCount)
-                })
-                .OrderByDescending(g => g.ViewCount)
-                .Select(g => (DateTime)g.TimeSlot)
-                .FirstOrDefaultAsync(cancellationToken);
+            return await _dbContext.LessonViews.Where(lv => lv.ModuleItemId == itemId)
+                 .GroupBy(lv => lv.CreatedAt)
+                 .Select(g => new
+                 {
+                     TimeSlot = g.Key,
+                     ViewCount = g.Sum(s => s.ViewCount)
+                 })
+                 .OrderByDescending(g => g.ViewCount)
+                 .Select(g => (DateTime)g.TimeSlot)
+                 .FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task<List<ViewsOverTime>> GetViewsOverTimeAsync(int itemId, CancellationToken cancellationToken)
         {
             return await _dbContext.LessonViews.Where(lv => lv.ModuleItemId == itemId && lv.CreatedAt >= DateTime.UtcNow.AddDays(-7))
@@ -69,10 +75,22 @@ namespace Infrastructure.Repositories
                     TotalViews = g.Sum(s => s.ViewCount)
                 }).ToListAsync(cancellationToken);
         }
+<<<<<<< HEAD
 
         public async Task<bool> IsFound(int id, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
+=======
+        public async Task<bool> IsFound(int id, CancellationToken cancellationToken)
+>>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         {
             return await _dbContext.Lessons.AnyAsync(l => l.ModuleItemId == id && l.ModuleId == moduleId && l.CourseId == courseId && l.Course.Tenant.SubDomain == subdomain, cancellationToken);
+        }
+        public async Task<StudentLessonProgressDto> GetStudentLessonProgressAsync(int studentId, int courseId, int itemId, CancellationToken cancellationToken)
+        {
+            var result = await _dbContext.LessonViews
+                .Where(lv => lv.StudentId == studentId && lv.ModuleItemId == itemId && lv.Lesson.CourseId == courseId)
+                .ProjectTo<StudentLessonProgressDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+            return result!;
         }
     }
 }

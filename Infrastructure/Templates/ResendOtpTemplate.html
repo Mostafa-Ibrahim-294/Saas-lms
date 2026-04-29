@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعادة إرسال رمز التحقق</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #F39C12;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .otp {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333333;
+            margin: 20px 0;
+            letter-spacing: 6px;
+            direction: ltr;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #555555;
+        }
+
+        .warning {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #D63031;
+        }
+
+        .info {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #2E86DE;
+        }
+
+        .footer {
+            background-color: #f0f0f0;
+            text-align: center;
+            font-size: 12px;
+            color: #888888;
+            padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+            }
+
+            .otp {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            إعادة إرسال رمز التحقق
+        </div>
+
+        <div class="content">
+            <p>مرحبًا <strong>{{UserName}}</strong>،</p>
+
+            <p>بناءً على طلبك، تم إعادة إرسال رمز التحقق الخاص بحسابك.</p>
+
+            <p>يرجى استخدام الرمز التالي لإكمال العملية:</p>
+
+            <div class="otp">{{OTP_CODE}}</div>
+
+            <p class="note">سينتهي صلاحية هذا الرمز خلال دقيقتين.</p>
+
+            <p class="note">إذا لم تطلب إعادة الإرسال، يمكنك تجاهل هذه الرسالة.</p>
+
+            <p class="warning">
+                لا تشارك هذا الرمز مع أي شخص للحفاظ على أمان حسابك.
+            </p>
+
+            <p class="info">
+                يمكنك طلب رمز جديد فقط عند الحاجة.
+            </p>
+        </div>
+
+        <div class="footer">
+            © 2026 منصتك. جميع الحقوق محفوظة.
+        </div>
+    </div>
+</body>
+</html>

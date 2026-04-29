@@ -34,7 +34,7 @@ namespace Application.Features.TenantWebsiteSettings.Commands.UpdateTenantWebsit
             if (!isUpdated)
                 return TenantWebsiteSettingsErrors.TenantWebsiteSettingsUpdateFailed;
             else
-                return new TenantWebsiteSettingsResponse { Message = TenantWebsiteSettingsConstants.TenantWebsiteSettingsUpdated };
+                return new TenantWebsiteSettingsResponse { Message = MessagesConstants.TenantWebsiteSettingsUpdated };
         }
     }
 }

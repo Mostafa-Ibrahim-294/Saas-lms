@@ -1,10 +1,17 @@
 ﻿using Application.Features.Assignments.Dtos;
+using Application.Features.StudentAssignments.Dtos;
 
 namespace Application.Contracts.Repositories
 {
     public interface IAssignmentRepository
     {
         Task<List<StudentSubmissionDto>> GetSubmissionsAsync(int courseId, int itemId, CancellationToken cancellationToken);
+<<<<<<< HEAD
         Task<OverviewDto?> GetOverviewAsync(int itemId, CancellationToken cancellationToken);
+=======
+        Task<StudentAssignmentDto> GetStudentAssignmentAsync(int studentId, int itemId, int courseId, CancellationToken cancellationToken);
+        Task CreateAssignmentSubmissionAsync(AssignmentSubmission assignmentSubmission,  CancellationToken cancellationToken);
+        Task<int> SaveAsync(CancellationToken cancellationToken);
+>>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
     }
 }

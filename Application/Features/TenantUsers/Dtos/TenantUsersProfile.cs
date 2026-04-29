@@ -1,0 +1,20 @@
+﻿namespace Application.Features.TenantUsers.Dtos
+{
+    public class TenantUsersProfile : Profile
+    {
+        public TenantUsersProfile()
+        {
+            CreateMap<ApplicationUser, TenantUserProfileDto>();
+
+            CreateMap<TenantMember, UserTenantsDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Tenant.Id))
+                .ForMember(dest => dest.PlatformName, opt => opt.MapFrom(src => src.Tenant.PlatformName))
+                .ForMember(dest => dest.Logo, opt => opt.MapFrom(src => src.Tenant.Logo))
+                .ForMember(dest => dest.Subdomain, opt => opt.MapFrom(src => src.Tenant.SubDomain))
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.TenantRole.Name))
+                .ForMember(dest => dest.IsCurrentTenant, opt => opt.MapFrom(src => src.User.LastActiveTenantSubDomain == src.Tenant.SubDomain));
+
+
+        }
+    }
+}

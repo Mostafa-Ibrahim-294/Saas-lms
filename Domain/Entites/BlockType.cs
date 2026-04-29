@@ -8,7 +8,6 @@ namespace Domain.Entites
         public string DisplayName { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
-        //public Dictionary<string, object> Schema { get; set; } = [];
         public JsonDocument Schema { get; set; } = JsonDocument.Parse("{}");
 
         public ICollection<PageBlock> PageBlocks { get; set; } = [];

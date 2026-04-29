@@ -1,7 +1,4 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Assignments.Dtos
 {
@@ -17,7 +14,7 @@ namespace Application.Features.Assignments.Dtos
         public string? Feedback { get; set; }
         public string? Link { get; set; }
         public string? Text { get; set; }
-        public IEnumerable<FileDto>? Files { get; set; }
+        public FileDto? File { get; set; }
     }
     public sealed class FileDto
     {

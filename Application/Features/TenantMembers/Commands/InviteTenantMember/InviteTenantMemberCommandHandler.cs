@@ -78,10 +78,7 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
 
             BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.email, EmailConstants.Subject, emailBody));
 
-            return new InviteTenantMemberDto
-            {
-                Message = $"{TenantInviteConstants.InviteResponse} {request.email}"
-            };
+            return new InviteTenantMemberDto { Message = $"{MessagesConstants.TenantInviteSent} {request.email}"};
         }
     }
 }

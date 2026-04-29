@@ -10,5 +10,7 @@
         public const string VerificationCode = "ExtraInfo";
         public const string CookieDomain = ".waey.online";
         public const string StudentId = "studentId";
+        public const string StudentEmail = "StudentEmail";
+        public const string SessionId = "SessionId";
     }
 }

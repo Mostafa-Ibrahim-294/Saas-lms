@@ -23,7 +23,7 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("")]
+        [HttpGet()]
         public async Task<IActionResult> GetOrders(CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetTenantOrdersQuery(), cancellationToken));

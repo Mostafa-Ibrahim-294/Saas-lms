@@ -2,5 +2,5 @@
 
 namespace Application.Features.Public.Queries.GetCourseDetails
 {
-    public sealed record GetCourseDetailsQuery(int CourseId, string SubDomain) : IRequest<OneOf<WebsiteCourseDetailsDto, Error>>;
+    public sealed record GetCourseDetailsQuery(int CourseId) : IRequest<OneOf<WebsiteCourseDetailsDto, Error>>;
 }

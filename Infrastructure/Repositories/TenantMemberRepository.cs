@@ -3,7 +3,6 @@ using Application.Features.TenantMembers.Commands.UpdateCurrentMember;
 using Application.Features.TenantMembers.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MediatR;
 
 namespace Infrastructure.Repositories
 {
@@ -41,7 +40,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<TenantMembersDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
-
         public async Task<bool> IsPermittedMember(string userId, string permission, CancellationToken cancellationToken)
         {
             var isPermitted = await _context.TenantMembers
@@ -148,6 +146,13 @@ namespace Infrastructure.Repositories
             await _context.Grades.AddRangeAsync(newGrades, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<int> GetTenantmemberIdAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            return await _context.TenantMembers
+                .Where(tm => tm.TenantId == tenantId)
+                .Select(tm => tm.Id)
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

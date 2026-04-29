@@ -13,6 +13,7 @@ namespace Domain.Entites
         public bool IsFree { get; set; }
         public int CourseId { get; set; }
         public Course Course { get; set; } = null!;
+<<<<<<< HEAD
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public ICollection<ModuleItem> ModuleItems { get; set; } = [];
@@ -20,5 +21,10 @@ namespace Domain.Entites
         public ICollection<Assignment> Assignments { get; set; } = [];
         public ICollection<Quiz> Quizzes { get; set; } = [];
 
+=======
+        public ICollection<ModuleItem> ModuleItems { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<Enrollment> Enrollments { get; set; } = [];
+>>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
     }
 }

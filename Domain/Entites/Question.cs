@@ -1,8 +1,5 @@
 ﻿using Domain.Abstractions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entites
 {
@@ -10,7 +7,7 @@ namespace Domain.Entites
     {
         public int Id { get; set; }
         public string? CorrectAnswer { get; set; }
-        public string? Explanation { get; set; }  
+        public string? Explanation { get; set; }
         public Difficulty Difficulty { get; set; }
         public int Reuse { get; set; }
         public int QuestionCategoryId { get; set; }
@@ -21,8 +18,8 @@ namespace Domain.Entites
         public int TenantId { get; set; }
         public Tenant Tenant { get; set; } = null!;
         public ICollection<QuizQuestion> QuizQuestions { get; set; } = [];
-        public DateTime CreatedAt { get ; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get ; set ; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
     }
     public sealed class QuestionCategory
     {

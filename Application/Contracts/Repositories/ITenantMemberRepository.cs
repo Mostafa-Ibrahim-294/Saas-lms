@@ -18,5 +18,6 @@ namespace Application.Contracts.Repositories
         Task UpdateRoleMemberAsync(int memberId, int roleId, CancellationToken cancellationToken);
         Task<MemberProfileDto> GetMemberProfileAsync(int memberId, CancellationToken cancellationToken);
         Task UpdateCurrentMemberAsync(int tenantId, int memberId, UpdateCurrentMemberCommand updateCurrentMember, CancellationToken cancellationToken);
+        Task<int> GetTenantmemberIdAsync(int tenantId, CancellationToken cancellationToken);
     }
 }

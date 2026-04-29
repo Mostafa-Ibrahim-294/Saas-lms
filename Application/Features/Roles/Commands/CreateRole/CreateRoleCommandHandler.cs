@@ -38,7 +38,7 @@ namespace Application.Features.Roles.Commands.CreateRole
             };
             await _tenantRoleRepository.CreateRoleASync(tenantRole, cancellationToken);
             await _tenantRoleRepository.AddRolePermissionsAsync(tenantRole.Id, request.EnabledPermissions, cancellationToken);
-            return new RoleDto { Message = RoleConstants.CreateRoleResponse};
+            return new RoleDto { Message = MessagesConstants.RoleCreated };
         }
     }
 }

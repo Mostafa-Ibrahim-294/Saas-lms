@@ -9,7 +9,8 @@ namespace Domain.Entites
         public Assignment Assignment { get; set; } = null!;
         public int StudentId { get; set; }
         public Student Student { get; set; } = null!;
-        public ICollection<File>? Files { get; set; } 
+        public string? FileId { get; set; }
+        public File? File { get; set; }
         public AssignmentStatus Status { get; set; }
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
         public double EarnedMarks { get; set; }

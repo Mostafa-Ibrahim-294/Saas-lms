@@ -49,7 +49,7 @@ namespace Application.Features.TenantMembers.Commands.RemoveMember
 
             var cacheKey = $"{CacheKeysConstants.CurrentTenantMemberKey}_{member.UserId}";
             await _hybridCache.RemoveAsync(cacheKey);
-            return new RemoveMemberDto { Message = TenantMemberConstants.RemoveMemberResponse };
+            return new RemoveMemberDto { Message = MessagesConstants.TenantMemberDeleted };
         }
     }
 }

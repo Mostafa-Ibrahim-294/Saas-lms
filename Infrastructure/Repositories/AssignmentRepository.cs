@@ -1,18 +1,19 @@
 ﻿using Application.Features.Assignments.Dtos;
-using Application.Features.Lessons.Dtos;
+using Application.Features.StudentAssignments.Dtos;
+using AutoMapper;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories
 {
     internal sealed class AssignmentRepository : IAssignmentRepository
     {
         private readonly AppDbContext _dbContext;
-        public AssignmentRepository(AppDbContext dbContext)
+        private readonly IMapper _mapper;
+
+        public AssignmentRepository(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<OverviewDto?> GetOverviewAsync(int itemId, CancellationToken cancellationToken)
@@ -45,12 +46,35 @@ namespace Infrastructure.Repositories
                          Link = studentSubmission != null ? studentSubmission.Link : null,
                          Text = studentSubmission != null ? studentSubmission.Text : null,
                          TotalMarks = studentSubmission != null ? studentSubmission.Assignment.Marks : 0,
-                         Files = studentSubmission != null ? studentSubmission.Files!.Select(f => new FileDto
+                         File = studentSubmission != null ? new FileDto
                          {
-                             FileName = f.Name,
-                             Url = f.Url
-                         }).ToList() : null
-                     }).ToListAsync(cancellationToken);
+                             FileName = studentSubmission.File!.Name,
+                             Url = studentSubmission.File.Url
+                         } : null
+                     }
+                 ).ToListAsync(cancellationToken);
+        }
+        public async Task<StudentAssignmentDto> GetStudentAssignmentAsync(int studentId, int itemId, int courseId, CancellationToken cancellationToken)
+        {
+            var result = await _dbContext.ModuleItems
+                .Where(dt => dt.Id == itemId && dt.CourseId == courseId)
+                .Include(mi => mi.Assignment)
+                    .ThenInclude(a => a!.Submissions.Where(s => s.StudentId == studentId))
+                        .ThenInclude(s => s.Student)
+                            .ThenInclude(sg => sg.StudentGrades)
+                .Include(a => a.Assignment)
+                    .ThenInclude(a => a!.Submissions.Where(s => s.StudentId == studentId))
+                        .ThenInclude(s => s.File)
+                .FirstOrDefaultAsync(cancellationToken);
+            return _mapper.Map<StudentAssignmentDto>(result!);
+        }
+        public async Task CreateAssignmentSubmissionAsync(AssignmentSubmission assignmentSubmission, CancellationToken cancellationToken)
+        {
+            await _dbContext.AssignmentSubmissions.AddAsync(assignmentSubmission, cancellationToken);
+        }
+        public async Task<int> SaveAsync(CancellationToken cancellationToken)
+        {
+            return await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

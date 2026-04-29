@@ -1,4 +1,5 @@
 using Api.Extensions;
+using Api.Middlewares;
 using Application.Contracts.Repositories;
 using Application.Extensions;
 using Hangfire;
@@ -59,8 +60,8 @@ app.UseHttpsRedirection();
 app.UseCors();
 app.UseHealthChecks("/health");
 app.UseAuthentication();
+app.UseMiddleware<SessionMiddleware>();
 app.UseAuthorization();
-app.UseSession();
 app.MapControllers();
 
 app.Run();

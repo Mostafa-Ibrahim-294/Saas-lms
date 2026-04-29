@@ -32,5 +32,14 @@ namespace Domain.Entites
         public WebsiteAppearanceSetting WebsiteAppearnceSetting { get; set; } = null!;
         public EmailSetting EmailSetting { get; set; } = null!;
         public NotificationSetting NotificationSetting { get; set; } = null!;
+        public ICollection<StudentGrade> StudentGrades { get; set; } = [];
+        public ICollection<CourseInvite> CourseInvites { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<DicussionThreadRead> DicussionReads { get; set; } = [];
+        public ICollection<DicussionThreadReply> DicussionReplies { get; set; } = [];
+        public ICollection<Announcement> Announcements { get; set; } = [];
+        public ICollection<Enrollment> Enrollments { get; set; } = [];
+        public ICollection<Schedule> Schedules { get; set; } = [];
+        public ICollection<StudentSubscription> StudentSubscriptions { get; set; } = [];
     }
 }

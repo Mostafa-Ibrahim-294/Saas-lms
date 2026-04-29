@@ -33,7 +33,6 @@ namespace Infrastructure.Services
             FileType.Image => _fileOptions.Value.ImageMaxSize,
             _ => _fileOptions.Value.DocumentMaxSize
         };
-
         public string GetPath(string fileId, string name, string? folder, string originalFileName)
         {
             var sanitizedFolder = string.IsNullOrWhiteSpace(folder) ? string.Empty : folder.Trim('/');
@@ -44,26 +43,22 @@ namespace Infrastructure.Services
                 ? $"{fileId}_{sanitizedFileName}{extension}"
                 : $"{sanitizedFolder}/{fileId}_{sanitizedFileName}{extension}";
         }
-
         public FileType GetFileType(string contentType) => contentType switch
         {
             var ct when ct.StartsWith(FileConstants.Image) => FileType.Image,
             var ct when ct.StartsWith(FileConstants.Video) => FileType.Video,
             _ => FileType.Document
         };
-
         public string CreateCdnUrl(string path)
         {
             var encodedPath = HttpUtility.UrlPathEncode(path);
             return $"{_bunnyOptions.Value.CdnUrl.TrimEnd('/')}/{encodedPath.TrimStart('/')}";
         }
-
         public string CreateUploadUrl(string path)
         {
             var encodedPath = HttpUtility.UrlPathEncode(path);
             return $"https://{_bunnyOptions.Value.HostName}/{_bunnyOptions.Value.StorageZoneName}/{encodedPath.TrimStart('/')}";
         }
-
         public async Task<string?> UploadFileAsync(IFormFile file, string path)
         {
             var uploadUrl = CreateUploadUrl(path);
@@ -78,7 +73,6 @@ namespace Infrastructure.Services
 
             return response.IsSuccessStatusCode ? CreateCdnUrl(path) : null;
         }
-
         public async Task CallAIService(IFormFile file, FileType fileType, string fileId)
         {
             using var content = new MultipartFormDataContent();
@@ -94,10 +88,6 @@ namespace Infrastructure.Services
 
             _ = _httpClient.PostAsync(_aiOptions.Value.Url, content);
         }
-
-
-
-
         public async Task<CreateUploadDto?> CreateUploadCredentialsAsync(string title, int Size, CancellationToken cancellationToken)
         {
             if (Size > _fileOptions.Value.VideoMaxSize)

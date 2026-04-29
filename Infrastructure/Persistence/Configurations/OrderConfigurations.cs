@@ -10,8 +10,9 @@ namespace Infrastructure.Persistence.Configurations
                 .HasColumnType("decimal(18,2)");
 
             builder.Property(o => o.OrderNumber)
-                .HasMaxLength(50)
-                .IsRequired();
+                   .HasMaxLength(50)
+                   .HasDefaultValueSql("'ORD_' || nextval('order_numbers_seq')")
+                   .ValueGeneratedOnAdd();
 
             builder.HasIndex(x => x.OrderNumber).IsUnique();
 

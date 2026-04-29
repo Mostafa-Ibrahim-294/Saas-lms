@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رمز التحقق لتسجيل الدخول</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #2E86DE;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .otp {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333333;
+            margin: 20px 0;
+            letter-spacing: 6px;
+            direction: ltr; /* عشان الأرقام تبان صح */
+        }
+
+        .note {
+            font-size: 14px;
+            color: #555555;
+        }
+
+        .warning {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #D63031;
+        }
+
+        .footer {
+            background-color: #f0f0f0;
+            text-align: center;
+            font-size: 12px;
+            color: #888888;
+            padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+            }
+
+            .otp {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            رمز التحقق لتسجيل الدخول
+        </div>
+
+        <div class="content">
+            <p>مرحبًا <strong>{{UserName}}</strong>،</p>
+
+            <p>تم رصد محاولة تسجيل دخول إلى حسابك.</p>
+
+            <p>يرجى استخدام رمز التحقق التالي لإكمال عملية تسجيل الدخول:</p>
+
+            <div class="otp">{{OTP_CODE}}</div>
+
+            <p class="note">سينتهي صلاحية هذا الرمز خلال دقيقتين.</p>
+
+            <p class="note">يرجى عدم مشاركة هذا الرمز مع أي شخص.</p>
+
+            <p class="warning">
+                إذا لم تكن أنت من حاول تسجيل الدخول، يرجى تأمين حسابك فورًا.
+            </p>
+        </div>
+
+        <div class="footer">
+            © 2026 منصتك. جميع الحقوق محفوظة.
+        </div>
+    </div>
+</body>
+</html>

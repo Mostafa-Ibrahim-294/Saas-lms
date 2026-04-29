@@ -1,6 +1,5 @@
 ﻿using Application.Features.Tenants.Dtos;
 using Domain.Enums;
-using System.Drawing;
 
 namespace Application.Contracts.Repositories
 {
@@ -12,21 +11,22 @@ namespace Application.Contracts.Repositories
         Task AddTenantMemberAsync(TenantMember member, CancellationToken cancellationToken);
         Task AssignAssistantPermissions(int assistantRoleId, CancellationToken cancellationToken);
         Task SaveAsync(CancellationToken cancellationToken);
-
         Task<LastTenantDto?> GetLastTenantAsync(string? subDomain, CancellationToken cancellationToken);
+<<<<<<< HEAD
 
 
        
 
+=======
+        Task BeginTransactionAsync(CancellationToken cancellationToken);
+        Task CommitTransactionAsync(CancellationToken cancellationToken);
+        Task RollbackTransactionAsync(CancellationToken cancellationToken);
+>>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         Task<int> GetTenantIdAsync(string subDomain, CancellationToken cancellationToken);
         Task<TenantUsageDto> GetTenantUsageAsync(int tenantId, CancellationToken cancellationToken);
         Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId);
-
-
-        Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q , CancellationToken cancellationToken );
+        Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q, CancellationToken cancellationToken);
         Task<ContentLibraryStatisticsDto> GetStatisticsAsync(int TenantId, CancellationToken cancellationToken);
-
-
         Task<int> GetPlanFeatureUsageAsync(Guid PlanFeatureId, CancellationToken cancellationToken);
         Task InCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
         Task IncreasePlanFeatureUsageByKeyAsync(string subDomain, string featureName, CancellationToken cancellationToken, long Size = 1);

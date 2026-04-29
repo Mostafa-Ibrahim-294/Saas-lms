@@ -29,6 +29,30 @@
 	  <Content Include="Templates\CancelLiveSessionTemplate.html">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
+	  <Content Include="Templates\CourseInviteTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\AnnouncementTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\LoginOtpTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\ResendOtpTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\ApproveOrderTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\RequestFriendTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\AcceptRequestTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\RejectRequestTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -36,7 +60,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

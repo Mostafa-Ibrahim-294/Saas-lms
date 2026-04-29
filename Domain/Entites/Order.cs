@@ -6,7 +6,7 @@ namespace Domain.Entites
     public sealed class Order : IAuditable
     {
         public int Id { get; set; }
-        public string OrderNumber { get; set; } = string.Empty;
+        public string? OrderNumber { get; set; }
         public decimal PricePaid { get; set; }
         public string PaymentProof { get; set; } = string.Empty;
         public string? PaymentReference { get; set; }
@@ -24,5 +24,6 @@ namespace Domain.Entites
         public int StudentId { get; set; }
         public Student Student { get; set; } = null!;
         public ICollection<OrderTimeLine> OrderTimeLines { get; set; } = [];
+        public ICollection<Enrollment> Enrollments { get; set; } = [];
     }
 }
