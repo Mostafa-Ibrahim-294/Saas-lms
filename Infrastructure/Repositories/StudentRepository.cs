@@ -1,4 +1,5 @@
 ﻿using Application.Features.Students.Dtos;
+using Application.Features.StudentUsers.Dtos;
 using Application.Features.TenantStudents.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -146,9 +147,25 @@ namespace Infrastructure.Repositories
         public async Task<Student> GetStudentByIdAsync(int studentId, CancellationToken cancellationToken)
         {
             var student = await _context.Students
-                .Include (s => s.User)
-                .FirstOrDefaultAsync(s => s.Id == studentId , cancellationToken);
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.Id == studentId, cancellationToken);
             return student!;
+        }
+        public async Task<CurrentStudentDto> GetCurrentStudentAsync(string userId, int studentId, CancellationToken cancellationToken)
+        {
+            var result = await _context.Students
+                .AsNoTracking()
+                .Where(s => s.Id == studentId && s.UserId == userId)
+                .ProjectTo<CurrentStudentDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var requiredXp = _context.Levels
+               .Where(l => l.LevelNumber == result!.Gamification.Level)
+               .Select(l => l.RequiredXp)
+               .FirstOrDefault();
+
+            result!.Gamification.NextLevelXp = requiredXp - result.Gamification.Xp;
+            return result;
         }
     }
 }

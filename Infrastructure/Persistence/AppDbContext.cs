@@ -64,6 +64,7 @@ namespace Infrastructure.Persistence
         internal DbSet<StudentStreak> StudentStreaks { get; set; }
         internal DbSet<Friend> Friends { get; set; }
         internal DbSet<LessonVideoSegmant> LessonVideoSegmants { get; set; }
+        internal DbSet<Level> Levels { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

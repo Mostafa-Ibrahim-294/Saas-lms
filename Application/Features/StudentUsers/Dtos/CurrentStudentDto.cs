@@ -1,0 +1,12 @@
+﻿namespace Application.Features.StudentUsers.Dtos
+{
+    public sealed class CurrentStudentDto
+    {
+        public int Id { get; set; }
+        public string? Grade { get; set; }
+        public string? InviteCode { get; set; }
+        public ProfileDto Profile { get; set; } = new();
+        public GamificationDto Gamification { get; set; } = new();
+        public StreakDto Streak { get; set; } = new();
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using Application.Features.StudentUsers.Commands.Onboarding;
+using Application.Features.StudentUsers.Queries.GetCurrentStudent;
 using Application.Features.StudentUsers.Queries.GetProfile;
 using Application.Features.StudentUsers.Queries.GetStudentStreak;
 using MediatR;
@@ -47,6 +48,17 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetStudentStreakQuery(), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+
+
+        [HttpGet("current")]
+        public async Task<IActionResult> GetCurrentStudent(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCurrentStudentQuery(), cancellationToken);
+            return result.Match<IActionResult>(
+                student => Ok(student),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
         }

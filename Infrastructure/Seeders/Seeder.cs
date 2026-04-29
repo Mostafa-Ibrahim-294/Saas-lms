@@ -61,6 +61,14 @@ namespace Infrastructure.Seeders
                     await _context.AvailableSubjects.AddRangeAsync(subjects);
                     await _context.SaveChangesAsync();
                 }
+
+                // Seed Level
+                if (!await _context.Levels.AnyAsync())
+                {
+                    var levels = GetLevels();
+                    await _context.Levels.AddRangeAsync(levels);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 
@@ -962,6 +970,41 @@ namespace Infrastructure.Seeders
                 new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub5", DisplayName = "أحياء", Semester = "الفصل الدراسي الثاني" },
                 new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub6", DisplayName = "رياضيات بحته", Semester = "الفصل الدراسي الثاني" },
                 new AvailableSubject { Grade = "الصف الثالث الثانوي", Key = "s3-sem2-sub7", DisplayName = "رياضيات تطبيقية", Semester = "الفصل الدراسي الثاني" },
+            };
+        }
+
+        private List<Level> GetLevels()
+        {
+            var levels = new List<Level>();
+            int totalXp = 0;
+            int maxLevel = 100;
+
+            for (int levelNumber = 1; levelNumber <= maxLevel; levelNumber++)
+            {
+                int xpForNextLevel = 15 + ((levelNumber - 1) * 5);
+
+                levels.Add(new Level
+                {
+                    LevelNumber = levelNumber,
+                    RequiredXp = totalXp,
+                    Title = GetLevelTitle(levelNumber)
+                });
+                totalXp += xpForNextLevel;
+            }
+            return levels;
+        }
+
+        private static string GetLevelTitle(int level)
+        {
+            return level switch
+            {
+                <= 5 => "Beginner",
+                <= 15 => "Learner",
+                <= 30 => "Dedicated",
+                <= 50 => "Advanced",
+                <= 75 => "Expert",
+                <= 100 => "Master",
+                _ => "Legend"
             };
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Application.Features.Students.Dtos;
+using Application.Features.StudentUsers.Dtos;
 using Application.Features.TenantStudents.Dtos;
 
 namespace Application.Contracts.Repositories
@@ -18,5 +19,6 @@ namespace Application.Contracts.Repositories
         Task<string> GetStuentNameByIdAsync(int studentId, CancellationToken cancellationToken);
         Task<Student?> GetStudentByInviteCodeAsync(string inviteCode, CancellationToken cancellationToken);
         Task<Student> GetStudentByIdAsync(int studentId, CancellationToken cancellationToken);
+        Task<CurrentStudentDto> GetCurrentStudentAsync(string userId, int studentId, CancellationToken cancellationToken);
     }
 }
