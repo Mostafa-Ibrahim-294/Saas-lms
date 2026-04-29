@@ -89,5 +89,12 @@ namespace Infrastructure.Repositories
                     }).ToList()
                 }).ToListAsync(cancellationToken);
         }
+        public async Task<int> GetTenantIdAsync(int studentId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _context.Enrollments
+                .Where(e => e.StudentId == studentId && e.CourseId == courseId)
+                .Select(e => e.TenantId)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

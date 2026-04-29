@@ -1,5 +1,6 @@
 ﻿using Application.Features.StudentUsers.Commands.Onboarding;
 using Application.Features.StudentUsers.Queries.GetProfile;
+using Application.Features.StudentUsers.Queries.GetStudentStreak;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,17 @@ namespace Api.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(
                 response => Ok(response),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+
+
+        [HttpGet("streak")]
+        public async Task<IActionResult> GetStudentStreak(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetStudentStreakQuery(), cancellationToken);
+            return result.Match<IActionResult>(
+                success => Ok(success),
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
         }

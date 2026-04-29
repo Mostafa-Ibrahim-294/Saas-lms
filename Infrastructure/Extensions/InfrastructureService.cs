@@ -141,6 +141,8 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IStudentUserRepository, StudentUserRepository>();
             builder.Services.AddScoped<IStudentSubscriptionRepository, StudentSubscriptionRepository>();
             builder.Services.AddScoped<IStudentSubjectRepository, StudentSubjectRepository>();
+            builder.Services.AddScoped<IStudentStreakRepository, StudentStreakRepository>();
+            builder.Services.AddScoped<IFriendRepository, FriendRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

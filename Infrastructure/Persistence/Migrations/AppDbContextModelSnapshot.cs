@@ -222,6 +222,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Feedback")
                         .HasColumnType("text");
 
+                    b.Property<string>("FileId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Link")
                         .HasColumnType("text");
 
@@ -240,6 +243,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
+
+                    b.HasIndex("FileId")
+                        .IsUnique();
 
                     b.HasIndex("StudentId")
                         .IsUnique();
@@ -743,9 +749,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<int?>("AssignmentSubmissionId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -787,13 +790,49 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignmentSubmissionId");
-
                     b.HasIndex("TenantId");
 
                     b.HasIndex("UploadedById");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionStudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Student1Id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Student2Id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionStudentId");
+
+                    b.HasIndex("Student2Id");
+
+                    b.HasIndex("Student1Id", "Student2Id")
+                        .IsUnique();
+
+                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("Domain.Entites.Grade", b =>
@@ -1195,9 +1234,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrderNumber")
-                        .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValueSql("'ORD_' || nextval('order_numbers_seq')");
 
                     b.Property<string>("PaymentProof")
                         .IsRequired()
@@ -1963,6 +2003,34 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("TypeId");
 
                     b.ToTable("StudentGrades");
+                });
+
+            modelBuilder.Entity("Domain.Entites.StudentStreak", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CurrentStreak")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LastActivityAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LongestStreak")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.ToTable("StudentStreaks");
                 });
 
             modelBuilder.Entity("Domain.Entites.StudentSubject", b =>
@@ -2788,6 +2856,11 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entites.File", "File")
+                        .WithOne("AssignmentSubmission")
+                        .HasForeignKey("Domain.Entites.AssignmentSubmission", "FileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Domain.Entites.Student", "Student")
                         .WithOne("AssignmentSubmission")
                         .HasForeignKey("Domain.Entites.AssignmentSubmission", "StudentId")
@@ -2795,6 +2868,8 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Assignment");
+
+                    b.Navigation("File");
 
                     b.Navigation("Student");
                 });
@@ -3045,11 +3120,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.File", b =>
                 {
-                    b.HasOne("Domain.Entites.AssignmentSubmission", "AssignmentSubmission")
-                        .WithMany("Files")
-                        .HasForeignKey("AssignmentSubmissionId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Domain.Entites.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
@@ -3061,11 +3131,36 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AssignmentSubmission");
-
                     b.Navigation("Tenant");
 
                     b.Navigation("UploadedBy");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Friend", b =>
+                {
+                    b.HasOne("Domain.Entites.Student", "ActionStudent")
+                        .WithMany("Actions")
+                        .HasForeignKey("ActionStudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Student", "Student1")
+                        .WithMany("Students1")
+                        .HasForeignKey("Student1Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Student", "Student2")
+                        .WithMany("Students2")
+                        .HasForeignKey("Student2Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ActionStudent");
+
+                    b.Navigation("Student1");
+
+                    b.Navigation("Student2");
                 });
 
             modelBuilder.Entity("Domain.Entites.Grade", b =>
@@ -3187,7 +3282,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Module", "Module")
-                        .WithMany()
+                        .WithMany("ModuleItems")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3520,6 +3615,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Tenant");
 
                     b.Navigation("TenantMember");
+                });
+
+            modelBuilder.Entity("Domain.Entites.StudentStreak", b =>
+                {
+                    b.HasOne("Domain.Entites.Student", "Student")
+                        .WithOne("StudentStreak")
+                        .HasForeignKey("Domain.Entites.StudentStreak", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Domain.Entites.StudentSubject", b =>
@@ -3860,11 +3966,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Submissions");
                 });
 
-            modelBuilder.Entity("Domain.Entites.AssignmentSubmission", b =>
-                {
-                    b.Navigation("Files");
-                });
-
             modelBuilder.Entity("Domain.Entites.AvailableSubject", b =>
                 {
                     b.Navigation("StudentSubjects");
@@ -3916,6 +4017,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("PlanFeatures");
                 });
 
+            modelBuilder.Entity("Domain.Entites.File", b =>
+                {
+                    b.Navigation("AssignmentSubmission");
+                });
+
             modelBuilder.Entity("Domain.Entites.Lesson", b =>
                 {
                     b.Navigation("LessonViews");
@@ -3931,6 +4037,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("DicussionThreads");
 
                     b.Navigation("Enrollments");
+
+                    b.Navigation("ModuleItems");
                 });
 
             modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
@@ -3991,6 +4099,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Student", b =>
                 {
+                    b.Navigation("Actions");
+
                     b.Navigation("AssignmentSubmission");
 
                     b.Navigation("Enrollments");
@@ -4003,9 +4113,16 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("StudentGrades");
 
+                    b.Navigation("StudentStreak")
+                        .IsRequired();
+
                     b.Navigation("StudentSubjects");
 
                     b.Navigation("StudentSubscriptions");
+
+                    b.Navigation("Students1");
+
+                    b.Navigation("Students2");
                 });
 
             modelBuilder.Entity("Domain.Entites.Subscription", b =>

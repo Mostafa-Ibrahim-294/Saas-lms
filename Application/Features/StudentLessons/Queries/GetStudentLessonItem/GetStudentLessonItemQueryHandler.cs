@@ -1,7 +1,6 @@
 ﻿using Application.Contracts.Repositories;
 using Application.Features.StudentLessons.Dtos;
 using Microsoft.AspNetCore.Http;
-using System.Text.Json;
 
 namespace Application.Features.StudentLessons.Queries.GetStudentLessonItem
 {
@@ -27,15 +26,11 @@ namespace Application.Features.StudentLessons.Queries.GetStudentLessonItem
         {
             var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionId];
             var cachedSessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
-            var sessionData = await _hybridCache.GetOrCreateAsync(cachedSessionKey, async entry =>
-            {
-                return await Task.FromResult<string?>(null);
-            }, cancellationToken: cancellationToken);
-
-            if (string.IsNullOrEmpty(sessionData))
-                return UserErrors.Unauthorized;
-
-            var session = JsonSerializer.Deserialize<UserSession>(sessionData);
+            var session = await _hybridCache.GetOrCreateAsync<UserSession?>(
+                cachedSessionKey,
+                _ => ValueTask.FromResult<UserSession?>(null),
+                cancellationToken: cancellationToken
+            );
             if (session is null)
                 return UserErrors.Unauthorized;
 

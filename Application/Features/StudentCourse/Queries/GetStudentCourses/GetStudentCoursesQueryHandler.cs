@@ -1,7 +1,6 @@
 ﻿using Application.Contracts.Repositories;
 using Application.Features.StudentCourse.Dtos;
 using Microsoft.AspNetCore.Http;
-using System.Text.Json;
 
 namespace Application.Features.StudentCourse.Queries.GetStudentCourses
 {
@@ -11,28 +10,23 @@ namespace Application.Features.StudentCourse.Queries.GetStudentCourses
         private readonly HybridCache _hybridCache;
         private readonly IEnrollmentRepository _enrollmentRepository;
         public GetStudentCoursesQueryHandler(IHttpContextAccessor httpContextAccessor, HybridCache hybridCache,
-            IEnrollmentRepository enrollmentRepository) 
+            IEnrollmentRepository enrollmentRepository)
         {
             _httpContextAccessor = httpContextAccessor;
             _hybridCache = hybridCache;
             _enrollmentRepository = enrollmentRepository;
         }
-        public async Task<OneOf<List<StudentCoursesDto>,Error>> Handle(GetStudentCoursesQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<List<StudentCoursesDto>, Error>> Handle(GetStudentCoursesQuery request, CancellationToken cancellationToken)
         {
             var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionId];
             var cachedSessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
-            var sessionData = await _hybridCache.GetOrCreateAsync(cachedSessionKey, async entry =>
-            {
-                return await Task.FromResult<string?>(null);
-            }, cancellationToken: cancellationToken);
-
-            if (string.IsNullOrEmpty(sessionData))
-                return UserErrors.Unauthorized;
-
-            var session = JsonSerializer.Deserialize<UserSession>(sessionData);
+            var session = await _hybridCache.GetOrCreateAsync<UserSession?>(
+                cachedSessionKey,
+                _ => ValueTask.FromResult<UserSession?>(null),
+                cancellationToken: cancellationToken
+            );
             if (session is null)
                 return UserErrors.Unauthorized;
-
 
             var cacheKey = $"{CacheKeysConstants.StudentCoursesKey}_{session.StudentId}";
             return await _hybridCache.GetOrCreateAsync(cacheKey, async entry =>

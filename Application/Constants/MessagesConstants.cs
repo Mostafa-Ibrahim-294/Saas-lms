@@ -25,6 +25,8 @@
         public const string RoleUpdated = "تم تحديث الدور بنجاح";
         public const string RoleDeleted = "تم حذف الدور بنجاح";
 
+        public const string OrderCreated = "تم ارسال الطلب بنجاح.";
+        public const string OrderUpdated = "تم تحديث الطلب بنجاح.";
         public const string OrderApproved = "تمت الموافقة على الطلب بنجاح.";
         public const string OrdersApproved = "تمت الموافقة على جميع الطلبات بنجاح.";
         public const string OrderDeclined = "تم رفض الطلب بنجاح.";
@@ -40,9 +42,13 @@
         public const string CourseInviteOperationFailed = "حدث خطأ أثناء تنفيذ العملية.";
         public const string CourseInviteJoined = "تم الانضمام إلى الدورة بنجاح";
 
+        public const string DiscussionThreadCreated = "تم إضافه رسالتك بنجاح.";
+        public const string DiscussionThreadUpdated = "تم تحديث رسالتك بنجاح.";
         public const string DiscussionThreadDeleted = "تم حذف موضوع النقاش بنجاح.";
-        public const string DiscussionReplyDeleted = "تم حذف رد النقاش بنجاح.";
+        public const string DiscussionThreadDelete = "تم حذف رسالتك بنجاح.";
+        public const string DiscussionReplyCreated = "تم إضافه رد النقاش بنجاح.";
         public const string DiscussionReplyUpdated = "تم تحديث رد النقاش بنجاح.";
+        public const string DiscussionReplyDeleted = "تم حذف رد النقاش بنجاح.";
 
         public const string AnnouncementCreated = "تم إنشاء الإعلان بنجاح.";
         public const string AnnouncementDeleted = "تم حذف الإعلان بنجاح.";
@@ -51,6 +57,12 @@
         public const string ScheduleUpdated = "تم تحديث الجدول بنجاح";
         public const string ScheduleDeleted = "تم حذف الجدول بنجاح";
 
-        public const string StudentOnboardingCompleted = "تم إكمال عملية الانضمام بنجاح.";    
+        public const string StudentOnboardingCompleted = "تم إكمال عملية الانضمام بنجاح.";
+
+        public const string AssignmentSubmissionSuccessfully = "تم تسليم الواجب بنجاح.";
+
+        public const string RequestFriendSuccessfully = "تم ارسال طلب الصداقه إلى .";
+        public const string AcceptRequestSuccessfully = "تم قبول طلب الصداقة الخاص بك بنجاح .";
+        public const string RejectRequestSuccessfully = "تم رفض طلب الصداقة الخاص بك بنجاح .";
     }
 }

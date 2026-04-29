@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Repositories;
 using Application.Features.TenantWebsiteSettings.Dtos;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Public.Queries.GetTenantSettings
 {
@@ -7,15 +8,26 @@ namespace Application.Features.Public.Queries.GetTenantSettings
     {
         private readonly ITenantWebsiteSettingsRepository _tenantWebsiteSettingsRepository;
         private readonly ITenantRepository _tenantRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GetTenantSettingsQueryHandler(ITenantWebsiteSettingsRepository tenantWebsiteSettingsRepository, ITenantRepository tenantRepository)
+        public GetTenantSettingsQueryHandler(ITenantWebsiteSettingsRepository tenantWebsiteSettingsRepository, ITenantRepository tenantRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             _tenantWebsiteSettingsRepository = tenantWebsiteSettingsRepository;
             _tenantRepository = tenantRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<TenantWebsiteSettingsDto> Handle(GetTenantSettingsQuery request, CancellationToken cancellationToken)
         {
-            var tenantId = await _tenantRepository.GetTenantIdAsync(request.SubDomain, cancellationToken);
+            string subDomain = string.Empty;
+            var httpRequest = _httpContextAccessor.HttpContext!.Request;
+            var origin = httpRequest.Headers["Origin"].ToString();
+            if (!string.IsNullOrEmpty(origin) && Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+                subDomain = uri.Host.Split('.')[0];
+            else
+                subDomain = httpRequest.Host.Host.Split(".")[0];
+
+            var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain, cancellationToken);
             return await _tenantWebsiteSettingsRepository.GetSettingsAsync(tenantId, cancellationToken);
         }
     }

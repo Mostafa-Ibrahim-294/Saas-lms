@@ -3,7 +3,6 @@ using Application.Features.StudentLessons.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
-using System.Text.Json;
 
 namespace Infrastructure.Repositories
 {
@@ -139,10 +138,17 @@ namespace Infrastructure.Repositories
                     .ThenInclude(l => l!.LessonViews)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (result is null) 
+            if (result is null)
                 return null!;
 
             return _mapper.Map<StudentLessonItemDto>(result);
+        }
+        public async Task<int> GetModuleIdAsync(int itemId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.ModuleItems
+                .Where(mi => mi.Id == itemId && mi.CourseId == courseId)
+                .Select(mi => mi.ModuleId)
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

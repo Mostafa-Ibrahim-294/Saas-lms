@@ -129,5 +129,26 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
             return result!;
         }
+        public async Task<string> GetStuentNameByIdAsync(int studentId, CancellationToken cancellationToken)
+        {
+            var studentName = await _context.Students
+                .Where(s => s.Id == studentId)
+                .Select(s => s.User.FirstName + " " + s.User.LastName)
+                .FirstOrDefaultAsync(cancellationToken);
+            return studentName!;
+        }
+        public async Task<Student?> GetStudentByInviteCodeAsync(string inviteCode, CancellationToken cancellationToken)
+        {
+            return await _context.Students
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.InviteCode == inviteCode, cancellationToken);
+        }
+        public async Task<Student> GetStudentByIdAsync(int studentId, CancellationToken cancellationToken)
+        {
+            var student = await _context.Students
+                .Include (s => s.User)
+                .FirstOrDefaultAsync(s => s.Id == studentId , cancellationToken);
+            return student!;
+        }
     }
 }

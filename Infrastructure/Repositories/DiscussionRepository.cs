@@ -17,7 +17,18 @@ namespace Infrastructure.Repositories
             _context = context;
             _mapper = mapper;
         }
-
+        public async Task CreateDiscussionThreadAsync(DicussionThread dicussionThread, CancellationToken cancellationToken)
+        {
+            await _context.DicussionThreads.AddAsync(dicussionThread, cancellationToken);
+        }
+        public async Task CreateDiscussionThreadReplyAsync(DicussionThreadReply reply, CancellationToken cancellationToken)
+        {
+            await _context.DicussionThreadReplies.AddAsync(reply, cancellationToken);
+        }
+        public async Task CreateDiscussionThreadReadAsync(DicussionThreadRead dicussionThreadRead, CancellationToken cancellationToken)
+        {
+            await _context.DicussionThreadReads.AddAsync(dicussionThreadRead, cancellationToken);
+        }
         public async Task<AllDiscussionsDto> GetAllDiscussionsAsync(string subDomain, string currentUser, string? Q, int? CourseId, ModuleItemType? Type, int? Cursor, int? Limit, CancellationToken cancellationToken)
         {
             var pageSize = Limit ?? 8;
@@ -144,10 +155,6 @@ namespace Infrastructure.Repositories
                 ThreadsLast24h = threadsLast24h
             };
         }
-        public async Task CreateDiscussionThreadReadAsync(DicussionThreadRead dicussionThreadRead, CancellationToken cancellationToken)
-        {
-            await _context.DicussionThreadReads.AddAsync(dicussionThreadRead, cancellationToken);
-        }
         public async Task<int> SaveAsync(CancellationToken cancellationToken)
         {
             return await _context.SaveChangesAsync(cancellationToken);
@@ -190,6 +197,38 @@ namespace Infrastructure.Repositories
                 .Where(dt => dt.ItemId == itemId && dt.CourseId == courseId)
                 .ProjectTo<StudentDiscussionDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+        public async Task<DicussionThread?> GetDicussionThreadAsync(int discussionId, CancellationToken cancellationToken)
+        {
+            var discussion = await _context.DicussionThreads.FirstOrDefaultAsync(dt => dt.Id == discussionId, cancellationToken);
+
+            if (discussion is null)
+                return null;
+
+            return discussion;
+        }
+        public async Task<bool> IsDiscussionOwnerAsync(int discussionId, string userId, CancellationToken cancellationToken)
+        {
+            return await _context.DicussionThreads
+                .AnyAsync(dt => dt.Id == discussionId && dt.CreatedBy == userId, cancellationToken);
+        }
+        public async Task DeleteDiscussionThreadAsync(DicussionThread dicussionThread, CancellationToken cancellationToken)
+        {
+            _context.DicussionThreads.Remove(dicussionThread);
+        }
+        public async Task<bool> IsDiscussionReplyOwnerAsync(int replyId, int discussionId, string userId, CancellationToken cancellationToken)
+        {
+            return await _context.DicussionThreadReplies
+                .AnyAsync(dr => dr.Id == replyId && dr.DicussionId == discussionId && dr.AuthorId == userId, cancellationToken);
+        }
+        public async Task<DicussionThreadReply?> GetDicussionThreadReplyAsync(int replyId, CancellationToken cancellationToken)
+        {
+            return await _context.DicussionThreadReplies
+                .FirstOrDefaultAsync(dr => dr.Id == replyId, cancellationToken);
+        }
+        public async Task DeleteDiscussionThreadReplyAsync(DicussionThreadReply reply, CancellationToken cancellationToken)
+        {
+            _context.DicussionThreadReplies.Remove(reply);
         }
     }
 }

@@ -2,7 +2,6 @@
 using Application.Features.TenantStudents.Dtos;
 using Microsoft.AspNetCore.Http;
 using System.Net;
-using System.Text.Json;
 
 namespace Application.Features.StudentUsers.Commands.Onboarding
 {
@@ -14,9 +13,11 @@ namespace Application.Features.StudentUsers.Commands.Onboarding
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStudentSubjectRepository _studentSubjectRepository;
         private readonly ITenantRepository _tenantRepository;
+        private readonly IStudentStreakRepository _studentStreakRepository;
 
         public OnboardingCommandHandler(IStudentRepository studentRepository, HybridCache hybridCache, IMapper mapper,
-            IHttpContextAccessor httpContextAccessor, IStudentSubjectRepository studentSubjectRepository, ITenantRepository tenantRepository)
+            IHttpContextAccessor httpContextAccessor, IStudentSubjectRepository studentSubjectRepository, ITenantRepository tenantRepository,
+            IStudentStreakRepository studentStreakRepository)
         {
             _studentRepository = studentRepository;
             _hybridCache = hybridCache;
@@ -24,20 +25,17 @@ namespace Application.Features.StudentUsers.Commands.Onboarding
             _httpContextAccessor = httpContextAccessor;
             _studentSubjectRepository = studentSubjectRepository;
             _tenantRepository = tenantRepository;
+            _studentStreakRepository = studentStreakRepository;
         }
         public async Task<OneOf<StudentResponse, Error>> Handle(OnboardingCommand request, CancellationToken cancellationToken)
         {
             var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionId];
             var cachedSessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
-            var sessionData = await _hybridCache.GetOrCreateAsync(cachedSessionKey, async entry =>
-            {
-                return await Task.FromResult<string?>(null);
-            }, cancellationToken: cancellationToken);
-
-            if (string.IsNullOrEmpty(sessionData))
-                return UserErrors.Unauthorized;
-
-            var session = JsonSerializer.Deserialize<UserSession>(sessionData);
+            var session = await _hybridCache.GetOrCreateAsync<UserSession?>(
+                cachedSessionKey,
+                _ => ValueTask.FromResult<UserSession?>(null),
+                cancellationToken: cancellationToken
+            );
             if (session is null)
                 return UserErrors.Unauthorized;
 
@@ -49,13 +47,13 @@ namespace Application.Features.StudentUsers.Commands.Onboarding
             try
             {
                 _mapper.Map(request, student);
-                
                 await _studentRepository.UpdateHasOnboardedAsync(session.UserId, cancellationToken);
+                
                 var subjectIds = await _studentSubjectRepository.GetSubjectIdsAsync(request.Subjects, cancellationToken);
                 var missingSubjects = request.Subjects.Except(subjectIds.Keys).ToList();
                 if (missingSubjects.Any())
-                    return new Error("InvalidSubjects", $"لم يتم العثور على المواد التالية: {string.Join("، ", missingSubjects)}",HttpStatusCode.BadRequest);
-                
+                    return new Error("InvalidSubjects", $"لم يتم العثور على المواد التالية: {string.Join("، ", missingSubjects)}", HttpStatusCode.BadRequest);
+
                 var newStudentSubjects = subjectIds.Select(kvp => new StudentSubject
                 {
                     Confidence = request.Confidence[kvp.Key],
@@ -63,7 +61,10 @@ namespace Application.Features.StudentUsers.Commands.Onboarding
                     AvailableSubjectId = kvp.Value
                 }).ToList();
 
+                var newStudentStreak = new StudentStreak { StudentId = session.StudentId };
+
                 await _studentSubjectRepository.CreateStudentSubjectAsync(newStudentSubjects, cancellationToken);
+                await _studentStreakRepository.CreateStudentStreakAsync(newStudentStreak, cancellationToken);
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
                 return new StudentResponse { Message = MessagesConstants.StudentOnboardingCompleted };
             }

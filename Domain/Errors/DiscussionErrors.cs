@@ -9,5 +9,11 @@ namespace Domain.Errors
 
         public static Error DiscussionReplyNotFound =>
             new("DiscussionReply.NotFound", "تعذر العثور على رد النقاش المطلوب", HttpStatusCode.NotFound);
+
+        public static Error NotDiscussionOwner =>
+            new("Discussion.NotOwner", "لا يمكنك تعديل هذا النقاش لأنه لا يخصك", HttpStatusCode.Forbidden);
+
+        public static Error NotDiscussionReplyOwner =>
+            new("Discussion.NotOwner", "لا يمكنك تعديل هذا الرد لأنه لا يخصك", HttpStatusCode.Forbidden);
     }
 }

@@ -25,6 +25,16 @@
 
             CreateMap<Module, CourseModuleDto>()
                 .ForMember(dest => dest.LessonsCount, opt => opt.MapFrom(src => src.Course.Lessons.Count(l => l.ModuleId == src.Id)));
+
+            CreateMap<PaymentMethod, PublicPaymentMethodDto>();
+
+            CreateMap<Order, OrderDto>()
+                .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentType))
+                .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Course.Currency))
+                .ForMember(dest => dest.Course, opt => opt.MapFrom(src => src.Course));
+
+            CreateMap<Course, CourseDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
         }
     }
 }

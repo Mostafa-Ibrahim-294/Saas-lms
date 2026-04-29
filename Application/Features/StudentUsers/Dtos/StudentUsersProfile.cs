@@ -9,6 +9,8 @@ namespace Application.Features.StudentUsers.Dtos
             CreateMap<ApplicationUser, StudentUserProfileDto>();
 
             CreateMap<OnboardingCommand, Student>();
+
+            CreateMap<StudentStreak, StudentStreakDto>();
         }
     }
 }

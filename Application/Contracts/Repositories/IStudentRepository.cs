@@ -15,5 +15,8 @@ namespace Application.Contracts.Repositories
         Task<List<AvailableSubjectDto>> GetAvailableSubjectsAsync(CancellationToken cancellationToken);
         Task UpdateHasOnboardedAsync(string userId, CancellationToken cancellationToken);
         Task<string> GetStudentEmailAsync(string userId, CancellationToken cancellationToken);
+        Task<string> GetStuentNameByIdAsync(int studentId, CancellationToken cancellationToken);
+        Task<Student?> GetStudentByInviteCodeAsync(string inviteCode, CancellationToken cancellationToken);
+        Task<Student> GetStudentByIdAsync(int studentId, CancellationToken cancellationToken);
     }
 }

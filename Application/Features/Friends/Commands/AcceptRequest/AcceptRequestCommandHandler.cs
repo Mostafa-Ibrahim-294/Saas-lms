@@ -1,0 +1,63 @@
+﻿using Application.Contracts.Repositories;
+using Application.Features.Friends.Dtos;
+using Application.Helpers;
+using Domain.Enums;
+using Hangfire;
+using Microsoft.AspNetCore.Http;
+
+namespace Application.Features.Friends.Commands.AcceptRequest
+{
+    internal sealed class AcceptRequestCommandHandler : IRequestHandler<AcceptRequestCommand, OneOf<FriendResponse, Error>>
+    {
+        private readonly HybridCache _hybridCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IFriendRepository _friendRepository;
+        private readonly IStudentRepository _studentRepository;
+        private readonly IEmailSender _emailSender;
+        public AcceptRequestCommandHandler(HybridCache hybridCache, IHttpContextAccessor httpContextAccessor,
+            IFriendRepository friendRepository, IStudentRepository studentRepository, IEmailSender emailSender)
+        {
+            _hybridCache = hybridCache;
+            _httpContextAccessor = httpContextAccessor;
+            _friendRepository = friendRepository;
+            _studentRepository = studentRepository;
+            _emailSender = emailSender;
+        }
+        public async Task<OneOf<FriendResponse, Error>> Handle(AcceptRequestCommand request, CancellationToken cancellationToken)
+        {
+            var sessionId = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SessionId];
+            var cachedSessionKey = $"{CacheKeysConstants.SessionKey}_{sessionId}";
+            var session = await _hybridCache.GetOrCreateAsync<UserSession?>(
+                cachedSessionKey,
+                _ => ValueTask.FromResult<UserSession?>(null),
+                cancellationToken: cancellationToken
+            );
+            if (session is null)
+                return UserErrors.Unauthorized;
+
+            var friendRequest = await _friendRepository.GetFriendRequestPendingAsync(request.RequestId, cancellationToken);
+            if (friendRequest is null)
+                return FriendErrors.RequestNotFound;
+
+            var senderStudentId = friendRequest.ActionStudentId;
+            var senderStudent = await _studentRepository.GetStudentByIdAsync(senderStudentId, cancellationToken);
+            var studentAcceptedName = await _studentRepository.GetStuentNameByIdAsync(session.StudentId, cancellationToken);
+
+            friendRequest.ActionStudentId = session.StudentId;
+            friendRequest.Status = FriendStatus.Accepted;
+            await _friendRepository.UpdateRequestStatusAsync(friendRequest, cancellationToken);
+            await _friendRepository.SaveAsync(cancellationToken);
+
+            var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(
+                EmailConstants.AcceptRequestTemplate,
+                new Dictionary<string, string>
+                {
+                    { "{{UserName}}", senderStudent.User.FirstName+" "+senderStudent.User.LastName },
+                    { "{{FriendName}}", studentAcceptedName },
+                    { "{{OPEN_APP_URL}}", EmailConstants.RequestFriendUrl },
+                });
+            BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(senderStudent.User.Email!, EmailConstants.AcceptRequestSubject, emailBody));
+            return new FriendResponse { Message = MessagesConstants.AcceptRequestSuccessfully };
+        }
+    }
+}

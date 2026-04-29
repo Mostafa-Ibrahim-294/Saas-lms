@@ -54,7 +54,8 @@ namespace Application.Features.StudentAuth.Commands.VerifyOtp
                 UserId = user.Id,
                 StudentId = studentId,
                 Role = RoleConstants.Student,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTimeOffset.UtcNow.AddDays(7)
             };
 
             await _hybridCache.SetAsync(

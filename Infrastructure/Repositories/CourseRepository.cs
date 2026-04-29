@@ -188,7 +188,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task<WebsiteCourseDetailsDto?> GetWebsiteCourseDetailsAsync(int courseId, string subDomain, string? studentId, CancellationToken cancellationToken)
+        public async Task<WebsiteCourseDetailsDto?> GetWebsiteCourseDetailsAsync(int courseId, string subDomain, string? studentUserId, CancellationToken cancellationToken)
         {
             var course = await _dbContext.Courses
                 .Where(c => c.Id == courseId && c.Tenant.SubDomain == subDomain && c.CourseStatus == CourseStatus.Published)
@@ -198,12 +198,12 @@ namespace Infrastructure.Repositories
             if (course is null)
                 return null;
 
-            if (!string.IsNullOrEmpty(studentId))
+            if (!string.IsNullOrEmpty(studentUserId))
             {
                 course.IsEnrolled = await _dbContext.Enrollments
-                    .AnyAsync(e => e.CourseId == courseId && e.Student.UserId == studentId, cancellationToken);
+                    .AnyAsync(e => e.CourseId == courseId && e.Student.UserId == studentUserId, cancellationToken);
                 course.HasPendingOrder = await _dbContext.Orders
-                    .AnyAsync(o => o.CourseId == courseId && o.Student.UserId == studentId && o.Status == OrderStatus.Pending, cancellationToken);
+                    .AnyAsync(o => o.CourseId == courseId && o.Student.UserId == studentUserId && o.Status == OrderStatus.Pending, cancellationToken);
             }
             return course;
         }

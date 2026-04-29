@@ -22,7 +22,6 @@ namespace Application.Features.TenantPaymentMethods.Queries.GetPaymentMethods
             var isPermitted = await _tenantMemberRepository.IsPermittedMember(userId, PermissionConstants.MANAGE_INTEGRATIONS, cancellationToken);
             if (!isPermitted)
                 return MemberErrors.NotAllowed;
-
             return await _paymentMethodRepository.GetPaymentMethodsAsync(cancellationToken);
         }
     }

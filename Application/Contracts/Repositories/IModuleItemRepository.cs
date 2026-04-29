@@ -24,5 +24,6 @@ namespace Application.Contracts.Repositories
         Task<int?> GetFirstModuleItemAsync(int? moduleId, CancellationToken cancellationToken);
         Task<bool> ModuleItemIsExistAsync(int moduleItemId, int courseId, CancellationToken cancellationToken);
         Task<StudentLessonItemDto> GetStudentLessonItemAsync(int moduleItemId, int courseId, CancellationToken cancellationToken);
+        Task<int> GetModuleIdAsync(int itemId, int courseId, CancellationToken cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Application.Features.TenantOrders.Commands.BulkOrderAction;
+﻿using Application.Features.Public.Dtos;
+using Application.Features.TenantOrders.Commands.BulkOrderAction;
 using Application.Features.TenantOrders.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -17,7 +18,14 @@ namespace Infrastructure.Repositories
             _context = context;
             _mapper = mapper;
         }
-
+        public async Task CreateOrderAsync(Order order, CancellationToken cancellationToken)
+        {
+            await _context.Orders.AddAsync(order, cancellationToken);
+        }
+        public async Task<int> SaveAsync(CancellationToken cancellationToken)
+        {
+            return await _context.SaveChangesAsync(cancellationToken);
+        }
         public async Task<List<TenantOrderDto>> GetTenantOrdersAsync(int tenantId, CancellationToken cancellationToken)
         {
             return await _context.Orders
@@ -39,8 +47,7 @@ namespace Infrastructure.Repositories
                     TotalRevenue = g.Where(o => o.Status == OrderStatus.Approved).Sum(o => o.PricePaid)
                 }).FirstOrDefaultAsync(cancellationToken) ?? new TenantOrderStatisticsDto();
         }
-        public async Task<bool> ApproveOrderWithEnrollmentAsync(int orderId, int tenantId, string actor,Enrollment enrollment,
-            StudentSubscription subscription, CancellationToken cancellationToken)
+        public async Task<bool> ApproveOrderWithEnrollmentAsync(int orderId, int tenantId, string actor, Enrollment enrollment, StudentSubscription subscription, CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
@@ -135,14 +142,35 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
-        public Task<Order?> GetOrderAsync(int tenantId, int orderId, CancellationToken cancellationToken)
+        public async Task<Order?> GetOrderAsync(int tenantId, int orderId, CancellationToken cancellationToken)
         {
-            return _context.Orders
+            return await _context.Orders
                 .AsNoTracking()
                 .Include(o => o.Course)
                     .ThenInclude(c => c.CreatedBy)
                 .Where(o => o.Id == orderId && o.TenantId == tenantId)
                 .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task<OrderDto?> GetStudentOrderAsync(int orderId, int studentId, string subDomain, CancellationToken cancellationToken)
+        {
+            return await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.Course)
+                .Where(o => o.Id == orderId && o.StudentId == studentId)
+                .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task<OrderStatus> GetOrderStatusAsync(int orderId, CancellationToken cancellationToken)
+        {
+            return await _context.Orders
+                .Where(o => o.Id == orderId)
+                .Select(o => o.Status)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task<Order?> GetOrderByIdAsync(int orderId, int studentId, string subDomain, CancellationToken cancellationToken)
+        {
+            return await _context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId && o.StudentId == studentId && o.Tenant.SubDomain == subDomain, cancellationToken);
         }
     }
 }

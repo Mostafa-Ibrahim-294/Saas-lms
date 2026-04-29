@@ -26,6 +26,10 @@ namespace Domain.Entites
         public ICollection<StudentGrade> StudentGrades { get; set; } = [];
         public ICollection<StudentSubscription> StudentSubscriptions { get; set; } = [];
         public ICollection<StudentSubject> StudentSubjects { get; set; } = [];
+        public StudentStreak StudentStreak { get; set; } = null!;
+        public ICollection<Friend> Students1 { get; set; } = [];
+        public ICollection<Friend> Students2 { get; set; } = [];
+        public ICollection<Friend> Actions { get; set; } = [];
 
         public static Student Create(string userId, string parentEmail)
         {

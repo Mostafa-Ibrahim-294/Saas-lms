@@ -58,9 +58,11 @@ namespace Infrastructure.Persistence
         internal DbSet<DicussionThreadRead> DicussionThreadReads { get; set; }
         internal DbSet<Announcement> Announcements { get; set; }
         internal DbSet<Schedule> Schedules { get; set; }
-        public DbSet<StudentSubscription> StudentSubscriptions { get; set; }
-        public DbSet<AvailableSubject> AvailableSubjects { get; set; }
-        public DbSet<StudentSubject> StudentSubjects { get; set; }
+        internal DbSet<StudentSubscription> StudentSubscriptions { get; set; }
+        internal DbSet<AvailableSubject> AvailableSubjects { get; set; }
+        internal DbSet<StudentSubject> StudentSubjects { get; set; }
+        internal DbSet<StudentStreak> StudentStreaks { get; set; }
+        internal DbSet<Friend> Friends { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

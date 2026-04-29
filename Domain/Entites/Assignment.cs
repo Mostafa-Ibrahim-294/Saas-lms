@@ -18,8 +18,6 @@ namespace Domain.Entites
         public int ModuleId { get; set; }
         public Module Module { get; set; } = null!;
         public ICollection<AssignmentSubmission> Submissions { get; set; } = [];
-
-
     }
     public sealed class Attachment
     {

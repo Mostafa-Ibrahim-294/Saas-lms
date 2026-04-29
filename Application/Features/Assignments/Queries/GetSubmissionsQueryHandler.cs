@@ -1,9 +1,6 @@
 ﻿using Application.Contracts.Repositories;
 using Application.Features.Assignments.Dtos;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Assignments.Queries
 {
