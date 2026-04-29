@@ -1,0 +1,8 @@
+﻿namespace Application.Features.StudentCourse.Dtos
+{
+    public sealed class CourseDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+}

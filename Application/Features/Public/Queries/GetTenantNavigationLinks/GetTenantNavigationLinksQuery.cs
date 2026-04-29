@@ -2,5 +2,5 @@
 
 namespace Application.Features.Public.Queries.GetTenantNavigationLinks
 {
-    public sealed record GetTenantNavigationLinksQuery(string SubDomain) : IRequest<List<TenantNavigationLinkDto>>;
+    public sealed record GetTenantNavigationLinksQuery : IRequest<List<TenantNavigationLinkDto>>;
 }

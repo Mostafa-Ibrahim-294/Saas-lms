@@ -26,7 +26,7 @@ namespace Application.Features.TenantWebsite.Commands.UpdateTenantPage
             if (!isUpdated)
                 return TenantWebsiteErrors.TenantPageNotFound;
 
-            return new TenantPageResponse { Message = TenantWebsiteConstants.Updated };
+            return new TenantPageResponse { Message = MessagesConstants.TenantWebsiteUpdated };
         }
     }
 }

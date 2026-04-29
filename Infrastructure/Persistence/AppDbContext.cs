@@ -51,6 +51,20 @@ namespace Infrastructure.Persistence
         internal DbSet<WebsiteAppearanceSetting> WebsiteAppearanceSettings { get; set; }
         internal DbSet<EmailSetting> EmailSettings { get; set; }
         internal DbSet<NotificationSetting> NotificationSettings { get; set; }
+        internal DbSet<StudentGrade> StudentGrades { get; set; }
+        internal DbSet<CourseInvite> CourseInvites { get; set; }
+        internal DbSet<DicussionThread> DicussionThreads { get; set; }
+        internal DbSet<DicussionThreadReply> DicussionThreadReplies { get; set; }
+        internal DbSet<DicussionThreadRead> DicussionThreadReads { get; set; }
+        internal DbSet<Announcement> Announcements { get; set; }
+        internal DbSet<Schedule> Schedules { get; set; }
+        internal DbSet<StudentSubscription> StudentSubscriptions { get; set; }
+        internal DbSet<AvailableSubject> AvailableSubjects { get; set; }
+        internal DbSet<StudentSubject> StudentSubjects { get; set; }
+        internal DbSet<StudentStreak> StudentStreaks { get; set; }
+        internal DbSet<Friend> Friends { get; set; }
+        internal DbSet<LessonVideoSegmant> LessonVideoSegmants { get; set; }
+        internal DbSet<Level> Levels { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

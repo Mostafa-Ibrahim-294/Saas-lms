@@ -1,0 +1,26 @@
+﻿using Application.Features.TenantUsers.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+
+namespace Infrastructure.Repositories
+{
+    internal sealed class TenantUserRepository : ITenantUserRepository
+    {
+        private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
+
+        public TenantUserRepository(AppDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        public async Task<IEnumerable<UserTenantsDto>> GetTenantsAsync(string userId, CancellationToken cancellationToken)
+        {
+            return await _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.UserId == userId && tm.IsActive)
+                .ProjectTo<UserTenantsDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
+    }
+}

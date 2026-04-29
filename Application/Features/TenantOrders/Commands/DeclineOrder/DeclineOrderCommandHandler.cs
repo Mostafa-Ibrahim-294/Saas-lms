@@ -36,7 +36,7 @@ namespace Application.Features.TenantOrders.Commands.DeclineOrder
             if (!result)
                 return OrderErrors.OrderDeclineFailed;
 
-            return new TenantOrderResponse { Message = OrderConstants.OrderDeclined };
+            return new TenantOrderResponse { Message = MessagesConstants.OrderDeclined };
         }
     }
 }

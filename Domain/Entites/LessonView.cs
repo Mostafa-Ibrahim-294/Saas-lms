@@ -1,8 +1,5 @@
 ﻿using Domain.Abstractions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entites
 {
@@ -21,5 +18,6 @@ namespace Domain.Entites
         public string Device { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public ICollection<LessonVideoSegmant> VideoSegmants { get; set; } = new List<LessonVideoSegmant>();
     }
 }

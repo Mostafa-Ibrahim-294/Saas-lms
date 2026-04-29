@@ -15,7 +15,7 @@ namespace Application.Features.TenantMembers.Commands.DeclineTenanInvite
         public async Task<DeclineTenanInviteDto> Handle(DeclineTenanInviteCommand request, CancellationToken cancellationToken)
         {
             await _tenantInviteRepository.DeclineInviteAsync(request.token, cancellationToken);
-            return new DeclineTenanInviteDto { Message = TenantInviteConstants.DeclineInviteResponse };
+            return new DeclineTenanInviteDto { Message = MessagesConstants.TenantInviteDeclined };
         }
     }
 }

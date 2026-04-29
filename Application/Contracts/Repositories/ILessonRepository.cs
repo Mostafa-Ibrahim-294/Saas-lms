@@ -1,4 +1,5 @@
 ﻿using Application.Features.Lessons.Dtos;
+using Application.Features.StudentLessons.Dtos;
 
 namespace Application.Contracts.Repositories
 {
@@ -9,5 +10,6 @@ namespace Application.Contracts.Repositories
         Task<LessonOverviewDto?> GetLessonOverviewAsync(int courseId, int itemId, CancellationToken cancellationToken);
         Task<DateTime> GetPeakActivityTimeAsync(int itemId, CancellationToken cancellationToken);
         Task<bool> IsFound(int id, CancellationToken cancellationToken);
+        Task<StudentLessonProgressDto> GetStudentLessonProgressAsync(int studentId, int courseId, int itemId, CancellationToken cancellationToken);
     }
 }

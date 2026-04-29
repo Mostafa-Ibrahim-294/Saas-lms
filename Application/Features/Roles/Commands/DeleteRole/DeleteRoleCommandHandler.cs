@@ -28,7 +28,7 @@ namespace Application.Features.Roles.Commands.DeleteRole
                 return TenantMemberErrors.CannotDeleteOwnerRole;
 
             await _tenantRoleRepository.DeleteRoleAsync(request.RoleId, cancellationToken);
-            return new RoleDto { Message = RoleConstants.DeleteRoleResponse };
+            return new RoleDto { Message = MessagesConstants.RoleDeleted };
         }
     }
 }

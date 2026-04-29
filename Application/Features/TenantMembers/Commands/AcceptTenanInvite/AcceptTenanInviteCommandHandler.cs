@@ -68,7 +68,7 @@ namespace Application.Features.TenantMembers.Commands.AcceptTenanInvite
                 Domain = AuthConstants.CookieDomain,
                 IsEssential = true
             });
-            return new AcceptTenanInviteDto { Message = TenantInviteConstants.AcceptInviteResponse, Subdomain = subdomain };
+            return new AcceptTenanInviteDto { Message = MessagesConstants.TenantInviteAccepted, Subdomain = subdomain };
         }
     }
 }

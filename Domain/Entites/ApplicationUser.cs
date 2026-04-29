@@ -9,11 +9,14 @@ namespace Domain.Entites
         public string LastName { get; set; } = string.Empty;
         public string? LastActiveTenantSubDomain { get; set; }
         public bool HasOnboarded { get; set; }
-        public string? ProfilePicture { get; set; } = string.Empty;
+        public string? ProfilePicture { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         public ICollection<ZoomIntegration> ZoomIntegrations { get; set; } = [];
         public ICollection<ZoomOAuthState> ZoomOAuthStates { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<DicussionThreadReply> DicussionReplies { get; set; } = [];
+        public ICollection<DicussionThreadRead> DicussionReads { get; set; } = [];
     }
 }

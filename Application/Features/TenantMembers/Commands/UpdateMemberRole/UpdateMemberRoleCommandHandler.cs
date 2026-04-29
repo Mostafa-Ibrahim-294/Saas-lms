@@ -38,7 +38,7 @@ namespace Application.Features.TenantMembers.Commands.UpdateMemberRole
                 return TenantMemberErrors.CannotChangeOwnRole;
 
             await _tenantMemberRepository.UpdateRoleMemberAsync(request.MemberId, request.RoleId, cancellationToken);
-            return new UpdateMemberRoleDto { Message = TenantMemberConstants.UpdateRoleMemberResponse };
+            return new UpdateMemberRoleDto { Message = MessagesConstants.TenantMemberUpdatedRole };
         }
     }
 }

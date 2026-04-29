@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب صداقة جديد</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: oklch(0.62 0.23 275);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .username {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2d3436;
+            margin: 20px 0;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #555;
+            margin: 15px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 20px 10px;
+            padding: 14px 28px;
+            font-size: 15px;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            background-color: oklch(0.62 0.23 275);
+        }
+
+        .secondary-actions {
+            margin-top: 15px;
+        }
+
+            .secondary-actions a {
+                font-size: 13px;
+                margin: 0 8px;
+                text-decoration: none;
+            }
+
+        .accept {
+            color: #00b894;
+        }
+
+        .decline {
+            color: #d63031;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #888;
+            margin-top: 20px;
+        }
+
+        .footer {
+            background-color: #f0f0f0;
+            text-align: center;
+            font-size: 12px;
+            color: #888888;
+            padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+            }
+
+            .username {
+                font-size: 18px;
+            }
+
+            .btn {
+                display: block;
+                margin: 15px auto;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            طلب صداقة جديد
+        </div>
+
+        <div class="content">
+            <p>مرحبًا <strong>{{UserName}}</strong>،</p>
+
+            <p class="message">
+                لديك طلب صداقة جديد من:
+            </p>
+
+            <div class="username">
+                {{RequesterName}}
+            </div>
+
+            <p class="message">
+                اضغط على الزر التالي لعرض الطلب والتفاعل معه:
+            </p>
+
+            <a href="{{VIEW_REQUEST_URL}}" class="btn">
+                عرض طلب الصداقة
+            </a>
+
+            <p class="note">
+                يمكنك أيضًا إدارة طلبات الصداقة من داخل التطبيق.
+            </p>
+        </div>
+
+        <div class="footer">
+            © 2026 منصتك. جميع الحقوق محفوظة.
+        </div>
+    </div>
+</body>
+</html>

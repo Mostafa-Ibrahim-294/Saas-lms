@@ -29,7 +29,7 @@ namespace Application.Features.TenantPaymentMethods.Commands.DeletePaymentMethod
             if (!deletePaymentMethod)
                 return TenantPaymentMethodErrors.DeleteFailed;
 
-            return new PaymentMethodResponseMessage { Message = TenantPaymentMethodsConstants.DeletedSuccessfully };
+            return new PaymentMethodResponseMessage { Message = MessagesConstants.TenantPaymentMethodsDeleted };
         }
     }
 }

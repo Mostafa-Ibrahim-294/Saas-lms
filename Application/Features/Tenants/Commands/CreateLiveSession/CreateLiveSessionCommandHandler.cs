@@ -125,7 +125,7 @@ namespace Application.Features.Tenants.Commands.CreateLiveSession
                     BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(student.User.Email!, EmailConstants.Subject, emailBody));
                 }
             }
-            return new CreateLiveSessionDto { Message = LiveSessionConstants.CreateSessionResponse };
+            return new CreateLiveSessionDto { Message = MessagesConstants.LiveSessionCreated };
         }
     }
 }

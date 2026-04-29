@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Persistence.Configurations
 {
@@ -9,12 +6,23 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Student> builder)
         {
-            builder.Property(s => s.ParentName)
-                .HasMaxLength(100);
             builder.Property(s => s.ParentEmail)
+               .HasMaxLength(100);
+
+            builder.Property(s => s.Grade)
                 .HasMaxLength(100);
-            builder.Property(s => s.ParentPhone)
-                .HasMaxLength(15);
+
+            builder.Property(s => s.Semester)
+                .HasMaxLength(50);
+
+            builder.Property(s => s.Goal)
+                .HasMaxLength(250);
+
+            builder.Property(s => s.InviteCode)
+                .HasMaxLength(10);
+
+            builder.HasIndex(s => s.InviteCode)
+                .IsUnique();
         }
     }
 }

@@ -45,9 +45,7 @@ namespace Application.Features.Files.Commands.CreateUpload
 
             var usedBytes = await _tenantRepository.GetPlanFeatureUsageAsync(planFeatureId, cancellationToken);
             var usedMB = Math.Max(0, usedBytes / (1024 * 1024));
-
             var requestMB = request.Size / (1024 * 1024);
-
             var totalAfterUpload = usedMB + requestMB - OverFlowSizeMB;
 
             if (totalAfterUpload > limitMB)
@@ -57,25 +55,20 @@ namespace Application.Features.Files.Commands.CreateUpload
             if (credentials == null)
                 return FileErrors.UploadFailed;
 
-            var fileEntity = await CreateFileEntity(credentials.VideoId, request.Title, requestMB, credentials.EmbedUrl, tenantId, userId);
-            await _fileRepository.CreateAsync(fileEntity, cancellationToken);
-            await _fileRepository.SaveAsync(cancellationToken);
-            return credentials;
-        }
-
-        private async Task<Domain.Entites.File> CreateFileEntity(string videoId, string title, int size, string EmbedUrl, int tenantId, string userId)
-        {
-            return new Domain.Entites.File
+            var newFile = new Domain.Entites.File
             {
-                Id = videoId,
-                Name = title,
-                Size = size,
+                Id = credentials.VideoId,
+                Name = request.Title,
+                Size = requestMB,
                 Type = Domain.Enums.FileType.Video,
                 Status = Domain.Enums.FileStatus.Pending,
-                Url = EmbedUrl,
+                Url = credentials.EmbedUrl,
                 TenantId = tenantId,
                 UploadedById = userId
             };
+            await _fileRepository.CreateAsync(newFile, cancellationToken);
+            await _fileRepository.SaveAsync(cancellationToken);
+            return credentials;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
@@ -15,7 +16,6 @@ namespace Application.Extensions
             builder.Services.AddValidatorsFromAssembly(typeof(ApplicationService).Assembly)
                 .AddFluentValidationAutoValidation();
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddSession();
             builder.Services.AddScoped<ICurrentUserId, CurrentUserId>();
         }
     }

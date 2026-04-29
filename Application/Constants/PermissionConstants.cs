@@ -33,5 +33,6 @@
         public const string MANAGE_ORDERS = "MANAGE_ORDERS";
         public const string MANAGE_WEBSITE_SETTINGS = "MANAGE_WEBSITE_SETTINGS";
         public const string MANAGE_INTEGRATIONS = "MANAGE_INTEGRATIONS";
+        public const string MANAGE_STUDENTS = "MANAGE_STUDENTS";
     }
 }

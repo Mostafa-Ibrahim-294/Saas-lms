@@ -1,12 +1,8 @@
 ﻿using Application.Features.ModuleItems.Dtos;
-using Application.Features.TenantMembers.Dtos;
+using Application.Features.StudentLessons.Dtos;
 using AutoMapper;
-using AutoMapper.Execution;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories
 {
@@ -25,32 +21,27 @@ namespace Infrastructure.Repositories
             await _dbContext.QuizQuestions.AddRangeAsync(questions, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-
         public async Task CreateAssignment(Assignment assignment, CancellationToken cancellationToken)
         {
             await _dbContext.Assignments.AddAsync(assignment);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-
         public async Task CreateLesson(Lesson lesson, CancellationToken cancellationToken)
         {
             await _dbContext.Lessons.AddAsync(lesson);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-
         public async Task<int> CreateModuleItem(ModuleItem moduleItem, CancellationToken cancellationToken)
         {
             await _dbContext.ModuleItems.AddAsync(moduleItem);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return moduleItem.Id;
         }
-
         public async Task CreateQuiz(Quiz quiz, CancellationToken cancellationToken)
         {
             await _dbContext.Quizzes.AddAsync(quiz);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-
         public async Task<List<AllItemsDto>> GetAllItemsAsync(int moduleId, ModuleItemType? type, CancellationToken cancellationToken)
         {
             var query = _dbContext.ModuleItems
@@ -64,7 +55,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<AllItemsDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
-
         public async Task<AssignmentDto?> GetAssignmentAsync(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.Assignments
@@ -73,41 +63,35 @@ namespace Infrastructure.Repositories
                 .ProjectTo<AssignmentDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task<Assignment?> GetAssignmentByModuleItemIdAsync(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.Assignments.
                  Include(x => x.ModuleItem).
                  FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId, cancellationToken);
         }
-
         public async Task<ModuleItem?> GetAsync(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.ModuleItems.AsNoTracking().FirstOrDefaultAsync(m => m.Id == moduleItemId, cancellationToken);
 
         }
-
         public async Task<ModuleItem?> GetItemConditions(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.ModuleItems
                 .Include(mi => mi.Conditions)
                 .FirstOrDefaultAsync(m => m.Id == moduleItemId, cancellationToken);
         }
-
         public async Task<Lesson?> GetLessonByModuleItemIdAsync(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.Lessons.
                  Include(x => x.ModuleItem).
                  FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId, cancellationToken);
         }
-
         public async Task<Quiz?> GetQuizAsync(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.Quizzes.
                  FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId, cancellationToken);
 
         }
-
         public async Task<QuizDto?> GetQuizWithQuestions(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.Quizzes
@@ -116,7 +100,6 @@ namespace Infrastructure.Repositories
                 .ProjectTo<QuizDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task<SettingsDto?> GetSettingsAsync(int moduleItemId, CancellationToken cancellationToken)
         {
             return await _dbContext.ModuleItems
@@ -125,11 +108,47 @@ namespace Infrastructure.Repositories
                 .ProjectTo<SettingsDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task RemoveAsync(ModuleItem moduleItem, CancellationToken cancellationToken)
         {
             _dbContext.ModuleItems.Remove(moduleItem);
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<int?> GetFirstModuleItemAsync(int? moduleId, CancellationToken cancellationToken)
+        {
+            if (moduleId is null)
+                return null;
+
+            return await _dbContext.ModuleItems
+                .Where(mt => mt.ModuleId == moduleId && mt.Order == 1)
+                .Select(mt => (int?)mt.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task<bool> ModuleItemIsExistAsync(int moduleItemId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.ModuleItems
+                .AnyAsync(mi => mi.Id == moduleItemId && mi.CourseId == courseId, cancellationToken);
+        }
+        public async Task<StudentLessonItemDto> GetStudentLessonItemAsync(int moduleItemId, int courseId, CancellationToken cancellationToken)
+        {
+            var result = await _dbContext.ModuleItems
+                .Where(mi => mi.Id == moduleItemId && mi.CourseId == courseId)
+                .Include(mi => mi.Lesson)
+                    .ThenInclude(l => l!.File)
+                .Include(mi => mi.Lesson)
+                    .ThenInclude(l => l!.LessonViews)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (result is null)
+                return null!;
+
+            return _mapper.Map<StudentLessonItemDto>(result);
+        }
+        public async Task<int> GetModuleIdAsync(int itemId, int courseId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.ModuleItems
+                .Where(mi => mi.Id == itemId && mi.CourseId == courseId)
+                .Select(mi => mi.ModuleId)
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

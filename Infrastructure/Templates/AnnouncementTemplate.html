@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
+    <title>إعلان جديد</title>
+    <style>
+        body {
+            width: 100% !important;
+            margin: 0;
+            -webkit-text-size-adjust: none;
+            font-family: Arial, Tahoma, sans-serif;
+            background-color: #f2f4f6;
+            color: #51545e;
+            direction: rtl;
+        }
+
+        .email-body_inner {
+            width: 100%;
+            max-width: 570px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+        }
+
+        .content-cell {
+            padding: 40px;
+            text-align: right;
+            direction: rtl;
+            unicode-bidi: embed;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: right;
+            color: #1a1a2e;
+            margin-top: 0;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: right;
+            margin: 0 0 10px 0;
+        }
+
+        .announcement-card {
+            background-color: #f8f9ff;
+            border: 1px solid #e0e4ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .announcement-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin: 0 0 12px 0;
+        }
+
+        .announcement-content {
+            font-size: 15px;
+            line-height: 1.9;
+            color: #444;
+            margin: 0;
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .badge-pinned {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-all {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .badge-course {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .meta-label {
+            color: #a8aaaf;
+            font-size: 13px;
+            margin: 12px 0 2px 0;
+        }
+
+        .meta-value {
+            font-weight: bold;
+            font-size: 15px;
+            margin: 0 0 8px 0;
+        }
+
+        .platform-name {
+            color: #22bc66;
+            font-weight: bold;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 24px 0;
+        }
+
+        .footer-note {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #22bc66;
+            color: #ffffff !important;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="center" style="padding: 24px 0;">
+                <table class="email-body_inner">
+                    <tr>
+                        <td class="content-cell" dir="rtl">
+                            <h1>إعلان جديد!</h1>
+
+                            <p>
+                                لديك إعلان جديد من
+                                <strong><span dir="ltr">{{announcer_name}}</span></strong>
+                                على منصة
+                                <span class="platform-name">
+                                    <span dir="ltr">{{platform_name}}</span>
+                                </span>
+                            </p>
+
+                            <div class="announcement-card">
+                                <p class="announcement-title">
+                                    {{title}}
+                                </p>
+
+                                <p class="announcement-content">
+                                    {{content}}
+                                </p>
+
+                                <table style="margin-top:16px;">
+                                    <tr>
+                                        {{#if is_pinned}}
+                                        <td style="padding-left:6px;">
+                                            <span class="badge badge-pinned">مثبت</span>
+                                        </td>
+                                        {{/if}}
+
+                                        {{#if is_all}}
+                                        <td style="padding-left:6px;">
+                                            <span class="badge badge-all">للجميع</span>
+                                        </td>
+                                        {{/if}}
+
+                                        {{#if is_course}}
+                                        <td style="padding-left:6px;">
+                                            <span class="badge badge-course">خاص بالكورس</span>
+                                        </td>
+                                        {{/if}}
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p class="meta-label">نُشر بواسطة</p>
+                            <p class="meta-value">👤 <span dir="ltr">{{announcer_name}}</span></p>
+
+                            <p class="meta-label">تاريخ النشر</p>
+                            <p class="meta-value">🗓 {{created_at}}</p>
+
+                            <hr>
+
+                            <p class="footer-note">
+                                تم إرسال هذا الإعلان من منصة
+                                <span class="platform-name">{{platform_name}}</span>.
+                                إذا كنت لا تريد استقبال هذه الإشعارات، يمكنك تعديل إعدادات الإشعارات من حسابك.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

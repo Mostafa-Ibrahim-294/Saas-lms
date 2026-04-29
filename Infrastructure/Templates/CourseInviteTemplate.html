@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
+    <title>دعوة للانضمام إلى كورس</title>
+
+    <style>
+        body {
+            width: 100% !important;
+            margin: 0;
+            -webkit-text-size-adjust: none;
+            font-family: Arial, sans-serif;
+            background-color: #f2f4f6;
+            color: #51545e;
+            direction: rtl;
+        }
+
+        .email-body_inner {
+            width: 570px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+        }
+
+        .content-cell {
+            padding: 40px;
+            text-align: right;
+            direction: rtl;
+            unicode-bidi: embed;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: right;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: right;
+        }
+
+        .button {
+            background-color: #22bc66;
+            border-radius: 8px;
+            color: #fff !important;
+            display: inline-block;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .course-card {
+            background-color: #f8f9ff;
+            border: 1px solid #e0e4ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .course-label {
+            color: #a8aaaf;
+            font-size: 13px;
+        }
+
+        .course-value {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .platform-name {
+            color: #22bc66;
+            font-weight: bold;
+        }
+
+        .link-fallback {
+            direction: ltr;
+            text-align: left;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <table width="100%">
+        <tr>
+            <td align="center">
+                <table class="email-body_inner">
+                    <tr>
+                        <td class="content-cell" dir="rtl">
+
+                            <h1>مرحباً! 🎓</h1>
+
+                            <p>
+                                لقد قام
+                                <strong><span dir="ltr">{{inviter_name}}</span></strong>
+                                بدعوتك للانضمام إلى كورس جديد على منصة
+                                <span class="platform-name">
+                                    <span dir="ltr">{{platform_name}}</span>
+                                </span>
+                            </p>
+
+                            <div class="course-card">
+                                <p class="course-label">اسم الكورس</p>
+                                <p class="course-value">
+                                    📚 {{course_name}}
+                                </p>
+
+                                <p class="course-label">المدرس</p>
+                                <p class="course-value">
+                                    👨‍🏫 <span dir="ltr">{{inviter_name}}</span>
+                                </p>
+                            </div>
+
+                            <p>
+                                اضغط على الزر أدناه لقبول الدعوة والبدء في التعلم.
+                            </p>
+
+                            <p style="text-align:center;">
+                                <a href="{{action_url}}" class="button" target="_blank" dir="ltr">
+                                    قبول الدعوة والانضمام 🚀
+                                </a>
+                            </p>
+
+                            <p style="font-size:14px;color:#888;">
+                                ⏰ هذه الدعوة صالحة لمدة {{expiry_hours}} ساعة فقط.
+                            </p>
+
+                            <hr>
+
+                            <p style="font-size:13px;">
+                                إذا كنت تواجه مشكلة في الزر، انسخ الرابط التالي:
+                            </p>
+
+                            <p class="link-fallback">
+                                {{action_url}}
+                            </p>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

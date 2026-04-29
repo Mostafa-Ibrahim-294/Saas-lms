@@ -1,8 +1,5 @@
 ﻿using Domain.Abstractions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entites
 {
@@ -14,6 +11,7 @@ namespace Domain.Entites
         public CourseStatus Status { get; set; }
         public ModuleItemType Type { get; set; }
         public bool AllowDiscussions { get; set; }
+        public int Order { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public int ModuleId { get; set; }
@@ -24,5 +22,8 @@ namespace Domain.Entites
         public Lesson? Lesson { get; set; }
         public Quiz? Quiz { get; set; }
         public ICollection<ModuleItemCondition> Conditions { get; set; } = [];
+        public ICollection<StudentGrade> StudentGrades { get; set; } = [];
+        public ICollection<DicussionThread> DicussionThreads { get; set; } = [];
+        public ICollection<Enrollment> Enrollments { get; set; } = [];
     }
 }

@@ -23,7 +23,7 @@ namespace Application.Features.TenantWebsite.Commands.DeleteTenantPage
             var result = await _tenantWebsiteRepository.DeleteTenantPageAsync(tenantId, request.PageId, cancellationToken);
             if (result == 0)
                 return TenantWebsiteErrors.TenantPageNotFound;
-            return new TenantPageResponse { Message = TenantWebsiteConstants.Deleted };
+            return new TenantPageResponse { Message = MessagesConstants.TenantWebsiteDeleted };
         }
     }
 }

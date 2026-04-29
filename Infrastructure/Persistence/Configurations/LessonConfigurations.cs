@@ -16,7 +16,10 @@ namespace Infrastructure.Persistence.Configurations
                 .HasColumnType("jsonb")
                 .HasConversion(
                     v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                    v => JsonSerializer.Deserialize<List<Resource>>(v, (JsonSerializerOptions?)null)!
+                    v => JsonSerializer.Deserialize<List<Resource>>(v, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    })!
                 );
                 builder.HasOne(l => l.ModuleItem)
                     .WithOne(mi => mi.Lesson)
