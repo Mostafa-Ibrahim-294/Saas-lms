@@ -12,6 +12,7 @@ namespace Infrastructure.Repositories
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private IDbContextTransaction? _transaction;
         public TenantRepository(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -247,6 +248,30 @@ namespace Infrastructure.Repositories
             await _dbContext.TenantUsage
                 .Where(tu => tu.Tenant.SubDomain == subDomain && tu.PlanFeature.Feature.Key == featureName)
                 .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
+        }
+        public async Task BeginTransactionAsync(CancellationToken cancellationToken)
+        {
+            if (_transaction is null)
+            {
+                _transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            }
+        }
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken)
+        {
+            if (_transaction is null) return;
+
+            await SaveAsync(cancellationToken);
+            await _transaction.CommitAsync(cancellationToken);
+            await _transaction.DisposeAsync();
+            _transaction = null;
+        }
+        public async Task RollbackTransactionAsync(CancellationToken cancellationToken)
+        {
+            if (_transaction is null) return;
+
+            await _transaction.RollbackAsync(cancellationToken);
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
     }
 }

@@ -138,14 +138,11 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
             builder.Services.AddScoped<ITenantWebsiteSettingsRepository, TenantWebsiteSettingsRepository>();
             builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
-<<<<<<< HEAD
             builder.Services.AddScoped<IQuizRepository, QuizRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<IAttemptRepository, AttemptRepository>();
             builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
             builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
-=======
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<ICourseInviteRepository, CourseInviteRepository>();
             builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
@@ -157,7 +154,6 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IStudentSubjectRepository, StudentSubjectRepository>();
             builder.Services.AddScoped<IStudentStreakRepository, StudentStreakRepository>();
             builder.Services.AddScoped<IFriendRepository, FriendRepository>();
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

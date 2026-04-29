@@ -1,16 +1,5 @@
-<<<<<<< HEAD:Api/Controllers/AuthController.cs
-﻿using Application.Common;
+using Application.Common;
 using Application.Constants;
-using Application.Features.Auth.Commands.ForgetPassword;
-using Application.Features.Auth.Commands.Login;
-using Application.Features.Auth.Commands.Logout;
-using Application.Features.Auth.Commands.Refresh;
-using Application.Features.Auth.Commands.ResendOtp;
-using Application.Features.Auth.Commands.ResetPassword;
-using Application.Features.Auth.Commands.Signup;
-using Application.Features.Auth.Commands.VerifyOtp;
-=======
-﻿using Application.Constants;
 using Application.Features.TenantAuth.Commands.ForgetPassword;
 using Application.Features.TenantAuth.Commands.Login;
 using Application.Features.TenantAuth.Commands.Logout;
@@ -19,7 +8,6 @@ using Application.Features.TenantAuth.Commands.ResendOtp;
 using Application.Features.TenantAuth.Commands.ResetPassword;
 using Application.Features.TenantAuth.Commands.Signup;
 using Application.Features.TenantAuth.Commands.VerifyOtp;
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1:Api/Controllers/TenantAuthController.cs
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

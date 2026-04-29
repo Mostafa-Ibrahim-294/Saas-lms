@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-﻿using Application.Features.Modules.Dtos;
+using Application.Features.Modules.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories
-=======
-﻿namespace Infrastructure.Repositories
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
 {
     internal sealed class ModuleRepository : IModuleRepository
     {
@@ -32,7 +25,6 @@ namespace Infrastructure.Repositories
             await _context.Modules.Where(m => m.CourseId == courseId && m.Order > minOrder && m.Order <= maxOrder && m.Id != moduleId)
            .ExecuteUpdateAsync(m => m.SetProperty(p => p.Order, p => p.Order - 1), cancellationToken);
         }
-<<<<<<< HEAD
 
         public async Task<List<AllModulesDto>> GetAllModulesAsync(int courseId, CancellationToken cancellationToken)
         {
@@ -41,23 +33,16 @@ namespace Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-=======
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         public async Task<int> GetMaxOrder(int courseId, CancellationToken cancellationToken)
         {
             var maxOrder = await _context.Modules.Where(m => m.CourseId == courseId).MaxAsync(m => (int?)m.Order, cancellationToken);
             return maxOrder ?? 0;
         }
-<<<<<<< HEAD
 
         public async Task<Module?> GetModuleByIdAsync(int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
-=======
-        public async Task<Module?> GetModuleByIdAsync(int moduleId, CancellationToken cancellationToken)
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         {
             return await _context.Modules.FirstOrDefaultAsync(c => c.Id == moduleId && c.CourseId == courseId && c.Course.Tenant.SubDomain == subdomain, cancellationToken);
         }
-<<<<<<< HEAD
 
         public async Task<ModuleDto?> GetModuleWithItemsAsync(int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
@@ -95,8 +80,6 @@ namespace Infrastructure.Repositories
                     }).ToList()
                 }).FirstOrDefaultAsync(cancellationToken);
         }
-=======
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         public async Task IncreaseOrder(int moduleId, int courseId, int minOrder, CancellationToken cancellationToken, int maxOrder = int.MaxValue)
         {
             await _context.Modules.Where(m => m.CourseId == courseId && m.Order >= minOrder && m.Order < maxOrder && m.Id != moduleId)

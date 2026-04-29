@@ -1,13 +1,10 @@
 ﻿using Application.Constants;
-<<<<<<< HEAD
 using Application.Features.Students.Commands.SendReminder;
-=======
 using Application.Features.TenantStudents.Commands.DeleteStudent;
 using Application.Features.TenantStudents.Commands.InviteStudent;
 using Application.Features.TenantStudents.Queries.GetStudent;
 using Application.Features.TenantStudents.Queries.GetStudentsByCourseId;
 using Application.Features.TenantStudents.Queries.GetStudentStatistics;
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,26 +17,18 @@ namespace Api.Controllers
     public class TenantStudentsController : ControllerBase
     {
         private readonly IMediator _mediator;
-<<<<<<< HEAD
-=======
 
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         public TenantStudentsController(IMediator mediator)
         {
             _mediator = mediator;
         }
-<<<<<<< HEAD
         [HttpPost("send-reminder")]
         public async Task<IActionResult> SendReminder([FromBody] SendReminderCommand command)
         {
             await _mediator.Send(command);
             return NoContent();
         }
-    }
-}
-=======
-
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> GetStudents([FromQuery] GetStudentsQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
@@ -90,4 +79,3 @@ namespace Api.Controllers
         }
     }
 }
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1

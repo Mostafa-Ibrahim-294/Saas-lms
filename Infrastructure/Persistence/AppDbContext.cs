@@ -52,9 +52,7 @@ namespace Infrastructure.Persistence
         internal DbSet<WebsiteAppearanceSetting> WebsiteAppearanceSettings { get; set; }
         internal DbSet<EmailSetting> EmailSettings { get; set; }
         internal DbSet<NotificationSetting> NotificationSettings { get; set; }
-<<<<<<< HEAD
         internal DbSet<Answer> Answers { get; set; }
-=======
         internal DbSet<StudentGrade> StudentGrades { get; set; }
         internal DbSet<CourseInvite> CourseInvites { get; set; }
         internal DbSet<DicussionThread> DicussionThreads { get; set; }
@@ -69,7 +67,6 @@ namespace Infrastructure.Persistence
         internal DbSet<Friend> Friends { get; set; }
         internal DbSet<LessonVideoSegmant> LessonVideoSegmants { get; set; }
         internal DbSet<Level> Levels { get; set; }
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

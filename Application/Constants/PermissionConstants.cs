@@ -33,11 +33,8 @@
         public const string MANAGE_ORDERS = "MANAGE_ORDERS";
         public const string MANAGE_WEBSITE_SETTINGS = "MANAGE_WEBSITE_SETTINGS";
         public const string MANAGE_INTEGRATIONS = "MANAGE_INTEGRATIONS";
-<<<<<<< HEAD
         public const string MANAGE_ATTEMPTS = "MANAGE_ATTEMPTS";
         public const string MANAGE_SUBMISSIONS = "MANAGE_SUBMISSIONS";
-=======
         public const string MANAGE_STUDENTS = "MANAGE_STUDENTS";
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
     }
 }

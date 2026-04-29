@@ -12,16 +12,9 @@ namespace Application.Contracts.Repositories
         Task AssignAssistantPermissions(int assistantRoleId, CancellationToken cancellationToken);
         Task SaveAsync(CancellationToken cancellationToken);
         Task<LastTenantDto?> GetLastTenantAsync(string? subDomain, CancellationToken cancellationToken);
-<<<<<<< HEAD
-
-
-       
-
-=======
         Task BeginTransactionAsync(CancellationToken cancellationToken);
         Task CommitTransactionAsync(CancellationToken cancellationToken);
         Task RollbackTransactionAsync(CancellationToken cancellationToken);
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         Task<int> GetTenantIdAsync(string subDomain, CancellationToken cancellationToken);
         Task<TenantUsageDto> GetTenantUsageAsync(int tenantId, CancellationToken cancellationToken);
         Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId);

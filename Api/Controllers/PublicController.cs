@@ -1,12 +1,8 @@
-<<<<<<< HEAD
-﻿using Application.Common;
-using Application.Features.Public.Queries.GetCourseDetails;
-=======
-﻿using Application.Features.Public.Commands.CreateOrder;
+using Application.Common;
+using Application.Features.Public.Commands.CreateOrder;
 using Application.Features.Public.Commands.UpdateReceipt;
 using Application.Features.Public.Queries.GetCourseDetails;
 using Application.Features.Public.Queries.GetOrder;
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
 using Application.Features.Public.Queries.GetTenantNavigationLinks;
 using Application.Features.Public.Queries.GetTenantPages;
 using Application.Features.Public.Queries.GetTenantPaymentMethods;

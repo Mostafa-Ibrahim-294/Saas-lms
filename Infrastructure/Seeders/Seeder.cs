@@ -711,16 +711,10 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "VIEW_QUIZZES", Name = "عرض الاختبارات", Description = "السماح بمشاهدة قائمة الاختبارات", Module = "courses" },
                     new Permission { Id = "VIEW_QUESTION_BANK", Name = "عرض بنك الأسئلة", Description = "السماح بالوصول إلى بنك الأسئلة", Module = "courses" },
                     new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"},
-<<<<<<< HEAD
                     new Permission {Id = "MANAGE_ATTEMPTS" , Name = "إدارة محاولات ارسال الاختبار", Description = "السماح بإدارة محاولات ارسال الاختبار", Module = "quizzes"},
-                    new Permission { Id = "MANAGE_SUBMISSIONS", Name = "إدارة التقديمات", Description = "السماح بإدارة التقديمات", Module = "assignments" }
+                    new Permission { Id = "MANAGE_SUBMISSIONS", Name = "إدارة التقديمات", Description = "السماح بإدارة التقديمات", Module = "assignments" },
+                    new Permission{ Id = "MANAGE_STUDENTS", Name = "إدارة الطلاب", Description = "السماح بإضافة وتعديل وحذف الطلاب",Module = "students"}
                 };
-=======
-                    
-                    // Student
-                    new Permission{ Id = "MANAGE_STUDENTS", Name = "إدارة الطلاب", Description = "السماح بإضافة وتعديل وحذف الطلاب",Module = "students"},
-            };
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         }
 
         private List<string> GetRoles() => new List<string> { "Student", "Tenant", "Parent" };
@@ -729,7 +723,6 @@ namespace Infrastructure.Seeders
         {
             return new List<BlockType>
             {
-                // Hero Block
                 new BlockType
                 {
                     Id = "hero",
@@ -765,7 +758,6 @@ namespace Infrastructure.Seeders
                     """)
                 },
 
-                // Featured_Courses Block
                 new BlockType
                 {
                     Id = "featured_courses",
@@ -781,7 +773,6 @@ namespace Infrastructure.Seeders
                     """)
                 },
 
-                // Testimonials Block
                 new BlockType
                 {
                     Id = "testimonials",

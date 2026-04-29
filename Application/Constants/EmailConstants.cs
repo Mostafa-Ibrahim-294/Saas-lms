@@ -17,9 +17,7 @@
         public const string Subject = "لقد تمت دعوتك للانضمام";
         public const string UpdateSubject = "تم تعديل موعد أو تفاصيل الجلسة";
         public const string DeleteSubject = "تم حذف موعد أو تفاصيل الجلسة";
-<<<<<<< HEAD
         public const string StudentReminderSubject = "تذكير بالمهام القادمة";
-=======
 
         public const string CourseInviteTemplate = "CourseInviteTemplate";
         public const string CourseInviteUrl = "https://students.waey.online/course-invite";
@@ -44,6 +42,5 @@
 
         public const string RejectRequestTemplate = "RejectRequestTemplate";
         public const string RejectRequestSubject = "تم رفض طلب الصداقة الخاص بك";
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
     }
 }

@@ -1,22 +1,12 @@
-<<<<<<< HEAD
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-=======
-﻿using Application.Features.Students.Dtos;
+using Application.Features.Students.Dtos;
 using Application.Features.StudentUsers.Dtos;
 using Application.Features.TenantStudents.Dtos;
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
 
 namespace Application.Contracts.Repositories
 {
     public interface IStudentRepository
     {
-<<<<<<< HEAD
         Task<IEnumerable<string>> GetStudentsEmails(IEnumerable<int> studentIds, string subdomain, CancellationToken cancellationToken);
-    }
-}
-=======
         Task CreateStudentAsync(Student student, CancellationToken cancellationToken);
         Task<Student?> GetStudentAsync(int studentId, CancellationToken cancellationToken);
         Task<int> GetStudentIdAsync(string userId, CancellationToken cancellationToken);
@@ -33,4 +23,3 @@ namespace Application.Contracts.Repositories
         Task<CurrentStudentDto> GetCurrentStudentAsync(string userId, int studentId, CancellationToken cancellationToken);
     }
 }
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1

@@ -35,12 +35,8 @@ namespace Infrastructure.Repositories
                         Device = studentView != null ? studentView.Device : null
                     }).ToListAsync(cancellationToken);
         }
-<<<<<<< HEAD
 
         public async Task<LessonOverviewDto?> GetLessonOverviewAsync(int itemId, CancellationToken cancellationToken)
-=======
-        public async Task<LessonOverviewDto?> GetLessonOverviewAsync(int courseId, int itemId, CancellationToken cancellationToken)
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         {
             return await _dbContext.LessonViews.Where(lv => lv.ModuleItemId == itemId)
                 .GroupBy(lv => lv.ModuleItemId)
@@ -75,12 +71,8 @@ namespace Infrastructure.Repositories
                     TotalViews = g.Sum(s => s.ViewCount)
                 }).ToListAsync(cancellationToken);
         }
-<<<<<<< HEAD
 
         public async Task<bool> IsFound(int id, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
-=======
-        public async Task<bool> IsFound(int id, CancellationToken cancellationToken)
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
         {
             return await _dbContext.Lessons.AnyAsync(l => l.ModuleItemId == id && l.ModuleId == moduleId && l.CourseId == courseId && l.Course.Tenant.SubDomain == subdomain, cancellationToken);
         }

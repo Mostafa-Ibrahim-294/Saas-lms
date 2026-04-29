@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Infrastructure.Repositories
-{
-    public sealed class StudentRepository : IStudentRepository
-    {
-        private readonly AppDbContext _dbContext;
-        public StudentRepository(AppDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
-        public async Task<IEnumerable<string>> GetStudentsEmails(IEnumerable<int> studentIds, string subdomain, CancellationToken cancellationToken)
-        {
-            return await _dbContext.Students
-                .Where(s => studentIds.Contains(s.Id) && s.TeachingLevel.Tenant.SubDomain == subdomain)
-                .Select(s => s.User.Email!)
-                .ToListAsync(cancellationToken);
-        }
-    }
-}
-=======
 ﻿using Application.Features.Students.Dtos;
 using Application.Features.StudentUsers.Dtos;
 using Application.Features.TenantStudents.Dtos;
@@ -39,6 +14,13 @@ namespace Infrastructure.Repositories
         {
             _context = context;
             _mapper = mapper;
+        }
+        public async Task<IEnumerable<string>> GetStudentsEmails(IEnumerable<int> studentIds, string subdomain, CancellationToken cancellationToken)
+        {
+            return await _context.Students
+                .Where(s => studentIds.Contains(s.Id) && s.User.LastActiveTenantSubDomain == subdomain)
+                .Select(s => s.User.Email!)
+                .ToListAsync(cancellationToken);
         }
 
         public Task<Student?> GetStudentAsync(int studentId, CancellationToken cancellationToken)
@@ -194,4 +176,3 @@ namespace Infrastructure.Repositories
         }
     }
 }
->>>>>>> 4c7a93aa4a11710a64ff2df81ec9e472ae2910a1
