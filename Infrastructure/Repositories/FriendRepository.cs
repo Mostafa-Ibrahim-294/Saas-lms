@@ -29,8 +29,35 @@ namespace Infrastructure.Repositories
             return await _context.Friends
                 .AsNoTracking()
                 .Where(f => f.Status == FriendStatus.Accepted && (f.Student1Id == studentId || f.Student2Id == studentId))
-                .ProjectTo<FriendsDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+                .Select(f => new FriendsDto
+                {
+                    Id = f.Student1Id == studentId 
+                        ? f.Student2Id : f.Student1Id,
+
+                    Name = f.Student1Id == studentId
+                        ? f.Student2.User.FirstName + " " + f.Student2.User.LastName
+                        : f.Student1.User.FirstName + " " + f.Student1.User.LastName,
+
+                    ProfilePicture = f.Student1Id == studentId
+                        ? f.Student2.User.ProfilePicture
+                        : f.Student1.User.ProfilePicture,
+
+                    Grade = f.Student1Id == studentId
+                        ? f.Student2.Grade
+                        : f.Student1.Grade,
+
+                    XP = f.Student1Id == studentId
+                        ? f.Student2.XP
+                        : f.Student1.XP,
+
+                    Level = f.Student1Id == studentId
+                        ? f.Student2.Level
+                        : f.Student1.Level,
+
+                    CurrentStreak = f.Student1Id == studentId
+                        ? (f.Student2.StudentStreak != null ? f.Student2.StudentStreak.CurrentStreak : 0)
+                        : (f.Student1.StudentStreak != null ? f.Student1.StudentStreak.CurrentStreak : 0)
+                }).ToListAsync(cancellationToken);
         }
         public async Task<RequestsDto> GetRequestsAsync(int studentId, CancellationToken cancellationToken)
         {

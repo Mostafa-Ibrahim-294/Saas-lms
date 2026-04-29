@@ -4,142 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تم قبول طلب الصداقة</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f6fa;
             margin: 0;
             padding: 0;
+            background: #f5f6fa;
+            font-family: Tahoma, Arial, sans-serif;
             direction: rtl;
         }
 
-        .container {
+        table {
+            border-spacing: 0;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background: #f5f6fa;
+            padding: 30px 10px;
+        }
+
+        .main {
+            background: #ffffff;
+            margin: 0 auto;
+            width: 100%;
             max-width: 600px;
-            margin: 40px auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,.08);
         }
 
         .header {
-            background-color: #6c5ce7; /* fallback */
-            background-color: oklch(0.62 0.23 275);
+            background: #6c5ce7;
             color: #ffffff;
             text-align: center;
-            padding: 20px;
+            padding: 25px 20px;
             font-size: 24px;
+            font-weight: bold;
         }
 
         .content {
-            padding: 30px;
+            padding: 35px 25px;
             text-align: center;
+            color: #2d3436;
+            line-height: 1.8;
         }
 
-        .username {
-            font-size: 22px;
+            .content p {
+                margin: 10px 0;
+                font-size: 16px;
+            }
+
+        .friend-name {
+            font-size: 24px;
             font-weight: bold;
-            color: #2d3436;
+            color: #6c5ce7;
             margin: 20px 0;
         }
 
-        .message {
-            font-size: 16px;
-            color: #555;
-            margin: 15px 0;
-        }
-
         .success {
+            color: #00b894;
             font-size: 18px;
             font-weight: bold;
-            color: #00b894;
-            margin: 15px 0;
         }
 
         .btn {
             display: inline-block;
-            margin: 20px 10px;
-            padding: 14px 28px;
-            font-size: 15px;
-            color: #ffffff;
+            margin-top: 25px;
+            background: #6c5ce7;
+            color: #ffffff !important;
             text-decoration: none;
-            border-radius: 6px;
-            background-color: #6c5ce7; /* fallback */
-            background-color: oklch(0.62 0.23 275);
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
         }
 
         .note {
             font-size: 13px;
-            color: #888;
+            color: #777;
             margin-top: 20px;
         }
 
         .footer {
-            background-color: #f0f0f0;
+            background: #f8f9fa;
+            color: #999;
             text-align: center;
             font-size: 12px;
-            color: #888888;
-            padding: 15px;
+            padding: 18px;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                margin: 20px;
+        @media screen and (max-width:600px) {
+            .content {
+                padding: 25px 18px;
             }
 
-            .username {
-                font-size: 18px;
+            .friend-name {
+                font-size: 20px;
             }
 
             .btn {
                 display: block;
-                margin: 15px auto;
-                width: 80%;
+                width: 85%;
+                margin: 20px auto 0;
+                box-sizing: border-box;
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            🎉 تم قبول طلب الصداقة
-        </div>
 
-        <div class="content">
-            <p>مرحبًا <strong>{{UserName}}</strong>،</p>
+    <table class="wrapper" width="100%">
+        <tr>
+            <td align="center">
 
-            <p class="message">
-                خبر رائع! 🎊
-            </p>
+                <table class="main" width="100%">
 
-            <p class="message">
-                قام
-            </p>
+                    <tr>
+                        <td class="header">
+                            🎉 تم قبول طلب الصداقة
+                        </td>
+                    </tr>
 
-            <div class="username">
-                {{FriendName}}
-            </div>
+                    <tr>
+                        <td class="content">
 
-            <p class="success">
-                بقبول طلب الصداقة الخاص بك ✅
-            </p>
+                            <p>مرحبًا <strong>{{UserName}}</strong> 👋</p>
 
-            <p class="message">
-                يمكنك الآن البدء في التفاعل والدراسة معًا!
-            </p>
+                            <p>لدينا خبر رائع لك 🎊</p>
 
-            <a href="{{OPEN_APP_URL}}" class="btn">
-                عرض قائمه الاصدقاء
-            </a>
+                            <p>قام المستخدم:</p>
 
-            <p class="note">
-                اكتشف المزيد من الأصدقاء والأنشطة داخل التطبيق.
-            </p>
-        </div>
+                            <div class="friend-name">
+                                {{FriendName}}
+                            </div>
 
-        <div class="footer">
-            © 2026 منصتك. جميع الحقوق محفوظة.
-        </div>
-    </div>
+                            <p class="success">
+                                بقبول طلب الصداقة الخاص بك ✅
+                            </p>
+
+                            <p>
+                                يمكنك الآن بدء التفاعل، تبادل المعرفة، والدراسة معًا داخل المنصة.
+                            </p>
+
+                            <a href="{{OPEN_APP_URL}}" class="btn">
+                                عرض قائمة الأصدقاء
+                            </a>
+
+                            <p class="note">
+                                اكتشف المزيد من الأصدقاء والأنشطة داخل التطبيق.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="footer">
+                            © 2026 منصتك - جميع الحقوق محفوظة
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
 </body>
 </html>
