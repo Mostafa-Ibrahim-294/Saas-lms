@@ -1,4 +1,5 @@
-﻿using Application.Features.ModuleItems.Dtos;
+﻿using Application.Features.ModuleItems.Commands.ReorderModuleItem;
+using Application.Features.ModuleItems.Dtos;
 using Application.Features.TenantMembers.Dtos;
 using AutoMapper;
 using AutoMapper.Execution;
@@ -65,63 +66,64 @@ namespace Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<AssignmentDto?> GetAssignmentAsync(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<AssignmentDto?> GetAssignmentAsync(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Assignments
                 .AsNoTracking()
-                .Where(tm => tm.ModuleItemId == moduleItemId)
+                .Where(tm => tm.ModuleItemId == moduleItemId && tm.ModuleId == moduleId && tm.CourseId == courseId && tm.Course.Tenant.SubDomain == subdomain)
                 .ProjectTo<AssignmentDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<Assignment?> GetAssignmentByModuleItemIdAsync(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<Assignment?> GetAssignmentByModuleItemIdAsync(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Assignments.
                  Include(x => x.ModuleItem).
-                 FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId, cancellationToken);
+                 FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId && l.ModuleId == moduleId && l.CourseId == courseId && l.Course.Tenant.SubDomain == subdomain, cancellationToken);
         }
 
-        public async Task<ModuleItem?> GetAsync(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<ModuleItem?> GetAsync(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
-            return await _dbContext.ModuleItems.AsNoTracking().FirstOrDefaultAsync(m => m.Id == moduleItemId, cancellationToken);
-
+            return await _dbContext.ModuleItems.AsNoTracking().FirstOrDefaultAsync(m => m.Id == moduleItemId && m.ModuleId == moduleId
+            && m.CourseId == courseId && m.Course.Tenant.SubDomain == subdomain
+            , cancellationToken);
         }
 
-        public async Task<ModuleItem?> GetItemConditions(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<ModuleItem?> GetItemConditions(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.ModuleItems
                 .Include(mi => mi.Conditions)
-                .FirstOrDefaultAsync(m => m.Id == moduleItemId, cancellationToken);
+                .FirstOrDefaultAsync(m => m.Id == moduleItemId && m.ModuleId == moduleId && m.CourseId == courseId && m.Course.Tenant.SubDomain == subdomain, cancellationToken);
         }
 
-        public async Task<Lesson?> GetLessonByModuleItemIdAsync(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<Lesson?> GetLessonByModuleItemIdAsync(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Lessons.
                  Include(x => x.ModuleItem).
-                 FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId, cancellationToken);
+                 FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId && l.ModuleId == moduleId && l.CourseId == courseId && l.Course.Tenant.SubDomain == subdomain, cancellationToken);
         }
 
-        public async Task<Quiz?> GetQuizAsync(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<Quiz?> GetQuizAsync(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Quizzes.
-                 FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId, cancellationToken);
+                 FirstOrDefaultAsync(l => l.ModuleItemId == moduleItemId && l.ModuleId == moduleId && l.CourseId == courseId && l.Course.Tenant.SubDomain == subdomain, cancellationToken);
 
         }
 
-        public async Task<QuizDto?> GetQuizWithQuestions(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<QuizDto?> GetQuizWithQuestions(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Quizzes
                 .AsNoTracking()
-                .Where(q => q.ModuleItemId == moduleItemId)
+                .Where(q => q.ModuleItemId == moduleItemId && q.ModuleId == moduleId && q.CourseId == courseId && q.Course.Tenant.SubDomain == subdomain)
                 .ProjectTo<QuizDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<SettingsDto?> GetSettingsAsync(int moduleItemId, CancellationToken cancellationToken)
+        public async Task<SettingsDto?> GetSettingsAsync(int moduleItemId, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
             return await _dbContext.ModuleItems
                 .AsNoTracking()
-                .Where(tm => tm.Id == moduleItemId)
+                .Where(tm => tm.Id == moduleItemId && tm.ModuleId == moduleId && tm.CourseId == courseId && tm.Course.Tenant.SubDomain == subdomain)
                 .ProjectTo<SettingsDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
         }
@@ -130,6 +132,16 @@ namespace Infrastructure.Repositories
         {
             _dbContext.ModuleItems.Remove(moduleItem);
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task ReorderItems(IEnumerable<OrderDto> orders, CancellationToken cancellationToken)
+        {
+            foreach (var order in orders)
+            {
+                await _dbContext.ModuleItems
+                    .Where(mi => mi.Id == order.Id)
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(mi => mi.Order, order.Order), cancellationToken);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.Auth.Commands.ForgetPassword;
 using Application.Features.Auth.Commands.Login;
 using Application.Features.Auth.Commands.Logout;
@@ -27,7 +28,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(signupCommand, cancellationToken);
             return result.Match(
                 success => Created(),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost("resend-otp")]
@@ -36,7 +37,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(resendOtpCommand, cancellationToken);
             return result.Match(
                 success => Ok(new { Message = "Success" }),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost("verify-otp")]
@@ -45,7 +46,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(verifyOtpCommand, cancellationToken);
             return result.Match(
                 success => Ok(new { Message = "Success" }),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost("login")]
@@ -54,7 +55,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(loginCommand, cancellationToken);
             return result.Match(
                 loginDto => Ok(loginDto),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost("forgot-password")]
@@ -63,7 +64,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(forgetPasswordCommand, cancellationToken);
             return result.Match(
                 success => Ok(new { Message = "success" }),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost("reset-password")]
@@ -72,7 +73,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(resetPasswordCommand, cancellationToken);
             return result.Match(
                 success => Ok(new { Message = "Password reset successfully" }),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost("refresh")]
@@ -83,7 +84,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(refreshCommand, cancellationToken);
             return result.Match(
                 success => Ok(new { Message = "Success" }),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost("logout")]
@@ -93,7 +94,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(logoutCommand, cancellationToken);
             return result.Match(
                 success => Ok(new { Message = "Success" }),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

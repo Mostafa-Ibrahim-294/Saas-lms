@@ -40,7 +40,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 var recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
-recurringJobManager.AddOrUpdate<IZoomOAuthStateRepository>("cleanup-zoom-oauth-states", 
+recurringJobManager.AddOrUpdate<IZoomOAuthStateRepository>("cleanup-zoom-oauth-states",
     repo => repo.DeleteAllExpiredAndUsedStatesAsync(), Cron.Hourly);
 
 

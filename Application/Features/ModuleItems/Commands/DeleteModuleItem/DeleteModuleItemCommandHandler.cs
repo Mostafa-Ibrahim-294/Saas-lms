@@ -11,21 +11,17 @@ namespace Application.Features.ModuleItems.Commands.DeleteModuleItem
         private readonly ITenantMemberRepository _tenantMemberRepository;
         private readonly ICurrentUserId _currentUserId;
         private readonly ISubscriptionRepository _subscriptionRepository;
-        private readonly IModuleRepository _moduleRepository;
-        private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IModuleItemRepository _moduleItemRepository;
         private readonly HybridCache _hybridCache;
         public DeleteModuleItemCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
-            ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
-            IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository, HybridCache hybridCache)
+            ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, IModuleItemRepository moduleItemRepository,
+            HybridCache hybridCache)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
             _subscriptionRepository = subscriptionRepository;
             _httpContextAccessor = httpContextAccessor;
-            _courseRepository = courseRepository;
-            _moduleRepository = moduleRepository;
             _moduleItemRepository = moduleItemRepository;
             _hybridCache = hybridCache;
         }
@@ -43,17 +39,7 @@ namespace Application.Features.ModuleItems.Commands.DeleteModuleItem
             {
                 return TenantErrors.NotSubscribed;
             }
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subdomain!, cancellationToken);
-            if (course is null)
-            {
-                return CourseErrors.CourseNotFound;
-            }
-            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, cancellationToken);
-            if (module is null)
-            {
-                return ModuleErrors.ModuleNotFound;
-            }
-            var moduleItem = await _moduleItemRepository.GetAsync(request.ItemId, cancellationToken);
+            var moduleItem = await _moduleItemRepository.GetAsync(request.ItemId, request.ModuleId, request.CourseId, subdomain!, cancellationToken);
             if(moduleItem is null)
             {
                 return ModuleItemErrors.ModuleItemNotFound;
@@ -63,7 +49,7 @@ namespace Application.Features.ModuleItems.Commands.DeleteModuleItem
             return new SuccessDto
             {
                 Id = moduleItem.Id.ToString(),
-                Message = $"{nameof(ModuleItem)} {SuccessConstatns.ItemDeleted}"
+                Message = $"{nameof(ModuleItem)} {SuccessConstants.ItemDeleted}"
             };
         }
     }

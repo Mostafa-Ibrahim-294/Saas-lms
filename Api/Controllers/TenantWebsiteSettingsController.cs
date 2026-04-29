@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.TenantWebsiteSettings.Commands.UpdateTenantWebsiteSettings;
 using Application.Features.TenantWebsiteSettings.Queries.GetSettings;
 using MediatR;
@@ -27,7 +28,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetTenantWebsiteSettingsQuery(), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -38,7 +39,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

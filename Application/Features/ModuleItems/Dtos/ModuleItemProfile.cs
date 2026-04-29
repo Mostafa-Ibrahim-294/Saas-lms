@@ -1,8 +1,8 @@
-﻿using Application.Features.ModuleItems.Commands.CreateModuleItem;
-using Application.Features.ModuleItems.Commands.UpdateAssignment;
-using Application.Features.ModuleItems.Commands.UpdateLesson;
-using Application.Features.ModuleItems.Commands.UpdateQuiz;
+﻿using Application.Features.Assignments.Commands.UpdateAssignment;
+using Application.Features.Lessons.Commands.UpdateLesson;
+using Application.Features.ModuleItems.Commands.CreateModuleItem;
 using Application.Features.ModuleItems.Commands.UpdateSettings;
+using Application.Features.Quizzes.Commands.UpdateQuiz;
 namespace Application.Features.ModuleItems.Dtos
 {
     public class ModuleItemProfile : Profile
@@ -35,19 +35,13 @@ namespace Application.Features.ModuleItems.Dtos
             CreateMap<UpdateSettingsCommand, ModuleItem>();
             CreateMap<UpdateQuizCommand, Quiz>()
                 .ForMember(dest => dest.Questions, opt => opt.Ignore());
-            CreateMap<QuestionDto, Question>()
-                .ForMember(dest => dest.QuestionCategoryId, opt => opt.MapFrom(src => src.Category))
-                .ForMember(dest => dest.QuestionTitle, opt => opt.MapFrom(src => src.Question));
-            CreateMap<QuestionDto, QuizQuestion>()
-               .ForMember(d => d.Question, o => o.MapFrom(s => s));
             CreateMap<Quiz, QuizDto>();
             CreateMap<QuizQuestion, QuizQuestionDto>()
                 .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => src.Question.QuestionTitle))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Question.Type))
                 .ForMember(dest => dest.CorrectAnswer, opt => opt.MapFrom(src => src.Question.CorrectAnswer))
-                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Question.Options));
-            CreateMap<QuestionDto, QuizQuestion>()
-                .ForMember(d => d.Question, o => o.MapFrom(s => s));
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Question.Options))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Question.QuestionCategoryId));
 
         }
     }

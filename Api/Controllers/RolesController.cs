@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.Roles.Commands.CreateRole;
 using Application.Features.Roles.Commands.DeleteRole;
 using Application.Features.Roles.Commands.UpdateRole;
@@ -36,7 +37,7 @@ namespace Api.Controllers
                 updateRoleCommand.EnabledPermissions), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -47,7 +48,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new DeleteRoleCommand(roleId), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -58,7 +59,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new CreateRoleCommand(request.Name, request.Description, request.EnabledPermissions), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

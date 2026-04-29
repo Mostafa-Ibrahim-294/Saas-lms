@@ -17,19 +17,14 @@ namespace Infrastructure.Services
         private readonly IOptions<Common.Options.FileOptions> _fileOptions;
         private readonly IOptions<BunnyOptions> _bunnyOptions;
         private readonly IOptions<AiTranscriptionOptions> _aiOptions;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpClient _httpClient;
-
-        private const int OverFlowSize = 20;
-
         public FileService(IOptions<Common.Options.FileOptions> fileOptions, IOptions<BunnyOptions> bunnyOptions,
-            IOptions<AiTranscriptionOptions> aiOptions, IHttpContextAccessor httpContextAccessor, HttpClient httpClient)
+            IOptions<AiTranscriptionOptions> aiOptions, HttpClient httpClient)
         {
             _fileOptions = fileOptions;
             _bunnyOptions = bunnyOptions;
             _httpClient = httpClient;
             _aiOptions = aiOptions;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public long GetMaxSize(FileType fileType) => fileType switch

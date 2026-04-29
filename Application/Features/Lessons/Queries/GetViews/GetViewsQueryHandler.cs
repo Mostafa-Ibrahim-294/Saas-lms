@@ -25,17 +25,7 @@ namespace Application.Features.Lessons.Queries.GetViews
         public async Task<OneOf<IEnumerable<StudentViewsDto>, Error>> Handle(GetViewsQuery request, CancellationToken cancellationToken)
         {
             var subdomain = _httpContextAccessor?.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subdomain!, cancellationToken);
-            if (course is null)
-            {
-                return CourseErrors.CourseNotFound;
-            }
-            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, cancellationToken);
-            if (module is null)
-            {
-                return ModuleErrors.ModuleNotFound;
-            }
-            var isLessonFound = await _lessonRepository.IsFound(request.ItemId, cancellationToken);
+            var isLessonFound = await _lessonRepository.IsFound(request.ItemId, request.ModuleId, request.CourseId, subdomain!, cancellationToken);
             if (!isLessonFound)
             {
                 return ModuleItemErrors.ModuleItemNotFound;

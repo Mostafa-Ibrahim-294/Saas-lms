@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.Zoom.Commands.Callback;
 using Application.Features.Zoom.Commands.Webhook;
 using Application.Features.Zoom.Queries.ConnectZoom;
@@ -33,7 +34,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new ConnectZoomQuery(), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 

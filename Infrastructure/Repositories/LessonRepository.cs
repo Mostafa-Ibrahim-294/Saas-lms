@@ -33,7 +33,7 @@ namespace Infrastructure.Repositories
                     }).ToListAsync(cancellationToken);
         }
 
-        public async Task<LessonOverviewDto?> GetLessonOverviewAsync(int courseId, int itemId, CancellationToken cancellationToken)
+        public async Task<LessonOverviewDto?> GetLessonOverviewAsync(int itemId, CancellationToken cancellationToken)
         {
             return await _dbContext.LessonViews.Where(lv => lv.ModuleItemId == itemId)
                 .GroupBy(lv => lv.ModuleItemId)
@@ -45,7 +45,6 @@ namespace Infrastructure.Repositories
                     TotalStudents = g.Select(s => s.StudentId).Count()
                 }).FirstOrDefaultAsync(cancellationToken);
         }
-
         public async Task<DateTime> GetPeakActivityTimeAsync(int itemId, CancellationToken cancellationToken)
         {
            return await _dbContext.LessonViews.Where(lv => lv.ModuleItemId == itemId)
@@ -71,9 +70,9 @@ namespace Infrastructure.Repositories
                 }).ToListAsync(cancellationToken);
         }
 
-        public async Task<bool> IsFound(int id, CancellationToken cancellationToken)
+        public async Task<bool> IsFound(int id, int moduleId, int courseId, string subdomain, CancellationToken cancellationToken)
         {
-            return await _dbContext.Lessons.AnyAsync(l => l.ModuleItemId == id, cancellationToken);
+            return await _dbContext.Lessons.AnyAsync(l => l.ModuleItemId == id && l.ModuleId == moduleId && l.CourseId == courseId && l.Course.Tenant.SubDomain == subdomain, cancellationToken);
         }
     }
 }

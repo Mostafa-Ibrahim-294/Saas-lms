@@ -145,13 +145,6 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.Tenant.SubDomain == subdomain, cancellationToken);
         }
-        public async Task<Application.Features.Courses.Dtos.CourseModuleDto?> GetCourseModuleAsync(int courseId, string subdomain, CancellationToken cancellationToken)
-        {
-            return await _dbContext.Courses.Where(c => c.Id == courseId && c.Tenant.SubDomain == subdomain)
-                .ProjectTo<Application.Features.Courses.Dtos.CourseModuleDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellationToken);
-        }
-
         public async Task<StatisticsDto> GetCourseStatisticsAsync(string tenantSubdomain, CancellationToken cancellationToken)
         {
             var response = await _dbContext.Tenants

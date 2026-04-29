@@ -29,7 +29,7 @@ namespace Application.Features.ModuleItems.Queries.GetAll
             {
                 return CourseErrors.CourseNotFound;
             }
-            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, cancellationToken);
+            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, request.CourseId, subdomain!, cancellationToken);
             if (module is null)
             {
                 return ModuleErrors.ModuleNotFound;

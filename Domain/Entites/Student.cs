@@ -19,6 +19,7 @@ namespace Domain.Entites
         public ApplicationUser User { get; set; } = null!;
         public LessonView? LessonView { get; set; }
         public AssignmentSubmission? AssignmentSubmission { get; set; }
+        public QuizAttempt? QuizAttempt { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }

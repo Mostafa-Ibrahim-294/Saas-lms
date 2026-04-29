@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.TenantOrders.Commands.ApproveOrder;
 using Application.Features.TenantOrders.Commands.BulkOrderAction;
 using Application.Features.TenantOrders.Commands.DeclineOrder;
@@ -43,7 +44,7 @@ namespace Api.Controllers
 
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -55,7 +56,7 @@ namespace Api.Controllers
 
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -67,7 +68,7 @@ namespace Api.Controllers
 
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

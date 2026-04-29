@@ -14,6 +14,7 @@ namespace Domain.Entites
         public CourseStatus Status { get; set; }
         public ModuleItemType Type { get; set; }
         public bool AllowDiscussions { get; set; }
+        public int Order { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public int ModuleId { get; set; }

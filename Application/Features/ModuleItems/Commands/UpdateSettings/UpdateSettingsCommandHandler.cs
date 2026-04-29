@@ -11,14 +11,13 @@ namespace Application.Features.ModuleItems.Commands.UpdateSettings
         private readonly ITenantMemberRepository _tenantMemberRepository;
         private readonly ICurrentUserId _currentUserId;
         private readonly ISubscriptionRepository _subscriptionRepository;
-        private readonly IModuleRepository _moduleRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IModuleItemRepository _moduleItemRepository;
         private readonly IMapper _mapper;
         public UpdateSettingsCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
             ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
-            IMapper mapper, IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository)
+            IMapper mapper, IModuleItemRepository moduleItemRepository)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
@@ -26,7 +25,6 @@ namespace Application.Features.ModuleItems.Commands.UpdateSettings
             _httpContextAccessor = httpContextAccessor;
             _courseRepository = courseRepository;
             _mapper = mapper;
-            _moduleRepository = moduleRepository;
             _moduleItemRepository = moduleItemRepository;
         }
         public async Task<OneOf<SuccessDto, Error>> Handle(UpdateSettingsCommand request, CancellationToken cancellationToken)
@@ -43,17 +41,7 @@ namespace Application.Features.ModuleItems.Commands.UpdateSettings
             {
                 return TenantErrors.NotSubscribed;
             }
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subdomain!, cancellationToken);
-            if (course is null)
-            {
-                return CourseErrors.CourseNotFound;
-            }
-            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, cancellationToken);
-            if (module is null)
-            {
-                return ModuleErrors.ModuleNotFound;
-            }
-            var moduleItem = await _moduleItemRepository.GetItemConditions(request.ItemId, cancellationToken);
+            var moduleItem = await _moduleItemRepository.GetItemConditions(request.ItemId, request.ModuleId, request.CourseId, subdomain!, cancellationToken);
             if (moduleItem is null) 
             {
                 return ModuleItemErrors.ModuleItemNotFound;
@@ -63,7 +51,7 @@ namespace Application.Features.ModuleItems.Commands.UpdateSettings
             return new SuccessDto
             {
                 Id = moduleItem.Id.ToString(),
-                Message = $"{nameof(ModuleItem)} {SuccessConstatns.ItemUpdated}"
+                Message = $"{nameof(ModuleItem)} {SuccessConstants.ItemUpdated}"
             };
         }
     }

@@ -16,8 +16,9 @@ namespace Application.Features.Courses.Commands.DeleteCourse
         private readonly ICurrentUserId _currentUserId;
         private readonly HybridCache _hybridCache;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUnitOfWork _unitOfWork;
         public DeleteCourseCommandHandler(ICourseRepository courseRepository, ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId, HybridCache hybridCache,
-            IHttpContextAccessor httpContextAccessor, ITenantRepository tenantRepository)
+            IHttpContextAccessor httpContextAccessor, ITenantRepository tenantRepository, IUnitOfWork unitOfWork)
         {
             _courseRepository = courseRepository;
             _tenantMemberRepository = tenantMemberRepository;
@@ -25,6 +26,7 @@ namespace Application.Features.Courses.Commands.DeleteCourse
             _hybridCache = hybridCache;
             _httpContextAccessor = httpContextAccessor;
             _tenantRepository = tenantRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<OneOf<SuccessDto, Error>> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
@@ -41,15 +43,25 @@ namespace Application.Features.Courses.Commands.DeleteCourse
             {
                 return CourseErrors.CourseNotFound;
             }
-            await _courseRepository.RemoveCourseAsync(course, cancellationToken);
-            await _tenantRepository.DecreasePlanFeatureUsageByKeyAsync(subDomain!, FeatureConstants.COURSE_LIMIT, cancellationToken);
-            await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{subDomain}" }, cancellationToken);
-            await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{request.CourseId}" }, cancellationToken);
-            return new SuccessDto
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            try
             {
-                Id = course.Id.ToString(),
-                Message = $"{nameof(Course)} {SuccessConstatns.ItemDeleted}"
-            };
+                await _courseRepository.RemoveCourseAsync(course, cancellationToken);
+                await _tenantRepository.DecreasePlanFeatureUsageByKeyAsync(subDomain!, FeatureConstants.COURSE_LIMIT, cancellationToken);
+                await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{subDomain}" }, cancellationToken);
+                await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{request.CourseId}" }, cancellationToken);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                return new SuccessDto
+                {
+                    Id = course.Id.ToString(),
+                    Message = $"{nameof(Course)} {SuccessConstants.ItemDeleted}"
+                };
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                throw;
+            }
         }
     }
 }

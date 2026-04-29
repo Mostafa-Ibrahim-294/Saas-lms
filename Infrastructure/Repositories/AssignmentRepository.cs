@@ -14,6 +14,19 @@ namespace Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public async Task<OverviewDto?> GetOverviewAsync(int itemId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.AssignmentSubmissions.Where(s => s.AssignmentId == itemId)
+                .GroupBy(s => 1)
+                .Select(g => new OverviewDto
+                {
+                    TotalSubmissions = g.Count(),
+                    AverageScore = g.Average(s => s.EarnedMarks),
+                    HeighestScore = g.Max(s => s.EarnedMarks),
+                    LowestScore = g.Min(s => s.EarnedMarks)
+                }).FirstOrDefaultAsync(cancellationToken);
+        }
         public async Task<List<StudentSubmissionDto>> GetSubmissionsAsync(int courseId, int itemId, CancellationToken cancellationToken)
         {
             return await _dbContext.Students.Where(s => s.Enrollments.Any(c => c.CourseId == courseId))

@@ -9,5 +9,6 @@ namespace Domain.Enums
         Mcq,
         TrueFalse,
         ShortAnswer,
+        Mix
     }
 }

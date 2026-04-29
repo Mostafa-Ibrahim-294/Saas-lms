@@ -9,18 +9,16 @@ namespace Application.Features.Modules.Commands.DeleteModule
         private readonly ICurrentUserId _currentUserId;
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IModuleRepository _moduleRepository;
-        private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HybridCache _hybridCache;
         public DeleteModuleCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
-            ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
+            ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor,
             IModuleRepository moduleRepository, HybridCache hybridCache)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
             _subscriptionRepository = subscriptionRepository;
             _httpContextAccessor = httpContextAccessor;
-            _courseRepository = courseRepository;
             _moduleRepository = moduleRepository;
             _hybridCache = hybridCache;
         }
@@ -38,24 +36,19 @@ namespace Application.Features.Modules.Commands.DeleteModule
             {
                 return TenantErrors.NotSubscribed;
             }
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subdomain!, cancellationToken);
-            if (course is null)
-            {
-                return CourseErrors.CourseNotFound;
-            }
-            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, cancellationToken);
+            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, request.CourseId, subdomain!, cancellationToken);
             if (module is null)
             {
                 return ModuleErrors.ModuleNotFound;
             }
             var oldOrder = module.Order;
             await _moduleRepository.RemoveModule(module, cancellationToken);
-            await _moduleRepository.DecreaseOrder(module.Id, course.Id, oldOrder, cancellationToken);
+            await _moduleRepository.DecreaseOrder(module.Id, request.CourseId, oldOrder, cancellationToken);
             await _hybridCache.RemoveAsync($"{CacheKeysConstants.CourseStatisticsKey}-{request.CourseId}", cancellationToken);
             return new SuccessDto
             {
                 Id = module.Id.ToString(),
-                Message = $"{nameof(Module)} {SuccessConstatns.ItemDeleted}"
+                Message = $"{nameof(Module)} {SuccessConstants.ItemDeleted}"
             };
         }
     }

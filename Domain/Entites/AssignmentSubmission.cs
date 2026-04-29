@@ -12,7 +12,7 @@ namespace Domain.Entites
         public ICollection<File>? Files { get; set; } 
         public AssignmentStatus Status { get; set; }
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
-        public int EarnedMarks { get; set; }
+        public double EarnedMarks { get; set; }
         public string? Feedback { get; set; }
         public string? Link { get; set; }
         public string? Text { get; set; }

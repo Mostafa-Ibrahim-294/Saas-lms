@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.Questions.Commands.CreateQuestion;
 using Application.Features.Questions.Commands.CreateQuestionCategory;
 using Application.Features.Questions.Commands.DeleteQuestion;
@@ -29,7 +30,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(
                 success => Created(),
-                error => StatusCode((int)error.HttpStatusCode, error.Message));
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
         [HttpDelete("questions/{questionId}")]
         public async Task<IActionResult> DeleteQuestion([FromRoute] DeleteQuestionCommand command, CancellationToken cancellationToken)
@@ -37,7 +38,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(
                 success => NoContent(),
-                error => StatusCode((int)error.HttpStatusCode, error.Message));
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
         [HttpPost("questions")]
         public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionCommand command, CancellationToken cancellationToken)
@@ -45,7 +46,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match(
                success => Created(string.Empty, success),
-               error => StatusCode((int)error.HttpStatusCode, error.Message));
+               error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
         [HttpPut("questions/{questionId}")]
         public async Task<IActionResult> UpdateQuestion([FromRoute] int questionId, [FromBody] UpdateQuestionCommand command, CancellationToken cancellationToken)
@@ -54,7 +55,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match(
                success => Ok(success),
-               error => StatusCode((int)error.HttpStatusCode, error.Message));
+               error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
         [HttpGet("categories")]
         public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
@@ -81,7 +82,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(query, cancellationToken);
             return result.Match(
                success => Ok(success),
-               error => StatusCode((int)error.HttpStatusCode, error.Message));
+               error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
     }
 }

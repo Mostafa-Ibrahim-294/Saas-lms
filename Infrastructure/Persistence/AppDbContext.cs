@@ -45,12 +45,14 @@ namespace Infrastructure.Persistence
         internal DbSet<Question> Questions { get; set; }
         internal DbSet<QuestionCategory> Categories { get; set; }
         internal DbSet<QuizQuestion> QuizQuestions { get; set; }
+        internal DbSet<QuizAttempt> QuizAttempts { get; set; }
         internal DbSet<LessonView> LessonViews { get; set; }
         internal DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
         internal DbSet<WebsiteSetting> WebsiteSettings { get; set; }
         internal DbSet<WebsiteAppearanceSetting> WebsiteAppearanceSettings { get; set; }
         internal DbSet<EmailSetting> EmailSettings { get; set; }
         internal DbSet<NotificationSetting> NotificationSettings { get; set; }
+        internal DbSet<Answer> Answers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

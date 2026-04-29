@@ -13,13 +13,16 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IQuestionRepository _questionRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUserId _currentUserId;
         private readonly HybridCache _hybridCache;
+        private readonly IUnitOfWork _unitOfWork;
 
         public CreateOnboardingCommandHandler(ITenantRepository tenantRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor
-            , UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId, HybridCache hybridCache,
-            IPlanRepository planRepository, ISubscriptionRepository subscriptionRepository)
+            , UserManager<ApplicationUser> userManager,  ICurrentUserId currentUserId, HybridCache hybridCache,
+            IPlanRepository planRepository, ISubscriptionRepository subscriptionRepository, IUnitOfWork unitOfWork,
+            IQuestionRepository questionRepository)
         {
             _tenantRepository = tenantRepository;
             _mapper = mapper;
@@ -29,6 +32,8 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
             _hybridCache = hybridCache;
             _planRepository = planRepository;
             _subscriptionRepository = subscriptionRepository;
+            _unitOfWork = unitOfWork;
+            _questionRepository = questionRepository;
         }
 
         public async Task<OneOf<OnboardingDto, Error>> Handle(CreateOnboardingCommand request, CancellationToken cancellationToken)
@@ -43,7 +48,7 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 return TenantErrors.SubDomainAlreadyExists;
             }
 
-            await _tenantRepository.BeginTransactionAsync(cancellationToken);
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
                 var ownerId = _currentUserId.GetUserId();
@@ -83,8 +88,13 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 var planId = await _planRepository.GetPlanIdAsync(freePlanPricingId, cancellationToken);
                 var planFeatureIds = await _planRepository.GetPlanFeatureIdsAsync(planId, cancellationToken);
                 await _tenantRepository.InitializeTenantUsageAsync(planFeatureIds, subscriptionId, createdTenantId);
+                await _questionRepository.CreateQuestionCategory(new QuestionCategory
+                {
+                    TenantId = createdTenantId,
+                    Title = TenantMemberConstants.GeneralQuestionCategory
+                }, cancellationToken);
 
-                await _tenantRepository.CommitTransactionAsync(cancellationToken);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
 
                 await _hybridCache.RemoveAsync($"{CacheKeysConstants.LastTenantKey}_{ownerId}", cancellationToken);
@@ -107,7 +117,7 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
             catch
             {
 
-                await _tenantRepository.RollbackTransactionAsync(cancellationToken);
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 throw;
             }
         }

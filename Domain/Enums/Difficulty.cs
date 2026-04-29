@@ -8,6 +8,7 @@ namespace Domain.Enums
     {
         Easy,
         Medium,
-        Hard
+        Hard,
+        Mix
     }
 }

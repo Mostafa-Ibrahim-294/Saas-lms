@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.TenantPaymentMethods.Commands.AddPaymentMethod;
 using Application.Features.TenantPaymentMethods.Commands.DeletePaymentMethod;
 using Application.Features.TenantPaymentMethods.Commands.UpdatePaymentMethod;
@@ -28,7 +29,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetPaymentMethodsQuery(), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -39,7 +40,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -50,7 +51,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command with { PaymentMethodId = paymentMethodId }, cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -61,7 +62,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command with { PaymentMethodId = paymentMethodId}, cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -72,7 +73,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new DeletePaymentMethodCommand(paymentMethodId), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

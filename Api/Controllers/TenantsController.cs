@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.Tenants.Commands.CreateLiveSession;
 using Application.Features.Tenants.Commands.DeleteContentLibraryResource;
 using Application.Features.Tenants.Commands.DeleteLiveSession;
@@ -69,7 +70,7 @@ namespace Api.Controllers
 
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -96,7 +97,7 @@ namespace Api.Controllers
 
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -116,7 +117,7 @@ namespace Api.Controllers
 
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -127,7 +128,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new DeleteLiveSessionCommand(sessionsId), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -138,7 +139,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetLiveSessionsStatisticsQuery(), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

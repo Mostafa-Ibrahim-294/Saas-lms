@@ -1,4 +1,5 @@
-﻿using Application.Features.Public.Queries.GetCourseDetails;
+﻿using Application.Common;
+using Application.Features.Public.Queries.GetCourseDetails;
 using Application.Features.Public.Queries.GetTenantNavigationLinks;
 using Application.Features.Public.Queries.GetTenantPages;
 using Application.Features.Public.Queries.GetTenantPaymentMethods;
@@ -47,7 +48,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetTenantPagesQuery(url, GetSubDomain()), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -65,7 +66,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetCourseDetailsQuery(courseId, GetSubDomain()), cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

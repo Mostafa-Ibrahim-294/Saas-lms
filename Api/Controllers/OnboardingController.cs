@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.Tenants.Commands.CreateOnboarding;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(
                 onboardingDto => Created(string.Empty, onboardingDto),
-                error => StatusCode((int)error.HttpStatusCode, error.Message));
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
     }
 

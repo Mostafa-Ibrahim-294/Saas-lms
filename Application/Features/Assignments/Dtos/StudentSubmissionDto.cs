@@ -10,7 +10,7 @@ namespace Application.Features.Assignments.Dtos
         public int Id { get; set; }
         public AssignmentStatus Status { get; set; }
         public DateTime? SubmittedAt { get; set; }
-        public int? EarnedMarks { get; set; }
+        public double? EarnedMarks { get; set; }
         public int TotalMarks { get; set; }
         public string StudentName { get; set; } = null!;
         public string? ProfilePicture { get; set; }

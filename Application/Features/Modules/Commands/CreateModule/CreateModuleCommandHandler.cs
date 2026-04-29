@@ -65,7 +65,7 @@ namespace Application.Features.Modules.Commands.CreateModule
             return new SuccessDto 
             { 
                 Id = moduleId.ToString(),
-                Message = $"{nameof(Module)} {SuccessConstatns.ItemCreated}"
+                Message = $"{nameof(Module)} {SuccessConstants.ItemCreated}"
             };
         }
     }

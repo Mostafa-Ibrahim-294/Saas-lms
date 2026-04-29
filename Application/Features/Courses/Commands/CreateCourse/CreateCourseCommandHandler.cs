@@ -58,7 +58,7 @@ namespace Application.Features.Courses.Commands.CreateCourse
             return new SuccessDto
             {
                 Id = courseId.ToString(),
-                Message = $"{nameof(Course)} {SuccessConstatns.ItemCreated}"
+                Message = $"{nameof(Course)} {SuccessConstants.ItemCreated}"
             };
         }
     }

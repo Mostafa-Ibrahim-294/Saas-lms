@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Files;
+﻿using Application.Contracts.Externals;
+using Application.Contracts.Files;
 using Application.Contracts.Zoom;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -57,6 +58,10 @@ namespace Infrastructure.Extensions
                 .BindConfiguration(nameof(BunnyOptions))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+            builder.Services.AddOptions<AiOptions>()
+                .BindConfiguration(nameof(AiOptions))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
             builder.Services.AddOptions<Common.Options.FileOptions>()
                 .BindConfiguration(nameof(Common.Options.FileOptions))
                 .ValidateDataAnnotations()
@@ -106,6 +111,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddHttpClient<IFileService, FileService>();
+            builder.Services.AddHttpClient<IExternalService, ExternalService>();
             builder.Services.AddScoped<ITenantMemberRepository, TenantMemberRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<ITenantRoleRepository, TenantRoleRepository>();
@@ -124,6 +130,12 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
             builder.Services.AddScoped<ITenantWebsiteSettingsRepository, TenantWebsiteSettingsRepository>();
             builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IAttemptRepository, AttemptRepository>();
+            builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
+            builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

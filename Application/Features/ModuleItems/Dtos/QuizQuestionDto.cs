@@ -11,6 +11,7 @@ namespace Application.Features.ModuleItems.Dtos
         public string? CorrectAnswer { get; set; }
         public string QuestionText { get; set; } = string.Empty;
         public QuestionType Type { get; set; }
+        public int Category { get; set; }
         public List<QuestionOption>? Options { get; set; }
         public int Marks { get; set; }
         public int Order { get; set; }

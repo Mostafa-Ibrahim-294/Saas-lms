@@ -24,6 +24,44 @@ namespace Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entites.Answer", b =>
+                {
+                    b.Property<int>("QuizQuestionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AttemptId")
+                        .HasColumnType("integer");
+
+                    b.Property<double?>("AutoScore")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Feedback")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("QuizAttemptId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("Selected")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("StudentAnswer")
+                        .HasColumnType("text");
+
+                    b.Property<double?>("TeacherScore")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("QuizQuestionId", "AttemptId");
+
+                    b.HasIndex("AttemptId");
+
+                    b.HasIndex("QuizAttemptId");
+
+                    b.ToTable("Answers");
+                });
+
             modelBuilder.Entity("Domain.Entites.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -168,8 +206,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("AssignmentId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("EarnedMarks")
-                        .HasColumnType("integer");
+                    b.Property<double>("EarnedMarks")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Feedback")
                         .HasColumnType("text");
@@ -737,6 +775,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -753,6 +794,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -782,6 +826,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Order")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
@@ -1324,6 +1371,51 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("ModuleId");
 
                     b.ToTable("Quizzes");
+                });
+
+            modelBuilder.Entity("Domain.Entites.QuizAttempt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GradingStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModuleItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<double?>("Score")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubmissionStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("TimeSpent")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalMarks")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleItemId");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.ToTable("QuizAttempts");
                 });
 
             modelBuilder.Entity("Domain.Entites.QuizQuestion", b =>
@@ -2232,6 +2324,29 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entites.Answer", b =>
+                {
+                    b.HasOne("Domain.Entites.QuizAttempt", "Attempt")
+                        .WithMany()
+                        .HasForeignKey("AttemptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.QuizAttempt", null)
+                        .WithMany("Answers")
+                        .HasForeignKey("QuizAttemptId");
+
+                    b.HasOne("Domain.Entites.QuizQuestion", "QuizQuestion")
+                        .WithMany()
+                        .HasForeignKey("QuizQuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attempt");
+
+                    b.Navigation("QuizQuestion");
+                });
+
             modelBuilder.Entity("Domain.Entites.Assignment", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
@@ -2247,7 +2362,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Module", "Module")
-                        .WithMany()
+                        .WithMany("Assignments")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2421,7 +2536,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Module", "Module")
-                        .WithMany()
+                        .WithMany("Lessons")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2514,7 +2629,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Module", "Module")
-                        .WithMany()
+                        .WithMany("ModuleItems")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2696,7 +2811,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Module", "Module")
-                        .WithMany()
+                        .WithMany("Quizzes")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2714,6 +2829,25 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Module");
 
                     b.Navigation("ModuleItem");
+                });
+
+            modelBuilder.Entity("Domain.Entites.QuizAttempt", b =>
+                {
+                    b.HasOne("Domain.Entites.Quiz", "Quiz")
+                        .WithMany("Attempts")
+                        .HasForeignKey("ModuleItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Student", "Student")
+                        .WithOne("QuizAttempt")
+                        .HasForeignKey("Domain.Entites.QuizAttempt", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quiz");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Domain.Entites.QuizQuestion", b =>
@@ -3143,6 +3277,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Participants");
                 });
 
+            modelBuilder.Entity("Domain.Entites.Module", b =>
+                {
+                    b.Navigation("Assignments");
+
+                    b.Navigation("Lessons");
+
+                    b.Navigation("ModuleItems");
+
+                    b.Navigation("Quizzes");
+                });
+
             modelBuilder.Entity("Domain.Entites.ModuleItem", b =>
                 {
                     b.Navigation("Assignment");
@@ -3188,7 +3333,14 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Quiz", b =>
                 {
+                    b.Navigation("Attempts");
+
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("Domain.Entites.QuizAttempt", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("Domain.Entites.Student", b =>
@@ -3200,6 +3352,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("LessonView");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("QuizAttempt");
 
                     b.Navigation("SessionParticipants");
                 });

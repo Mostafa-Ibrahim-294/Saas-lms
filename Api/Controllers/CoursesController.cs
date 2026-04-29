@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.Courses.Commands.CreateCourse;
 using Application.Features.Courses.Commands.DeleteCourse;
 using Application.Features.Courses.Commands.UpdateCourse;
@@ -6,7 +7,6 @@ using Application.Features.Courses.Queries.GetAll;
 using Application.Features.Courses.Queries.GetCourse;
 using Application.Features.Courses.Queries.GetCourseStatistics;
 using Application.Features.Courses.Queries.GetLookup;
-using Application.Features.Courses.Queries.GetModules;
 using Application.Features.Courses.Queries.GetStatistics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +42,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetCourseQuery(courseId), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpGet("lookup")]
@@ -51,22 +51,13 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetLookupQuery(), cancellationToken);
             return Ok(result);
         }
-        [HttpGet("{courseId}/modules")]
-        public async Task<IActionResult> GetModulesByCourseId([FromRoute] GetModulesQuery query, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(query, cancellationToken);
-            return result.Match(
-                success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
-            );
-        }
         [HttpGet("{courseId}/statistics")]
         public async Task<IActionResult> GetCourseStatisticsByCourseId([FromRoute] GetCourseStatisticsQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPost]
@@ -75,7 +66,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(createCourseCommand, cancellationToken);
             return result.Match(
                 success => Created(string.Empty, success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpPut("{courseId}")]
@@ -85,7 +76,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(updateCourseCommand, cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
         [HttpDelete("{courseId}")]
@@ -94,7 +85,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new DeleteCourseCommand(courseId), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
     }

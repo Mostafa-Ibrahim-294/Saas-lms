@@ -9,4 +9,6 @@ global using Microsoft.Extensions.Caching.Hybrid;
 global using OneOf;
 global using Application.Common;
 global using Application.Constants;
+global using Application.Contracts.Repositories;
+
 

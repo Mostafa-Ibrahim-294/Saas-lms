@@ -56,7 +56,7 @@ namespace Application.Features.Courses.Commands.UpdateCourse
             return new SuccessDto
             {
                 Id = course.Id.ToString(),
-                Message = $"{nameof(Course)} {SuccessConstatns.ItemUpdated}"
+                Message = $"{nameof(Course)} {SuccessConstants.ItemUpdated}"
             };
         }
     }

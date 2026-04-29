@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
 using Application.Features.TenantMembers.Commands.AcceptTenanInvite;
 using Application.Features.TenantMembers.Commands.DeclineTenanInvite;
 using Application.Features.TenantMembers.Commands.InviteTenantMember;
@@ -49,7 +50,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(inviteTenantMemberCommand, cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -68,7 +69,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new AcceptTenanInviteCommand(token), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -87,7 +88,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new RemoveMemberCommand(memberId), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -98,7 +99,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new UpdateMemberRoleCommand(memberId, roleId), cancellationToken);
             return result.Match(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message)
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
             );
         }
 
@@ -109,7 +110,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(new GetMemberProfileQuery(memberId), cancellationToken);
             return result.Match(
                success => Ok(success),
-               error => StatusCode((int)error.HttpStatusCode, error.Message)
+               error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message })
            );
         }
 

@@ -24,5 +24,6 @@ namespace Domain.Entites
         public string CreatedById { get; set; } = string.Empty;
         public ApplicationUser CreatedBy { get; set; } = null!;
         public ICollection<QuizQuestion> Questions { get; set; } = [];
+        public ICollection<QuizAttempt> Attempts { get; set; } = [];
     }
 }

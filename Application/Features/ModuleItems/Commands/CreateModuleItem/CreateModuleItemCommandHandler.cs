@@ -13,26 +13,25 @@ namespace Application.Features.ModuleItems.Commands.CreateModuleItem
         private readonly ICurrentUserId _currentUserId;
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IModuleRepository _moduleRepository;
-        private readonly ICourseRepository _courseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IModuleItemRepository _moduleItemRepository;
-        private readonly ITenantRepository _tenantRepository;
         private readonly IMapper _mapper;
         private readonly HybridCache _hybridCache;
+        private readonly IUnitOfWork _unitOfWork;
         public CreateModuleItemCommandHandler(ITenantMemberRepository tenantMemberRepository, ICurrentUserId currentUserId,
-            ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository,
-            IMapper mapper, IModuleRepository moduleRepository, IModuleItemRepository moduleItemRepository, ITenantRepository tenantRepository, HybridCache hybridCache)
+            ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IModuleRepository moduleRepository,
+            IModuleItemRepository moduleItemRepository,
+            HybridCache hybridCache, IUnitOfWork unitOfWork)
         {
             _tenantMemberRepository = tenantMemberRepository;
             _currentUserId = currentUserId;
             _subscriptionRepository = subscriptionRepository;
             _httpContextAccessor = httpContextAccessor;
-            _courseRepository = courseRepository;
             _mapper = mapper;
             _moduleRepository = moduleRepository;
             _moduleItemRepository = moduleItemRepository;
-            _tenantRepository = tenantRepository;
             _hybridCache = hybridCache;
+            _unitOfWork = unitOfWork;
         }
         public async Task<OneOf<SuccessDto, Error>> Handle(CreateModuleItemCommand request, CancellationToken cancellationToken)
         {
@@ -48,18 +47,13 @@ namespace Application.Features.ModuleItems.Commands.CreateModuleItem
             {
                 return TenantErrors.NotSubscribed;
             }
-            var course = await _courseRepository.GetCourseByIdAsync(request.CourseId, subdomain!, cancellationToken);
-            if (course is null)
-            {
-                return CourseErrors.CourseNotFound;
-            }
-            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, cancellationToken);
+            var module = await _moduleRepository.GetModuleByIdAsync(request.ModuleId, request.CourseId, subdomain!, cancellationToken);
             if (module is null)
             {
                 return ModuleErrors.ModuleNotFound;
             }
             var moduleItem = _mapper.Map<ModuleItem>(request);
-            await _tenantRepository.BeginTransactionAsync(cancellationToken);
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
                 var moduleItemId = await _moduleItemRepository.CreateModuleItem(moduleItem, cancellationToken);
@@ -102,16 +96,16 @@ namespace Application.Features.ModuleItems.Commands.CreateModuleItem
                     await _moduleItemRepository.CreateQuiz(quiz, cancellationToken);
                 }
                 await _hybridCache.RemoveByTagAsync(tags: new[] { $"{CacheKeysConstants.AllCoursesKey}_{request.CourseId}" }, cancellationToken);
-                await _tenantRepository.CommitTransactionAsync(cancellationToken);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
                 return new SuccessDto
                 {
                     Id = moduleItemId.ToString(),
-                    Message = $"{nameof(ModuleItem)} {SuccessConstatns.ItemCreated}"
+                    Message = $"{nameof(ModuleItem)} {SuccessConstants.ItemCreated}"
                 };
             }
             catch
             {
-                await _tenantRepository.RollbackTransactionAsync(cancellationToken);
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 throw;
             }
         }

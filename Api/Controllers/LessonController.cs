@@ -1,12 +1,12 @@
-﻿using Application.Constants;
+﻿using Application.Common;
+using Application.Constants;
+using Application.Features.Lessons.Commands.UpdateLesson;
 using Application.Features.Lessons.Queries.GetLessonOverview;
 using Application.Features.Lessons.Queries.GetLessonPerformance;
 using Application.Features.Lessons.Queries.GetViews;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Api.Controllers
 {
@@ -26,7 +26,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(query, cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message));
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
         [HttpGet("performance")]
         public async Task<IActionResult> GetPerformance([FromRoute] GetLessonPerformanceQuery query, CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ namespace Api.Controllers
             var result = await _mediator.Send(query, cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message));
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
         [HttpGet("overview")]
         public async Task<IActionResult> GetOverview([FromRoute] GetLessonOverviewQuery query, CancellationToken cancellationToken)
@@ -42,7 +42,16 @@ namespace Api.Controllers
             var result = await _mediator.Send(query, cancellationToken);
             return result.Match<IActionResult>(
                 success => Ok(success),
-                error => StatusCode((int)error.HttpStatusCode, error.Message));
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
+        }
+        [HttpPatch]
+        public async Task<IActionResult> UpdateLesson(int courseId, int moduleId, int itemId, [FromBody] UpdateLessonCommand command, CancellationToken cancellationToken)
+        {
+            command = command with { CourseId = courseId, ModuleId = moduleId, ItemId = itemId };
+            var result = await _mediator.Send(command, cancellationToken);
+            return result.Match<IActionResult>(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, new ErrorDto { Error = error.Message }));
         }
     }
 }

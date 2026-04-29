@@ -694,7 +694,9 @@ namespace Infrastructure.Seeders
                     new Permission { Id = "CREATE_QUIZZES", Name = "إنشاء الاختبارات", Description = "السماح بإنشاء اختبارات جديدة", Module = "courses" },
                     new Permission { Id = "VIEW_QUIZZES", Name = "عرض الاختبارات", Description = "السماح بمشاهدة قائمة الاختبارات", Module = "courses" },
                     new Permission { Id = "VIEW_QUESTION_BANK", Name = "عرض بنك الأسئلة", Description = "السماح بالوصول إلى بنك الأسئلة", Module = "courses" },
-                    new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"}
+                    new Permission { Id = "VIEW_PERFORMANCE_CHART", Name = "عرض مخططات الأداء", Description = "السماح بعرض مخططات ومؤشرات الأداء", Module = "general"},
+                    new Permission {Id = "MANAGE_ATTEMPTS" , Name = "إدارة محاولات ارسال الاختبار", Description = "السماح بإدارة محاولات ارسال الاختبار", Module = "quizzes"},
+                    new Permission { Id = "MANAGE_SUBMISSIONS", Name = "إدارة التقديمات", Description = "السماح بإدارة التقديمات", Module = "assignments" }
                 };
         }
 
